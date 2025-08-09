@@ -1,0 +1,322 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Plus, Edit, Trash2, Eye } from "lucide-react";
+import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from "@/hooks/useProjects";
+import { Project } from "@/lib/supabase";
+
+export const ProjectsAdmin = () => {
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    amount: "",
+    target: "",
+    backers: "",
+    platform: "",
+    category: "",
+    country: "",
+    launch_date: "",
+    status: "active" as "active" | "completed" | "failed",
+  });
+
+  const { data: projects = [], isLoading } = useProjects();
+  const createProject = useCreateProject();
+  const updateProject = useUpdateProject();
+  const deleteProject = useDeleteProject();
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      description: "",
+      amount: "",
+      target: "",
+      backers: "",
+      platform: "",
+      category: "",
+      country: "",
+      launch_date: "",
+      status: "active" as "active" | "completed" | "failed",
+    });
+    setEditingProject(null);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const projectData = {
+      ...formData,
+      amount: parseInt(formData.amount),
+      target: parseInt(formData.target),
+      backers: parseInt(formData.backers),
+      success_rate: Math.round((parseInt(formData.amount) / parseInt(formData.target)) * 100),
+    };
+
+    if (editingProject) {
+      updateProject.mutate({ id: editingProject.id, ...projectData });
+    } else {
+      createProject.mutate(projectData);
+    }
+
+    resetForm();
+    setIsAddDialogOpen(false);
+  };
+
+  const handleEdit = (project: Project) => {
+    setEditingProject(project);
+    setFormData({
+      name: project.name,
+      description: project.description,
+      amount: project.amount.toString(),
+      target: project.target.toString(),
+      backers: project.backers.toString(),
+      platform: project.platform,
+      category: project.category,
+      country: project.country,
+      launch_date: project.launch_date,
+      status: project.status,
+    });
+    setIsAddDialogOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    if (confirm("確定要刪除此專案嗎？")) {
+      deleteProject.mutate(id);
+    }
+  };
+
+  if (isLoading) {
+    return <div>載入中...</div>;
+  }
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>專案管理</CardTitle>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={resetForm}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  新增專案
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>
+                    {editingProject ? "編輯專案" : "新增專案"}
+                  </DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="name">專案名稱</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="platform">平台</Label>
+                      <Select
+                        value={formData.platform}
+                        onValueChange={(value) => setFormData({ ...formData, platform: value })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="選擇平台" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Kickstarter">Kickstarter</SelectItem>
+                          <SelectItem value="嘖嘖">嘖嘖</SelectItem>
+                          <SelectItem value="Indiegogo">Indiegogo</SelectItem>
+                          <SelectItem value="其他">其他</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="description">專案描述</Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="amount">募資金額</Label>
+                      <Input
+                        id="amount"
+                        type="number"
+                        value={formData.amount}
+                        onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="target">目標金額</Label>
+                      <Input
+                        id="target"
+                        type="number"
+                        value={formData.target}
+                        onChange={(e) => setFormData({ ...formData, target: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="backers">支持人數</Label>
+                      <Input
+                        id="backers"
+                        type="number"
+                        value={formData.backers}
+                        onChange={(e) => setFormData({ ...formData, backers: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="category">分類</Label>
+                      <Input
+                        id="category"
+                        value={formData.category}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="country">國家</Label>
+                      <Select
+                        value={formData.country}
+                        onValueChange={(value) => setFormData({ ...formData, country: value })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="選擇國家" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="台灣">台灣</SelectItem>
+                          <SelectItem value="日本">日本</SelectItem>
+                          <SelectItem value="美國">美國</SelectItem>
+                          <SelectItem value="英國">英國</SelectItem>
+                          <SelectItem value="其他">其他</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="launch_date">上線日期</Label>
+                      <Input
+                        id="launch_date"
+                        type="date"
+                        value={formData.launch_date}
+                        onChange={(e) => setFormData({ ...formData, launch_date: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="status">狀態</Label>
+                    <Select
+                      value={formData.status}
+                      onValueChange={(value: "active" | "completed" | "failed") => 
+                        setFormData({ ...formData, status: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="active">進行中</SelectItem>
+                        <SelectItem value="completed">已完成</SelectItem>
+                        <SelectItem value="failed">失敗</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex justify-end gap-2">
+                    <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                      取消
+                    </Button>
+                    <Button type="submit">
+                      {editingProject ? "更新" : "創建"}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>專案名稱</TableHead>
+                  <TableHead>平台</TableHead>
+                  <TableHead>國家</TableHead>
+                  <TableHead>募資金額</TableHead>
+                  <TableHead>達成率</TableHead>
+                  <TableHead>狀態</TableHead>
+                  <TableHead>操作</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {projects.map((project) => (
+                  <TableRow key={project.id}>
+                    <TableCell className="font-medium">{project.name}</TableCell>
+                    <TableCell>{project.platform}</TableCell>
+                    <TableCell>{project.country}</TableCell>
+                    <TableCell>{project.amount.toLocaleString()}</TableCell>
+                    <TableCell>{project.success_rate}%</TableCell>
+                    <TableCell>
+                      <Badge variant={
+                        project.status === "completed" ? "default" :
+                        project.status === "active" ? "secondary" : "destructive"
+                      }>
+                        {project.status === "completed" ? "已完成" :
+                         project.status === "active" ? "進行中" : "失敗"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(project)}
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDelete(project.id)}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
