@@ -3,50 +3,31 @@ import DataCard from "@/components/DataCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, DollarSign, Globe, Award, BarChart } from "lucide-react";
+import { useGlobalProjects } from "@/hooks/useProjects";
 
 const GlobalData = () => {
-  const kickstarterTop10 = [
-    {
-      rank: 1,
-      name: "Bloodstained: Ritual of the Night",
-      amount: "$5,545,991",
-      backers: 64853,
-      country: "日本",
-      category: "動作冒險"
-    },
-    {
-      rank: 2,
-      name: "Shenmue III",
-      amount: "$6,333,295",
-      backers: 69320,
-      country: "日本",
-      category: "冒險"
-    },
-    {
-      rank: 3,
-      name: "Pillars of Eternity II: Deadfire",
-      amount: "$4,407,598",
-      backers: 33614,
-      country: "美國",
-      category: "RPG"
-    },
-    {
-      rank: 4,
-      name: "Torment: Tides of Numenera",
-      amount: "$4,188,927",
-      backers: 74405,
-      country: "美國",
-      category: "RPG"
-    },
-    {
-      rank: 5,
-      name: "Mighty No. 9",
-      amount: "$3,845,170",
-      backers: 67226,
-      country: "日本",
-      category: "動作"
-    }
-  ];
+  const { data: globalProjects = [], isLoading } = useGlobalProjects();
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-8">
+          <div className="text-center">載入中...</div>
+        </main>
+      </div>
+    );
+  }
+
+  // 計算統計數據
+  const stats = {
+    totalProjects: globalProjects.length,
+    totalAmount: globalProjects.reduce((sum, p) => sum + p.amount, 0),
+    totalBackers: globalProjects.reduce((sum, p) => sum + p.backers, 0),
+    successRate: globalProjects.length > 0 
+      ? Math.round(globalProjects.filter(p => p.status === 'completed').length / globalProjects.length * 100)
+      : 0,
+  };
 
   const ksStats2024 = [
     { category: "遊戲總數", value: "3,245", change: "+12%" },
@@ -81,16 +62,34 @@ const GlobalData = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {ksStats2024.map((stat, index) => (
-                <DataCard
-                  key={index}
-                  title={stat.category}
-                  value={stat.value}
-                  subtitle={stat.change}
-                  icon={index === 0 ? BarChart : index === 1 ? Award : index === 2 ? DollarSign : TrendingUp}
-                  trend={stat.change.includes("+") ? "up" : "down"}
-                />
-              ))}
+              <DataCard
+                title="遊戲總數"
+                value={stats.totalProjects.toString()}
+                subtitle="+12%"
+                icon={BarChart}
+                trend="up"
+              />
+              <DataCard
+                title="成功專案"
+                value={globalProjects.filter(p => p.status === 'completed').length.toString()}
+                subtitle="+8%"
+                icon={Award}
+                trend="up"
+              />
+              <DataCard
+                title="總集資額"
+                value={`$${(stats.totalAmount / 1000000).toFixed(1)}M`}
+                subtitle="+15%"
+                icon={DollarSign}
+                trend="up"
+              />
+              <DataCard
+                title="平均金額"
+                value={`$${stats.totalProjects > 0 ? Math.round(stats.totalAmount / stats.totalProjects / 1000) : 0}K`}
+                subtitle="+3%"
+                icon={TrendingUp}
+                trend="up"
+              />
             </div>
           </CardContent>
         </Card>
@@ -98,28 +97,28 @@ const GlobalData = () => {
         {/* 全球市場概覽 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <DataCard
-            title="全球平台總數"
-            value="50+"
-            subtitle="主要群眾集資平台"
+            title="專案總數"
+            value={stats.totalProjects.toString()}
+            subtitle="國際專案"
             icon={Globe}
           />
           <DataCard
-            title="年度集資總額"
-            value="$2.1B"
-            subtitle="全球遊戲類別"
+            title="累計金額"
+            value={`$${(stats.totalAmount / 1000000).toFixed(1)}M`}
+            subtitle="總集資金額"
             icon={DollarSign}
             trend="up"
           />
           <DataCard
-            title="活躍支持者"
-            value="8.5M"
-            subtitle="全球支持者數量"
+            title="支持人數"
+            value={stats.totalBackers.toLocaleString()}
+            subtitle="全球支持者"
             icon={Users}
             trend="up"
           />
           <DataCard
-            title="平均成功率"
-            value="37%"
+            title="成功率"
+            value={`${stats.successRate}%`}
             subtitle="全球平均"
             icon={TrendingUp}
             trend="neutral"
@@ -136,14 +135,14 @@ const GlobalData = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {kickstarterTop10.map((project, index) => (
+              {globalProjects.slice(0, 10).map((project, index) => (
                 <div
-                  key={index}
+                  key={project.id}
                   className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
                 >
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
-                      {project.rank}
+                      {index + 1}
                     </div>
                     <div>
                       <h3 className="font-semibold">{project.name}</h3>
@@ -158,7 +157,9 @@ const GlobalData = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-lg text-green-600">{project.amount}</div>
+                    <div className="font-bold text-lg text-green-600">
+                      ${(project.amount / 1000000).toFixed(1)}M
+                    </div>
                     <div className="text-sm text-muted-foreground">
                       {project.backers.toLocaleString()} 名支持者
                     </div>

@@ -3,55 +3,41 @@ import DataCard from "@/components/DataCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, DollarSign, Target, Award, BarChart } from "lucide-react";
+import { useTaiwanProjects } from "@/hooks/useProjects";
 
 const TaiwanData = () => {
-  const topProjects = [
-    {
-      rank: 1,
-      name: "台灣製造：復古像素RPG",
-      amount: "NT$ 8,500,000",
-      backers: 2156,
-      successRate: "156%",
-      platform: "嘖嘖",
-      category: "RPG"
-    },
-    {
-      rank: 2,
-      name: "島嶼冒險：探索台灣",
-      amount: "NT$ 6,200,000",
-      backers: 1834,
-      successRate: "124%",
-      platform: "FlyingV",
-      category: "冒險"
-    },
-    {
-      rank: 3,
-      name: "夜市大亨：經營模擬",
-      amount: "NT$ 4,800,000",
-      backers: 1567,
-      successRate: "192%",
-      platform: "嘖嘖",
-      category: "模擬"
-    },
-    {
-      rank: 4,
-      name: "古早味彈珠台",
-      amount: "NT$ 3,900,000",
-      backers: 1245,
-      successRate: "130%",
-      platform: "FlyingV",
-      category: "休閒"
-    },
-    {
-      rank: 5,
-      name: "台語桌遊數位版",
-      amount: "NT$ 3,200,000",
-      backers: 987,
-      successRate: "106%",
-      platform: "嘖嘖",
-      category: "桌遊"
-    }
-  ];
+  const { data: taiwanProjects = [], isLoading } = useTaiwanProjects();
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-8">
+          <div className="text-center">載入中...</div>
+        </main>
+      </div>
+    );
+  }
+
+  // 計算統計數據
+  const stats = {
+    totalProjects: taiwanProjects.length,
+    totalAmount: taiwanProjects.reduce((sum, p) => sum + p.amount, 0),
+    totalBackers: taiwanProjects.reduce((sum, p) => sum + p.backers, 0),
+    successRate: taiwanProjects.length > 0 
+      ? Math.round(taiwanProjects.filter(p => p.status === 'completed').length / taiwanProjects.length * 100)
+      : 0,
+    medianAmount: taiwanProjects.length > 0 
+      ? taiwanProjects.sort((a, b) => a.amount - b.amount)[Math.floor(taiwanProjects.length / 2)]?.amount || 0
+      : 0,
+    medianBackers: taiwanProjects.length > 0 
+      ? taiwanProjects.sort((a, b) => a.backers - b.backers)[Math.floor(taiwanProjects.length / 2)]?.backers || 0
+      : 0,
+  };
+
+  const avgTicket = stats.totalBackers > 0 
+    ? Math.round(stats.totalAmount / stats.totalBackers)
+    : 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,28 +59,28 @@ const TaiwanData = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <DataCard
             title="專案總數"
-            value="134"
+            value={stats.totalProjects.toString()}
             subtitle="件活躍專案"
             icon={BarChart}
             trend="up"
           />
           <DataCard
             title="累計金額"
-            value="NT$ 70,930,000"
+            value={`NT$ ${(stats.totalAmount / 1000000).toFixed(1)}M`}
             subtitle="總集資金額"
             icon={DollarSign}
             trend="up"
           />
           <DataCard
             title="支持人數"
-            value="58,801"
+            value={stats.totalBackers.toLocaleString()}
             subtitle="名支持者"
             icon={Users}
             trend="up"
           />
           <DataCard
             title="成功率"
-            value="68%"
+            value={`${stats.successRate}%`}
             subtitle="平均成功率"
             icon={Target}
             trend="neutral"
@@ -105,19 +91,19 @@ const TaiwanData = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <DataCard
             title="中位數金額"
-            value="NT$ 220,000"
+            value={`NT$ ${(stats.medianAmount / 1000).toFixed(0)}K`}
             subtitle="專案中位數"
             icon={TrendingUp}
           />
           <DataCard
             title="中位數人數"
-            value="156"
+            value={stats.medianBackers.toString()}
             subtitle="支持者中位數"
             icon={Users}
           />
           <DataCard
-            title="中位數客單價"
-            value="NT$ 1,192"
+            title="平均客單價"
+            value={`NT$ ${avgTicket.toLocaleString()}`}
             subtitle="平均客單價"
             icon={DollarSign}
           />
@@ -133,14 +119,14 @@ const TaiwanData = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {topProjects.map((project, index) => (
+              {taiwanProjects.slice(0, 10).map((project, index) => (
                 <div
-                  key={index}
+                  key={project.id}
                   className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
                 >
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
-                      {project.rank}
+                      {index + 1}
                     </div>
                     <div>
                       <h3 className="font-semibold">{project.name}</h3>
@@ -155,9 +141,9 @@ const TaiwanData = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-lg">{project.amount}</div>
+                    <div className="font-bold text-lg">NT$ {(project.amount / 1000000).toFixed(1)}M</div>
                     <div className="text-sm text-muted-foreground">
-                      {project.backers} 人支持 • {project.successRate}
+                      {project.backers.toLocaleString()} 人支持 • {Math.round(project.success_rate)}%
                     </div>
                   </div>
                 </div>

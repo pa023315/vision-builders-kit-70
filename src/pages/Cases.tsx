@@ -3,11 +3,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Award, ExternalLink, Calendar, Users, DollarSign, TrendingUp } from "lucide-react";
+import { useCaseStudies } from "@/hooks/useCaseStudies";
 
 const Cases = () => {
-  const featuredCases = [
+  const { data: caseStudies = [], isLoading } = useCaseStudies();
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-8">
+          <div className="text-center">載入中...</div>
+        </main>
+      </div>
+    );
+  }
+
+  // 如果沒有案例數據，顯示模擬數據
+  const featuredCases = caseStudies.length > 0 ? caseStudies : [
     {
-      id: 1,
+      id: "demo-1",
       name: "Bloodstained: Ritual of the Night",
       description: "由《惡魔城》系列製作人五十嵐孝司打造的精神續作，結合經典2D動作與現代遊戲設計。",
       amount: "$5,545,991",
@@ -16,73 +31,23 @@ const Cases = () => {
       platform: "Kickstarter",
       category: "動作冒險",
       country: "日本",
-      launchDate: "2015-05-11",
-      successRate: "1109%",
+      launch_date: "2015-05-11",
+      success_rate: "1109%",
       highlights: [
         "製作人知名度極高",
         "展示完整遊戲原型",
         "豐富的回饋選項",
         "定期更新開發進度"
       ],
-      keyFactors: [
+      key_factors: [
         "強大的IP基礎",
         "專業的開發團隊",
         "完整的市場策略",
         "社群經營得當"
       ],
-      image: "/placeholder.svg"
-    },
-    {
-      id: 2,
-      name: "台灣製造：復古像素RPG",
-      description: "以台灣在地文化為背景的像素風RPG，融合傳統元素與現代遊戲機制。",
-      amount: "NT$ 8,500,000",
-      target: "NT$ 1,500,000",
-      backers: 2156,
-      platform: "嘖嘖",
-      category: "RPG",
-      country: "台灣",
-      launchDate: "2024-08-15",
-      successRate: "567%",
-      highlights: [
-        "在地文化特色鮮明",
-        "精美的像素藝術",
-        "完整的遊戲Demo",
-        "強力的媒體曝光"
-      ],
-      keyFactors: [
-        "文化認同感強",
-        "視覺風格獨特",
-        "故事劇情吸引人",
-        "開發進度透明"
-      ],
-      image: "/placeholder.svg"
-    },
-    {
-      id: 3,
-      name: "Shenmue III",
-      description: "經典冒險遊戲《莎木》系列的第三部作品，延續芮涼遙的復仇之路。",
-      amount: "$6,333,295",
-      target: "$2,000,000",
-      backers: 69320,
-      platform: "Kickstarter",
-      category: "冒險",
-      country: "日本",
-      launchDate: "2015-06-15",
-      successRate: "317%",
-      highlights: [
-        "經典IP復活",
-        "原創團隊回歸",
-        "粉絲期待已久",
-        "媒體廣泛報導"
-      ],
-      keyFactors: [
-        "懷舊情懷強烈",
-        "品牌影響力大",
-        "開發者信譽佳",
-        "市場需求明確"
-      ],
-      image: "/placeholder.svg"
+      image_url: "/placeholder.svg",
+      created_at: "2024-01-01",
+      updated_at: "2024-01-01"
     }
   ];
 
@@ -141,7 +106,7 @@ const Cases = () => {
 
         {/* 精選案例 */}
         <div className="space-y-8 mb-12">
-          {featuredCases.map((caseItem) => (
+          {featuredCases.slice(0, 3).map((caseItem) => (
             <Card key={caseItem.id} className="overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
@@ -161,11 +126,11 @@ const Cases = () => {
                         <div className="text-xs text-muted-foreground">最終金額</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-primary">{caseItem.successRate}</div>
+                        <div className="text-2xl font-bold text-primary">{caseItem.success_rate}</div>
                         <div className="text-xs text-muted-foreground">達成率</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold">{caseItem.backers.toLocaleString()}</div>
+                        <div className="text-2xl font-bold">{typeof caseItem.backers === 'number' ? caseItem.backers.toLocaleString() : caseItem.backers}</div>
                         <div className="text-xs text-muted-foreground">支持者</div>
                       </div>
                       <div className="text-center">
@@ -195,7 +160,7 @@ const Cases = () => {
                           關鍵因素
                         </h4>
                         <ul className="space-y-1">
-                          {caseItem.keyFactors.map((factor, index) => (
+                          {caseItem.key_factors.map((factor, index) => (
                             <li key={index} className="text-sm text-muted-foreground flex items-center">
                               <span className="w-1.5 h-1.5 bg-secondary rounded-full mr-2"></span>
                               {factor}
