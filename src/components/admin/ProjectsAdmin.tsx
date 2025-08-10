@@ -97,6 +97,74 @@ export const ProjectsAdmin = () => {
     return <div>載入中...</div>;
   }
 
+  // Filter projects by platform and country
+  const taiwanProjects = projects.filter(p => p.country === '台灣');
+  const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
+  const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
+
+  const renderProjectTable = (projectList: Project[], title: string) => (
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle className="text-lg">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>專案名稱</TableHead>
+                <TableHead>平台</TableHead>
+                <TableHead>國家</TableHead>
+                <TableHead>募資金額</TableHead>
+                <TableHead>達成率</TableHead>
+                <TableHead>狀態</TableHead>
+                <TableHead>操作</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {projectList.map((project) => (
+                <TableRow key={project.id}>
+                  <TableCell className="font-medium">{project.name}</TableCell>
+                  <TableCell>{project.platform}</TableCell>
+                  <TableCell>{project.country}</TableCell>
+                  <TableCell>{project.amount.toLocaleString()}</TableCell>
+                  <TableCell>{project.success_rate}%</TableCell>
+                  <TableCell>
+                    <Badge variant={
+                      project.status === "completed" ? "default" :
+                      project.status === "active" ? "secondary" : "destructive"
+                    }>
+                      {project.status === "completed" ? "已完成" :
+                       project.status === "active" ? "進行中" : "失敗"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEdit(project)}
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDelete(project.id)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <div className="space-y-6">
       <Card>
@@ -138,6 +206,7 @@ export const ProjectsAdmin = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Kickstarter">Kickstarter</SelectItem>
+                          <SelectItem value="Campfire">Campfire</SelectItem>
                           <SelectItem value="嘖嘖">嘖嘖</SelectItem>
                           <SelectItem value="Indiegogo">Indiegogo</SelectItem>
                           <SelectItem value="其他">其他</SelectItem>
@@ -262,58 +331,14 @@ export const ProjectsAdmin = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>專案名稱</TableHead>
-                  <TableHead>平台</TableHead>
-                  <TableHead>國家</TableHead>
-                  <TableHead>募資金額</TableHead>
-                  <TableHead>達成率</TableHead>
-                  <TableHead>狀態</TableHead>
-                  <TableHead>操作</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {projects.map((project) => (
-                  <TableRow key={project.id}>
-                    <TableCell className="font-medium">{project.name}</TableCell>
-                    <TableCell>{project.platform}</TableCell>
-                    <TableCell>{project.country}</TableCell>
-                    <TableCell>{project.amount.toLocaleString()}</TableCell>
-                    <TableCell>{project.success_rate}%</TableCell>
-                    <TableCell>
-                      <Badge variant={
-                        project.status === "completed" ? "default" :
-                        project.status === "active" ? "secondary" : "destructive"
-                      }>
-                        {project.status === "completed" ? "已完成" :
-                         project.status === "active" ? "進行中" : "失敗"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleEdit(project)}
-                        >
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleDelete(project.id)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <div className="space-y-6">
+            {renderProjectTable(taiwanProjects, "台灣專案")}
+            
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold">國際專案</h3>
+              {renderProjectTable(kickstarterProjects, "Kickstarter 平台")}
+              {renderProjectTable(campfireProjects, "日本 Campfire 平台")}
+            </div>
           </div>
         </CardContent>
       </Card>

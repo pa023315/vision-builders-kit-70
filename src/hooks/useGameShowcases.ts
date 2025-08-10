@@ -1,50 +1,31 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { supabase } from '@/lib/supabase'
+import { supabase, GameShowcase } from '@/lib/supabase'
 import { useToast } from '@/hooks/use-toast'
 
-interface CaseStudy {
-  id: string
-  name: string
-  description: string
-  amount: string
-  target: string
-  backers: number
-  platform: string
-  category: string
-  country: string
-  launch_date: string
-  success_rate: string
-  highlights: string[]
-  key_factors: string[]
-  image_url?: string
-  created_at: string
-  updated_at: string
-}
-
-export const useCaseStudies = () => {
+export const useGameShowcases = () => {
   return useQuery({
-    queryKey: ['case-studies'],
+    queryKey: ['game-showcases'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('case_studies')
+        .from('game_showcases')
         .select('*')
         .order('created_at', { ascending: false })
       
       if (error) throw error
-      return data as CaseStudy[]
+      return data as GameShowcase[]
     },
   })
 }
 
-export const useCreateCaseStudy = () => {
+export const useCreateGameShowcase = () => {
   const { toast } = useToast()
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: async (caseStudy: Omit<CaseStudy, 'id' | 'created_at' | 'updated_at'>) => {
+    mutationFn: async (showcaseData: Omit<GameShowcase, 'id' | 'created_at' | 'updated_at'>) => {
       const { data, error } = await supabase
-        .from('case_studies')
-        .insert([caseStudy])
+        .from('game_showcases')
+        .insert([showcaseData])
         .select()
         .single()
       
@@ -52,30 +33,30 @@ export const useCreateCaseStudy = () => {
       return data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['case-studies'] })
+      queryClient.invalidateQueries({ queryKey: ['game-showcases'] })
       toast({
-        title: "案例已新增",
-        description: "新案例分析已成功添加",
+        title: "遊戲案例已新增",
+        description: "新的遊戲展示案例已成功添加",
       })
     },
     onError: () => {
       toast({
         title: "新增失敗",
-        description: "無法新增案例，請重試",
+        description: "無法新增遊戲案例，請重試",
         variant: "destructive",
       })
     },
   })
 }
 
-export const useUpdateCaseStudy = () => {
+export const useUpdateGameShowcase = () => {
   const { toast } = useToast()
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: async ({ id, ...updates }: Partial<CaseStudy> & { id: string }) => {
+    mutationFn: async ({ id, ...updates }: Partial<GameShowcase> & { id: string }) => {
       const { data, error } = await supabase
-        .from('case_studies')
+        .from('game_showcases')
         .update(updates)
         .eq('id', id)
         .select()
@@ -85,46 +66,46 @@ export const useUpdateCaseStudy = () => {
       return data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['case-studies'] })
+      queryClient.invalidateQueries({ queryKey: ['game-showcases'] })
       toast({
-        title: "案例已更新",
-        description: "案例資料已成功更新",
+        title: "遊戲案例已更新",
+        description: "遊戲展示案例已成功更新",
       })
     },
     onError: () => {
       toast({
         title: "更新失敗",
-        description: "無法更新案例，請重試",
+        description: "無法更新遊戲案例，請重試",
         variant: "destructive",
       })
     },
   })
 }
 
-export const useDeleteCaseStudy = () => {
+export const useDeleteGameShowcase = () => {
   const { toast } = useToast()
   const queryClient = useQueryClient()
   
   return useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('case_studies')
+        .from('game_showcases')
         .delete()
         .eq('id', id)
       
       if (error) throw error
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['case-studies'] })
+      queryClient.invalidateQueries({ queryKey: ['game-showcases'] })
       toast({
-        title: "案例已刪除",
-        description: "案例已從系統中移除",
+        title: "遊戲案例已刪除",
+        description: "遊戲展示案例已從系統中移除",
       })
     },
     onError: () => {
       toast({
         title: "刪除失敗",
-        description: "無法刪除案例，請重試",
+        description: "無法刪除遊戲案例，請重試",
         variant: "destructive",
       })
     },

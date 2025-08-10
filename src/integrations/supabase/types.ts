@@ -14,7 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      crowdfunding_cases: {
+        Row: {
+          amount: number
+          backers: number
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          name: string
+          project_url: string | null
+          success_rate: number
+          target: number
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          backers: number
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          name: string
+          project_url?: string | null
+          success_rate: number
+          target: number
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          backers?: number
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+          project_url?: string | null
+          success_rate?: number
+          target?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      game_showcases: {
+        Row: {
+          created_at: string
+          description: string
+          game_url: string | null
+          id: string
+          image_url: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          game_url?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          game_url?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

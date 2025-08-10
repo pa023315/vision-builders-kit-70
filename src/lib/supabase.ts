@@ -36,21 +36,26 @@ export interface NewsItem {
   updated_at: string
 }
 
-export interface CaseStudy {
+export interface CrowdfundingCase {
   id: string
   name: string
   description: string
-  amount: string
-  target: string
+  amount: number
+  target: number
   backers: number
-  platform: string
-  category: string
-  country: string
-  launch_date: string
-  success_rate: string
-  highlights: string[]
-  key_factors: string[]
+  success_rate: number
   image_url?: string
+  project_url?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface GameShowcase {
+  id: string
+  name: string
+  description: string
+  image_url?: string
+  game_url?: string
   created_at: string
   updated_at: string
 }
