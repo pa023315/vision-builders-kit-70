@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Plus, Edit, Trash2, Eye } from "lucide-react";
 import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from "@/hooks/useProjects";
 import { Project } from "@/lib/supabase";
+import { ImageUpload } from "@/components/ImageUpload";
 
 export const ProjectsAdmin = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -26,6 +27,7 @@ export const ProjectsAdmin = () => {
     country: "",
     launch_date: "",
     status: "active" as "active" | "completed" | "failed",
+    image_url: "",
   });
 
   const { data: projects = [], isLoading } = useProjects();
@@ -45,6 +47,7 @@ export const ProjectsAdmin = () => {
       country: "",
       launch_date: "",
       status: "active" as "active" | "completed" | "failed",
+      image_url: "",
     });
     setEditingProject(null);
   };
@@ -83,6 +86,7 @@ export const ProjectsAdmin = () => {
       country: project.country,
       launch_date: project.launch_date,
       status: project.status,
+      image_url: project.image_url || "",
     });
     setIsAddDialogOpen(true);
   };
@@ -296,6 +300,14 @@ export const ProjectsAdmin = () => {
                         required
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <ImageUpload
+                      label="專案圖片"
+                      value={formData.image_url}
+                      onChange={(url) => setFormData({ ...formData, image_url: url })}
+                    />
                   </div>
 
                   <div>

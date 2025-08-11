@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, TrendingUp, Users, DollarSign } from "lucide-react";
+import { ArrowRight, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
-import DataCard from "./DataCard";
 
 const HeroSection = () => {
   return (
@@ -44,36 +43,20 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Right Content - Quick Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <DataCard
-              title="台灣專案總數"
-              value="134"
-              subtitle="件活躍專案"
-              icon={TrendingUp}
-              trend="up"
-            />
-            <DataCard
-              title="累計集資金額"
-              value="$70.9M"
-              subtitle="新台幣"
-              icon={DollarSign}
-              trend="up"
-            />
-            <DataCard
-              title="支持人數"
-              value="58.8K"
-              subtitle="名支持者"
-              icon={Users}
-              trend="up"
-            />
-            <DataCard
-              title="成功率"
-              value="68%"
-              subtitle="平均成功率"
-              icon={TrendingUp}
-              trend="neutral"
-            />
+          {/* Right Content - Illustration/Visual */}
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl blur-xl"></div>
+            <div className="relative bg-card/50 backdrop-blur-sm border rounded-3xl p-8">
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+                  <TrendingUp className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold">數據驅動決策</h3>
+                <p className="text-muted-foreground">
+                  透過深度分析群眾集資數據，為您的遊戲開發與行銷策略提供科學依據
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
