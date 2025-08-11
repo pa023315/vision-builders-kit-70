@@ -19,6 +19,7 @@ export interface Project {
   launch_date: string
   success_rate: number
   status: 'active' | 'completed' | 'failed'
+  image_url?: string
   created_at: string
   updated_at: string
 }
