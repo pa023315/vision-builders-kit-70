@@ -170,74 +170,47 @@ const GlobalData = () => {
           </CardContent>
         </Card>
 
-        {/* 區域分析 */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">北美市場</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">市場佔比</span>
-                  <span className="font-semibold">45%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">平均金額</span>
-                  <span className="font-semibold">$85K</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">成功率</span>
-                  <span className="font-semibold">42%</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">歐洲市場</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">市場佔比</span>
-                  <span className="font-semibold">32%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">平均金額</span>
-                  <span className="font-semibold">$62K</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">成功率</span>
-                  <span className="font-semibold">38%</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">亞太市場</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">市場佔比</span>
-                  <span className="font-semibold">23%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">平均金額</span>
-                  <span className="font-semibold">$48K</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">成功率</span>
-                  <span className="font-semibold">35%</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Campfire 歷年統計 */}
+        <Card className="mt-12">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <BarChart className="h-5 w-5 mr-2 text-primary" />
+              Campfire 歷年統計
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <DataCard
+                title="遊戲總數"
+                value="1,234"
+                subtitle="累計專案數"
+                icon={BarChart}
+                trend="up"
+              />
+              <DataCard
+                title="集資金額"
+                value="¥2.8B"
+                subtitle="總募資金額"
+                icon={DollarSign}
+                trend="up"
+              />
+              <DataCard
+                title="贊助人數"
+                value="245K"
+                subtitle="總支持者數"
+                icon={Users}
+                trend="up"
+              />
+              <DataCard
+                title="成功率"
+                value="71%"
+                subtitle="平均成功率"
+                icon={TrendingUp}
+                trend="up"
+              />
+            </div>
+          </CardContent>
+        </Card>
       </main>
     </div>
   );
