@@ -11,6 +11,7 @@ import { Plus, Edit, Trash2, ExternalLink } from "lucide-react";
 import { useCrowdfundingCases, useCreateCrowdfundingCase, useUpdateCrowdfundingCase, useDeleteCrowdfundingCase } from "@/hooks/useCrowdfundingCases";
 import { useGameShowcases, useCreateGameShowcase, useUpdateGameShowcase, useDeleteGameShowcase } from "@/hooks/useGameShowcases";
 import { CrowdfundingCase, GameShowcase } from "@/lib/supabase";
+import { ImageUpload } from "@/components/ImageUpload";
 
 export const CasesAdmin = () => {
   const [crowdfundingDialogOpen, setCrowdfundingDialogOpen] = useState(false);
@@ -229,12 +230,13 @@ export const CasesAdmin = () => {
                       </div>
 
                       <div>
-                        <Label htmlFor="cf-image">專案圖片網址</Label>
-                        <Input
-                          id="cf-image"
+                        <ImageUpload
+                          label="專案圖片"
                           value={crowdfundingForm.image_url}
-                          onChange={(e) => setCrowdfundingForm({ ...crowdfundingForm, image_url: e.target.value })}
-                          placeholder="https://..."
+                          onChange={(url) => setCrowdfundingForm({ 
+                            ...crowdfundingForm, 
+                            image_url: url 
+                          })}
                         />
                       </div>
 
@@ -358,12 +360,13 @@ export const CasesAdmin = () => {
                       </div>
 
                       <div>
-                        <Label htmlFor="game-image">遊戲圖片網址</Label>
-                        <Input
-                          id="game-image"
+                        <ImageUpload
+                          label="遊戲圖片"
                           value={gameForm.image_url}
-                          onChange={(e) => setGameForm({ ...gameForm, image_url: e.target.value })}
-                          placeholder="https://..."
+                          onChange={(url) => setGameForm({ 
+                            ...gameForm, 
+                            image_url: url 
+                          })}
                         />
                       </div>
 
