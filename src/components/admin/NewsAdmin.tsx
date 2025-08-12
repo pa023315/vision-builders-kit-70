@@ -20,6 +20,7 @@ export const NewsAdmin = () => {
     author: "",
     category: "",
     published_at: "",
+    url: "",
   });
 
   const { data: news = [], isLoading } = useNews();
@@ -35,6 +36,7 @@ export const NewsAdmin = () => {
       author: "",
       category: "",
       published_at: "",
+      url: "",
     });
     setEditingNews(null);
   };
@@ -61,6 +63,7 @@ export const NewsAdmin = () => {
       author: newsItem.author,
       category: newsItem.category,
       published_at: newsItem.published_at.split('T')[0],
+      url: newsItem.url || "",
     });
     setIsAddDialogOpen(true);
   };
@@ -158,6 +161,17 @@ export const NewsAdmin = () => {
                     />
                   </div>
 
+                  <div>
+                    <Label htmlFor="url">外部連結</Label>
+                    <Input
+                      id="url"
+                      type="url"
+                      placeholder="https://example.com"
+                      value={formData.url}
+                      onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                    />
+                  </div>
+
                   <div className="flex justify-end gap-2">
                     <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                       取消
@@ -179,6 +193,7 @@ export const NewsAdmin = () => {
                   <TableHead>標題</TableHead>
                   <TableHead>作者</TableHead>
                   <TableHead>分類</TableHead>
+                  <TableHead>外部連結</TableHead>
                   <TableHead>發布日期</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
@@ -189,6 +204,15 @@ export const NewsAdmin = () => {
                     <TableCell className="font-medium">{newsItem.title}</TableCell>
                     <TableCell>{newsItem.author}</TableCell>
                     <TableCell>{newsItem.category}</TableCell>
+                    <TableCell>
+                      {newsItem.url ? (
+                        <a href={newsItem.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                          外部連結
+                        </a>
+                      ) : (
+                        "無"
+                      )}
+                    </TableCell>
                     <TableCell>
                       {new Date(newsItem.published_at).toLocaleDateString('zh-TW')}
                     </TableCell>

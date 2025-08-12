@@ -33,6 +33,7 @@ export interface NewsItem {
   published_at: string
   category: string
   featured_image?: string
+  url?: string
   created_at: string
   updated_at: string
 }

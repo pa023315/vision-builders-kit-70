@@ -2,42 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, ArrowRight, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useNews } from "@/hooks/useNews";
 
 const NewsSection = () => {
-  const newsItems = [
-    {
-      id: 1,
-      title: "2025年數位遊戲群眾集資趨勢分析報告發布",
-      summary: "最新報告顯示台灣數位遊戲群眾集資市場持續成長，平均成功率達68%...",
-      date: "2025-01-15",
-      category: "市場分析",
-      isExternal: false
-    },
-    {
-      id: 2,
-      title: "Kickstarter 公布2024年度遊戲類別統計數據",
-      summary: "2024年遊戲類別在Kickstarter平台表現亮眼，總集資額突破2億美元...",
-      date: "2025-01-10",
-      category: "國際動態",
-      isExternal: true
-    },
-    {
-      id: 3,
-      title: "台灣獨立遊戲開發者訪談：群眾集資成功秘訣",
-      summary: "專訪三位成功透過群眾集資的台灣遊戲開發者，分享他們的經驗與心得...",
-      date: "2025-01-08",
-      category: "專訪",
-      isExternal: false
-    },
-    {
-      id: 4,
-      title: "群眾集資平台比較：台灣 vs 國際平台優劣分析",
-      summary: "深入比較嘖嘖、FlyingV與Kickstarter等平台的特色與適用性...",
-      date: "2025-01-05",
-      category: "平台分析",
-      isExternal: false
-    }
-  ];
+  const { data: news = [] } = useNews();
+  
+  // Show latest 4 news items
+  const newsItems = news.slice(0, 4);
 
   return (
     <section className="py-20 bg-muted/30">
@@ -64,7 +35,7 @@ const NewsSection = () => {
                   </span>
                   <div className="flex items-center text-xs text-muted-foreground">
                     <Calendar className="h-3 w-3 mr-1" />
-                    {new Date(item.date).toLocaleDateString('zh-TW')}
+                    {new Date(item.published_at).toLocaleDateString('zh-TW')}
                   </div>
                 </div>
                 <CardTitle className="text-lg group-hover:text-primary transition-colors">
@@ -73,16 +44,24 @@ const NewsSection = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground mb-4 line-clamp-2">
-                  {item.summary}
+                  {item.excerpt}
                 </p>
-                <Button variant="ghost" size="sm" className="p-0 h-auto">
-                  閱讀更多
-                  {item.isExternal ? (
+                {item.url ? (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="p-0 h-auto"
+                    onClick={() => window.open(item.url, '_blank', 'noopener,noreferrer')}
+                  >
+                    查看外部連結
                     <ExternalLink className="ml-1 h-3 w-3" />
-                  ) : (
+                  </Button>
+                ) : (
+                  <Button variant="ghost" size="sm" className="p-0 h-auto">
+                    閱讀更多
                     <ArrowRight className="ml-1 h-3 w-3" />
-                  )}
-                </Button>
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))}
