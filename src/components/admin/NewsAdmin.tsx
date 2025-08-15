@@ -6,13 +6,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2, Link, Loader2 } from "lucide-react";
 import { useNews, useCreateNews, useUpdateNews, useDeleteNews } from "@/hooks/useNews";
 import { NewsItem } from "@/lib/supabase";
 
 export const NewsAdmin = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
+  const [isUrlFetching, setIsUrlFetching] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -71,6 +72,47 @@ export const NewsAdmin = () => {
   const handleDelete = (id: string) => {
     if (confirm("確定要刪除此新聞嗎？")) {
       deleteNews.mutate(id);
+    }
+  };
+
+  const handleUrlFetch = async () => {
+    if (!formData.url) {
+      alert('請先輸入網址');
+      return;
+    }
+
+    setIsUrlFetching(true);
+    try {
+      // 使用 Supabase Edge Function 來獲取網頁內容
+      const response = await fetch('https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/fetch-news', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url: formData.url }),
+      });
+
+      if (!response.ok) {
+        throw new Error('無法獲取網頁內容');
+      }
+
+      const data = await response.json();
+      
+      setFormData(prev => ({
+        ...prev,
+        title: data.title || prev.title,
+        excerpt: data.excerpt || prev.excerpt,
+        content: data.content || prev.content,
+        author: data.author || prev.author,
+        category: data.category || prev.category,
+      }));
+
+      alert('網頁內容已自動填入！');
+    } catch (error) {
+      console.error('獲取網頁內容失敗:', error);
+      alert('無法獲取網頁內容，請手動輸入');
+    } finally {
+      setIsUrlFetching(false);
     }
   };
 
@@ -162,14 +204,29 @@ export const NewsAdmin = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="url">外部連結</Label>
-                    <Input
-                      id="url"
-                      type="url"
-                      placeholder="https://example.com"
-                      value={formData.url}
-                      onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                    />
+                    <Label htmlFor="url">新聞網址</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="url"
+                        type="url"
+                        placeholder="貼上新聞網址，點擊抓取按鈕自動填入內容"
+                        value={formData.url}
+                        onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleUrlFetch}
+                        disabled={isUrlFetching || !formData.url}
+                      >
+                        {isUrlFetching ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Link className="h-4 w-4" />
+                        )}
+                        抓取
+                      </Button>
+                    </div>
                   </div>
 
                   <div className="flex justify-end gap-2">

@@ -8,7 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, Upload } from "lucide-react";
+import * as XLSX from 'xlsx';
 import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from "@/hooks/useProjects";
 import { Project } from "@/lib/supabase";
 import { ImageUpload } from "@/components/ImageUpload";
@@ -97,6 +98,53 @@ export const ProjectsAdmin = () => {
     }
   };
 
+  const handleExcelImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        // 批量創建專案
+        jsonData.forEach((row: any) => {
+          const projectData = {
+            name: row['專案名稱'] || row['name'] || '',
+            description: row['專案描述'] || row['description'] || '',
+            amount: parseInt(row['募資金額'] || row['amount'] || '0'),
+            target: parseInt(row['目標金額'] || row['target'] || '0'),
+            backers: parseInt(row['支持人數'] || row['backers'] || '0'),
+            platform: row['平台'] || row['platform'] || '',
+            category: row['分類'] || row['category'] || '',
+            country: row['國家'] || row['country'] || '',
+            launch_date: row['上線日期'] || row['launch_date'] || '',
+            status: (row['狀態'] || row['status'] || 'active') as "active" | "completed" | "failed",
+            image_url: row['圖片網址'] || row['image_url'] || '',
+            success_rate: Math.round((parseInt(row['募資金額'] || row['amount'] || '0') / parseInt(row['目標金額'] || row['target'] || '1')) * 100),
+          };
+
+          if (projectData.name && projectData.description) {
+            createProject.mutate(projectData);
+          }
+        });
+
+        alert('Excel 匯入完成！');
+      } catch (error) {
+        console.error('Excel 解析錯誤:', error);
+        alert('Excel 格式錯誤，請檢查檔案格式');
+      }
+    };
+    reader.readAsArrayBuffer(file);
+    
+    // 清除選擇的檔案
+    event.target.value = '';
+  };
+
   if (isLoading) {
     return <div>載入中...</div>;
   }
@@ -175,14 +223,29 @@ export const ProjectsAdmin = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>專案管理</CardTitle>
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={resetForm}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  新增專案
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex gap-2">
+              <input
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleExcelImport}
+                style={{ display: 'none' }}
+                id="excel-upload"
+              />
+              <Button 
+                variant="outline"
+                onClick={() => document.getElementById('excel-upload')?.click()}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Excel 匯入
+              </Button>
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button onClick={resetForm}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    新增專案
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>
                     {editingProject ? "編輯專案" : "新增專案"}
@@ -338,8 +401,9 @@ export const ProjectsAdmin = () => {
                     </Button>
                   </div>
                 </form>
-              </DialogContent>
-            </Dialog>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
