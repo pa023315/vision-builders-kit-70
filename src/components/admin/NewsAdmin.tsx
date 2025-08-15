@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Plus, Edit, Trash2, Link, Loader2 } from "lucide-react";
 import { useNews, useCreateNews, useUpdateNews, useDeleteNews } from "@/hooks/useNews";
 import { NewsItem } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 export const NewsAdmin = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -83,20 +84,14 @@ export const NewsAdmin = () => {
 
     setIsUrlFetching(true);
     try {
-      // 使用 Supabase Edge Function 來獲取網頁內容
-      const response = await fetch('https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/fetch-news', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url: formData.url }),
+      // 使用 Supabase client 調用 edge function
+      const { data, error } = await supabase.functions.invoke('fetch-news', {
+        body: { url: formData.url }
       });
 
-      if (!response.ok) {
-        throw new Error('無法獲取網頁內容');
+      if (error) {
+        throw error;
       }
-
-      const data = await response.json();
       
       setFormData(prev => ({
         ...prev,
