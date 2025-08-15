@@ -10,6 +10,7 @@ import { Plus, Edit, Trash2, Link, Loader2 } from "lucide-react";
 import { useNews, useCreateNews, useUpdateNews, useDeleteNews } from "@/hooks/useNews";
 import { NewsItem } from "@/lib/supabase";
 import { supabase } from "@/integrations/supabase/client";
+import { ImageUpload } from "@/components/ImageUpload";
 
 export const NewsAdmin = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -23,6 +24,7 @@ export const NewsAdmin = () => {
     category: "",
     published_at: "",
     url: "",
+    featured_image: "",
   });
 
   const { data: news = [], isLoading } = useNews();
@@ -39,6 +41,7 @@ export const NewsAdmin = () => {
       category: "",
       published_at: "",
       url: "",
+      featured_image: "",
     });
     setEditingNews(null);
   };
@@ -66,6 +69,7 @@ export const NewsAdmin = () => {
       category: newsItem.category,
       published_at: newsItem.published_at.split('T')[0],
       url: newsItem.url || "",
+      featured_image: newsItem.featured_image || "",
     });
     setIsAddDialogOpen(true);
   };
@@ -222,6 +226,14 @@ export const NewsAdmin = () => {
                         抓取
                       </Button>
                     </div>
+                  </div>
+
+                  <div>
+                    <ImageUpload
+                      value={formData.featured_image}
+                      onChange={(url) => setFormData({ ...formData, featured_image: url })}
+                      label="特色圖片"
+                    />
                   </div>
 
                   <div className="flex justify-end gap-2">

@@ -27,7 +27,16 @@ const NewsSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {newsItems.map((item) => (
-            <Card key={item.id} className="group hover:shadow-lg transition-all duration-300">
+            <Card key={item.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
+              {item.featured_image && (
+                <div className="aspect-video overflow-hidden">
+                  <img 
+                    src={item.featured_image} 
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              )}
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full">
