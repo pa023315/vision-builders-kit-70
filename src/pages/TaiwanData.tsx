@@ -28,10 +28,10 @@ const TaiwanData = () => {
       ? Math.round(taiwanProjects.filter(p => p.status === 'completed').length / taiwanProjects.length * 100)
       : 0,
     medianAmount: taiwanProjects.length > 0 
-      ? taiwanProjects.sort((a, b) => a.amount - b.amount)[Math.floor(taiwanProjects.length / 2)]?.amount || 0
+      ? [...taiwanProjects].sort((a, b) => a.amount - b.amount)[Math.floor(taiwanProjects.length / 2)]?.amount || 0
       : 0,
     medianBackers: taiwanProjects.length > 0 
-      ? taiwanProjects.sort((a, b) => a.backers - b.backers)[Math.floor(taiwanProjects.length / 2)]?.backers || 0
+      ? [...taiwanProjects].sort((a, b) => a.backers - b.backers)[Math.floor(taiwanProjects.length / 2)]?.backers || 0
       : 0,
   };
 
@@ -145,7 +145,7 @@ const TaiwanData = () => {
                   <div className="text-right">
                     <div className="font-bold text-lg">NT$ {(project.amount / 1000000).toFixed(1)}M</div>
                     <div className="text-sm text-muted-foreground">
-                      {project.backers.toLocaleString()} 人支持 • {Math.round(project.success_rate)}%
+                      {project.backers.toLocaleString()} 人支持 • {project.target > 0 ? Math.round((project.amount / project.target) * 100) : 0}%
                     </div>
                   </div>
                 </div>
