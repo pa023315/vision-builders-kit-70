@@ -164,8 +164,15 @@ export const ProjectsAdmin = () => {
 
   // 計算台灣專案統計數據
   const successfulTaiwanProjects = taiwanProjects.filter(p => p.status === 'completed');
+  console.log('所有台灣專案:', taiwanProjects.length);
+  console.log('成功台灣專案:', successfulTaiwanProjects.length);
+  console.log('專案狀態分布:', taiwanProjects.map(p => ({ name: p.name, status: p.status })));
+  
   const totalAmountSuccessful = successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0);
   const totalBackersSuccessful = successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0);
+  
+  console.log('成功專案總金額:', totalAmountSuccessful);
+  console.log('成功專案總人數:', totalBackersSuccessful);
   
   const taiwanStats = {
     totalProjects: taiwanProjects.length,
