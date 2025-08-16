@@ -167,8 +167,8 @@ export const ProjectsAdmin = () => {
   
   const taiwanStats = {
     totalProjects: taiwanProjects.length, // 顯示所有專案數量（不論狀態）
-    totalAmount: successfulProjects.reduce((sum, p) => sum + p.amount, 0),
-    totalBackers: successfulProjects.reduce((sum, p) => sum + p.backers, 0),
+    totalAmount: successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0), // 只計算成功專案的累計金額
+    totalBackers: successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0), // 只計算成功專案的支持人數
     successRate: taiwanProjects.length > 0 ? Math.round((successfulProjects.length / taiwanProjects.length) * 100) : 0,
     medianAmount: (() => {
       if (successfulProjects.length === 0) return 0;
