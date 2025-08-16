@@ -162,27 +162,13 @@ export const ProjectsAdmin = () => {
   const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
 
-  // 自動更新專案狀態：贊助金額超過目標金額則為成功
-  const updateProjectStatus = (project: Project) => {
-    const newStatus = project.amount >= project.target ? 'completed' : 'failed';
-    if (project.status !== newStatus) {
-      updateProject.mutate({ id: project.id, status: newStatus });
-    }
-  };
-
-  // 對台灣專案執行狀態更新
-  taiwanProjects.forEach(updateProjectStatus);
-
-  // 計算台灣專案統計數據 - 使用實時計算的成功狀態
-  const successfulTaiwanProjects = taiwanProjects.filter(p => p.amount >= p.target);
-  
-  const totalAmountSuccessful = successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0);
-  const totalBackersSuccessful = successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0);
+  // 計算台灣專案統計數據 - 只計算成功專案（贊助金額>=目標金額）
+  const successfulTaiwanProjects = taiwanProjects.filter(p => p.amount >= p.target && p.target > 0);
   
   const taiwanStats = {
     totalProjects: taiwanProjects.length,
-    totalAmount: totalAmountSuccessful,
-    totalBackers: totalBackersSuccessful,
+    totalAmount: successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0),
+    totalBackers: successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0),
     successRate: taiwanProjects.length > 0 ? Math.round((successfulTaiwanProjects.length / taiwanProjects.length) * 100) : 0,
     medianAmount: successfulTaiwanProjects.length > 0 ? 
       (() => {
@@ -200,7 +186,8 @@ export const ProjectsAdmin = () => {
           ? Math.round((sortedBackers[mid - 1] + sortedBackers[mid]) / 2)
           : sortedBackers[mid];
       })() : 0,
-    averageOrderValue: totalBackersSuccessful > 0 ? Math.round(totalAmountSuccessful / totalBackersSuccessful) : 0,
+    averageOrderValue: successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0) > 0 ? 
+      Math.round(successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0) / successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0)) : 0,
   };
 
   const handleBulkDelete = (projectList: Project[], title: string) => {
