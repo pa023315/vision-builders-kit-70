@@ -174,7 +174,7 @@ export const ProjectsAdmin = () => {
     <Card className="mb-6">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{title}</CardTitle>
+          <CardTitle className="text-lg">{title} ({projectList.length})</CardTitle>
           {showActions && (
             <div className="flex gap-2">
               <input
@@ -293,7 +293,7 @@ export const ProjectsAdmin = () => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>專案管理</CardTitle>
+            <CardTitle>專案管理 (總計: {projects.length} 個專案)</CardTitle>
             <div className="flex gap-2">
               <input
                 type="file"
