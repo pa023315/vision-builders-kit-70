@@ -98,12 +98,23 @@ const News = () => {
                     </div>
                     <span>作者：{news.author}</span>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4 leading-relaxed">
-                  {news.excerpt}
-                </p>
+                 </div>
+               </CardHeader>
+               <CardContent>
+                 <div className="space-y-4">
+                   {news.featured_image && (
+                     <div className="aspect-video overflow-hidden rounded-lg">
+                       <img 
+                         src={news.featured_image} 
+                         alt={news.title}
+                         className="w-full h-full object-cover"
+                       />
+                     </div>
+                   )}
+                   <p className="text-muted-foreground leading-relaxed">
+                     {news.excerpt}
+                   </p>
+                 </div>
                 <div className="flex items-center justify-end">
                   {news.url ? (
                     <Button 

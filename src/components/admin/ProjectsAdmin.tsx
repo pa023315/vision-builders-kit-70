@@ -111,22 +111,24 @@ export const ProjectsAdmin = () => {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        // 批量創建專案
-        jsonData.forEach((row: any) => {
-          const projectData = {
-            name: row['專案名稱'] || row['name'] || '',
-            description: row['專案描述'] || row['description'] || '',
-            amount: parseInt(row['募資金額'] || row['amount'] || '0'),
-            target: parseInt(row['目標金額'] || row['target'] || '0'),
-            backers: parseInt(row['支持人數'] || row['backers'] || '0'),
-            platform: row['平台'] || row['platform'] || '',
-            category: row['分類'] || row['category'] || '',
-            country: row['國家'] || row['country'] || '',
-            launch_date: row['上線日期'] || row['launch_date'] || '',
-            status: (row['狀態'] || row['status'] || 'active') as "active" | "completed" | "failed",
-            image_url: row['圖片網址'] || row['image_url'] || '',
-            success_rate: Math.round((parseInt(row['募資金額'] || row['amount'] || '0') / parseInt(row['目標金額'] || row['target'] || '1')) * 100),
-          };
+         // 批量創建專案 - 支援新格式：狀態|平台|時程|類型|名稱|目標金額|贊助金額|達成率|人數|網址
+         jsonData.forEach((row: any) => {
+           const projectData = {
+             name: row['名稱'] || row['專案名稱'] || row['name'] || '',
+             description: row['描述'] || row['專案描述'] || row['description'] || row['名稱'] || '',
+             amount: parseInt(row['贊助金額'] || row['募資金額'] || row['amount'] || '0'),
+             target: parseInt(row['目標金額'] || row['target'] || '0'),
+             backers: parseInt(row['人數'] || row['支持人數'] || row['backers'] || '0'),
+             platform: row['平台'] || row['platform'] || '',
+             category: row['類型'] || row['分類'] || row['category'] || '',
+             country: '台灣', // 固定為台灣
+             launch_date: row['時程'] || row['上線日期'] || row['launch_date'] || '',
+             status: (row['狀態'] === '已完成' ? 'completed' : 
+                     row['狀態'] === '失敗' ? 'failed' : 
+                     row['status'] || 'active') as "active" | "completed" | "failed",
+             image_url: row['網址'] || row['圖片網址'] || row['image_url'] || '',
+             success_rate: parseInt(row['達成率'] || '0') || Math.round((parseInt(row['贊助金額'] || row['amount'] || '0') / parseInt(row['目標金額'] || row['target'] || '1')) * 100),
+           };
 
           if (projectData.name && projectData.description) {
             createProject.mutate(projectData);
@@ -164,32 +166,46 @@ export const ProjectsAdmin = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>專案名稱</TableHead>
-                <TableHead>平台</TableHead>
-                <TableHead>國家</TableHead>
-                <TableHead>募資金額</TableHead>
-                <TableHead>達成率</TableHead>
-                <TableHead>狀態</TableHead>
-                <TableHead>操作</TableHead>
+                 <TableHead>狀態</TableHead>
+                 <TableHead>平台</TableHead>
+                 <TableHead>時程</TableHead>
+                 <TableHead>類型</TableHead>
+                 <TableHead>名稱</TableHead>
+                 <TableHead>目標金額</TableHead>
+                 <TableHead>贊助金額</TableHead>
+                 <TableHead>達成率</TableHead>
+                 <TableHead>人數</TableHead>
+                 <TableHead>網址</TableHead>
+                 <TableHead>操作</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {projectList.map((project) => (
-                <TableRow key={project.id}>
-                  <TableCell className="font-medium">{project.name}</TableCell>
-                  <TableCell>{project.platform}</TableCell>
-                  <TableCell>{project.country}</TableCell>
-                  <TableCell>{project.amount.toLocaleString()}</TableCell>
-                  <TableCell>{project.success_rate}%</TableCell>
-                  <TableCell>
-                    <Badge variant={
-                      project.status === "completed" ? "default" :
-                      project.status === "active" ? "secondary" : "destructive"
-                    }>
-                      {project.status === "completed" ? "已完成" :
-                       project.status === "active" ? "進行中" : "失敗"}
-                    </Badge>
-                  </TableCell>
+               {projectList.map((project) => (
+                 <TableRow key={project.id}>
+                   <TableCell>
+                     <Badge variant={
+                       project.status === "completed" ? "default" :
+                       project.status === "active" ? "secondary" : "destructive"
+                     }>
+                       {project.status === "completed" ? "已完成" :
+                        project.status === "active" ? "進行中" : "失敗"}
+                     </Badge>
+                   </TableCell>
+                   <TableCell>{project.platform}</TableCell>
+                   <TableCell>{project.launch_date}</TableCell>
+                   <TableCell>{project.category}</TableCell>
+                   <TableCell className="font-medium">{project.name}</TableCell>
+                   <TableCell>{project.target.toLocaleString()}</TableCell>
+                   <TableCell>{project.amount.toLocaleString()}</TableCell>
+                   <TableCell>{project.success_rate}%</TableCell>
+                   <TableCell>{project.backers}</TableCell>
+                   <TableCell>
+                     {project.image_url ? (
+                       <a href={project.image_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                         連結
+                       </a>
+                     ) : "無"}
+                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Button
