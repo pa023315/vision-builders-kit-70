@@ -175,21 +175,9 @@ export const ProjectsAdmin = () => {
 
   // 計算台灣專案統計數據 - 使用實時計算的成功狀態
   const successfulTaiwanProjects = taiwanProjects.filter(p => p.amount >= p.target);
-  console.log('所有台灣專案:', taiwanProjects.length);
-  console.log('成功台灣專案:', successfulTaiwanProjects.length);
-  console.log('專案狀態分布:', taiwanProjects.map(p => ({ 
-    name: p.name, 
-    status: p.status, 
-    amount: p.amount, 
-    target: p.target,
-    isSuccess: p.amount >= p.target 
-  })));
   
   const totalAmountSuccessful = successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0);
   const totalBackersSuccessful = successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0);
-  
-  console.log('成功專案總金額:', totalAmountSuccessful);
-  console.log('成功專案總人數:', totalBackersSuccessful);
   
   const taiwanStats = {
     totalProjects: taiwanProjects.length,
@@ -201,7 +189,7 @@ export const ProjectsAdmin = () => {
         const sortedAmounts = successfulTaiwanProjects.map(p => p.amount).sort((a, b) => a - b);
         const mid = Math.floor(sortedAmounts.length / 2);
         return sortedAmounts.length % 2 === 0 
-          ? (sortedAmounts[mid - 1] + sortedAmounts[mid]) / 2 
+          ? Math.round((sortedAmounts[mid - 1] + sortedAmounts[mid]) / 2)
           : sortedAmounts[mid];
       })() : 0,
     medianBackers: successfulTaiwanProjects.length > 0 ? 
@@ -209,10 +197,10 @@ export const ProjectsAdmin = () => {
         const sortedBackers = successfulTaiwanProjects.map(p => p.backers).sort((a, b) => a - b);
         const mid = Math.floor(sortedBackers.length / 2);
         return sortedBackers.length % 2 === 0 
-          ? (sortedBackers[mid - 1] + sortedBackers[mid]) / 2 
+          ? Math.round((sortedBackers[mid - 1] + sortedBackers[mid]) / 2)
           : sortedBackers[mid];
       })() : 0,
-    averageOrderValue: totalBackersSuccessful > 0 ? totalAmountSuccessful / totalBackersSuccessful : 0,
+    averageOrderValue: totalBackersSuccessful > 0 ? Math.round(totalAmountSuccessful / totalBackersSuccessful) : 0,
   };
 
   const handleBulkDelete = (projectList: Project[], title: string) => {
