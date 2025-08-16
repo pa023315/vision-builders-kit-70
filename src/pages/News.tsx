@@ -103,7 +103,7 @@ const News = () => {
                <CardContent>
                   <div className="space-y-4">
                     {news.featured_image && (
-                      <div className="w-48 h-32 overflow-hidden rounded-lg float-left mr-4 mb-2">
+                      <div className="w-32 h-24 flex-shrink-0 overflow-hidden rounded-lg float-left mr-4 mb-2">
                         <img 
                           src={news.featured_image} 
                           alt={news.title}
@@ -111,11 +111,13 @@ const News = () => {
                         />
                       </div>
                     )}
-                    <p className="text-muted-foreground leading-relaxed">
-                      {news.excerpt}
-                    </p>
+                    <div className="overflow-hidden">
+                      <p className="text-muted-foreground leading-relaxed">
+                        {news.excerpt}
+                      </p>
+                    </div>
                   </div>
-                <div className="flex items-center justify-end">
+                <div className="flex items-center justify-end clear-both pt-4">
                   {news.url ? (
                     <Button 
                       variant="ghost" 
