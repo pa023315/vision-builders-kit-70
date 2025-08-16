@@ -162,10 +162,11 @@ export const ProjectsAdmin = () => {
   const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
 
-  // 計算台灣專案統計數據
+  // 計算台灣專案統計數據（只計算成功專案）
+  const successfulTaiwanProjects = taiwanProjects.filter(p => p.status === 'completed');
   const taiwanStats = {
-    totalAmount: taiwanProjects.reduce((sum, p) => sum + p.amount, 0),
-    totalBackers: taiwanProjects.reduce((sum, p) => sum + p.backers, 0),
+    totalAmount: successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0),
+    totalBackers: successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0),
   };
 
   const handleBulkDelete = (projectList: Project[], title: string) => {
