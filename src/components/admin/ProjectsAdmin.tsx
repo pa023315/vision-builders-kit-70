@@ -162,32 +162,30 @@ export const ProjectsAdmin = () => {
   const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
 
-  // 計算台灣專案統計數據 - 只計算成功專案（贊助金額>=目標金額）
-  const successfulTaiwanProjects = taiwanProjects.filter(p => p.amount >= p.target && p.target > 0);
+  // 直接計算台灣專案統計數據
+  const successfulProjects = taiwanProjects.filter(p => p.amount >= p.target && p.target > 0);
+  const totalAmount = successfulProjects.reduce((sum, p) => sum + p.amount, 0);
+  const totalBackers = successfulProjects.reduce((sum, p) => sum + p.backers, 0);
+  
+  // 計算中位數
+  const getMedian = (values) => {
+    if (values.length === 0) return 0;
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 
+      ? Math.round((sorted[mid - 1] + sorted[mid]) / 2)
+      : sorted[mid];
+  };
   
   const taiwanStats = {
     totalProjects: taiwanProjects.length,
-    totalAmount: successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0),
-    totalBackers: successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0),
-    successRate: taiwanProjects.length > 0 ? Math.round((successfulTaiwanProjects.length / taiwanProjects.length) * 100) : 0,
-    medianAmount: successfulTaiwanProjects.length > 0 ? 
-      (() => {
-        const sortedAmounts = successfulTaiwanProjects.map(p => p.amount).sort((a, b) => a - b);
-        const mid = Math.floor(sortedAmounts.length / 2);
-        return sortedAmounts.length % 2 === 0 
-          ? Math.round((sortedAmounts[mid - 1] + sortedAmounts[mid]) / 2)
-          : sortedAmounts[mid];
-      })() : 0,
-    medianBackers: successfulTaiwanProjects.length > 0 ? 
-      (() => {
-        const sortedBackers = successfulTaiwanProjects.map(p => p.backers).sort((a, b) => a - b);
-        const mid = Math.floor(sortedBackers.length / 2);
-        return sortedBackers.length % 2 === 0 
-          ? Math.round((sortedBackers[mid - 1] + sortedBackers[mid]) / 2)
-          : sortedBackers[mid];
-      })() : 0,
-    averageOrderValue: successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0) > 0 ? 
-      Math.round(successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0) / successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0)) : 0,
+    totalAmount: totalAmount,
+    totalBackers: totalBackers,
+    successRate: taiwanProjects.filter(p => p.target > 0).length > 0 ? 
+      Math.round((successfulProjects.length / taiwanProjects.filter(p => p.target > 0).length) * 100) : 0,
+    medianAmount: getMedian(successfulProjects.map(p => p.amount)),
+    medianBackers: getMedian(successfulProjects.map(p => p.backers)),
+    averageOrderValue: totalBackers > 0 ? Math.round(totalAmount / totalBackers) : 0,
   };
 
   const handleBulkDelete = (projectList: Project[], title: string) => {
@@ -602,8 +600,8 @@ export const ProjectsAdmin = () => {
                   <div>
                     <CardTitle className="text-lg">台灣專案 ({taiwanProjects.length})</CardTitle>
                     <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
-                      <span>總贊助金額: NT$ {(successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0) / 1000000).toFixed(1)}M</span>
-                      <span>總贊助人數: {successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0).toLocaleString()}人</span>
+                      <span>總贊助金額: NT$ {(taiwanStats.totalAmount / 1000000).toFixed(1)}M</span>
+                      <span>總贊助人數: {taiwanStats.totalBackers.toLocaleString()}人</span>
                     </div>
                   </div>
                   <div className="flex gap-2">
