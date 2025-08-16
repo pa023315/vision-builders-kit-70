@@ -177,6 +177,19 @@ export const ProjectsAdmin = () => {
     }
   };
 
+  const handleBulkUpdateCategories = () => {
+    if (confirm("確定要將所有「手」類型更新為「手機」嗎？")) {
+      projects.forEach(project => {
+        if (project.category === "手") {
+          updateProject.mutate({ 
+            id: project.id, 
+            category: "手機" 
+          });
+        }
+      });
+    }
+  };
+
   const renderProjectTable = (projectList: Project[], title: string, showActions: boolean = false) => (
     <Card className="mb-6">
       <CardHeader>
@@ -315,6 +328,12 @@ export const ProjectsAdmin = () => {
               >
                 <Upload className="h-4 w-4 mr-2" />
                 Excel 匯入
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleBulkUpdateCategories}
+              >
+                更新類型欄位
               </Button>
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
