@@ -158,7 +158,7 @@ export const ProjectsAdmin = () => {
   }
 
   // Filter projects by platform and country
-  const taiwanProjects = projects.filter(p => p.country === '台灣');
+  const taiwanProjects = projects.filter(p => p.country === '台灣').sort((a, b) => b.amount - a.amount);
   const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
 
