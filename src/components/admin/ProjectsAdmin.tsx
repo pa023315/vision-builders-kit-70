@@ -424,7 +424,7 @@ export const ProjectsAdmin = () => {
 
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="category">分類</Label>
+                      <Label htmlFor="category">類型</Label>
                       <Input
                         id="category"
                         value={formData.category}
