@@ -125,7 +125,7 @@ export const ProjectsAdmin = () => {
              category: row['類型'] || row['分類'] || row['category'] || '',
              country: '台灣', // 固定為台灣
              launch_date: row['時程'] || row['上線日期'] || row['launch_date'] || '',
-             status: (row['狀態'] === '已完成' ? 'completed' : 
+             status: (row['狀態'] === '成功' || row['狀態'] === '已完成' ? 'completed' : 
                      row['狀態'] === '失敗' ? 'failed' : 
                      row['status'] || 'active') as "active" | "completed" | "failed",
              image_url: row['網址'] || row['圖片網址'] || row['image_url'] || '',
@@ -236,8 +236,8 @@ export const ProjectsAdmin = () => {
                        project.status === "completed" ? "default" :
                        project.status === "active" ? "secondary" : "destructive"
                      }>
-                       {project.status === "completed" ? "已完成" :
-                        project.status === "active" ? "進行中" : "失敗"}
+                        {project.status === "completed" ? "成功" :
+                         project.status === "active" ? "進行中" : "失敗"}
                      </Badge>
                    </TableCell>
                    <TableCell>{project.platform}</TableCell>
@@ -452,7 +452,7 @@ export const ProjectsAdmin = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="active">進行中</SelectItem>
-                        <SelectItem value="completed">已完成</SelectItem>
+                        <SelectItem value="completed">成功</SelectItem>
                         <SelectItem value="failed">失敗</SelectItem>
                       </SelectContent>
                     </Select>
