@@ -162,11 +162,28 @@ export const ProjectsAdmin = () => {
   const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
 
-  // 計算台灣專案統計數據
-  const successfulTaiwanProjects = taiwanProjects.filter(p => p.status === 'completed');
+  // 自動更新專案狀態：贊助金額超過目標金額則為成功
+  const updateProjectStatus = (project: Project) => {
+    const newStatus = project.amount >= project.target ? 'completed' : 'failed';
+    if (project.status !== newStatus) {
+      updateProject.mutate({ id: project.id, status: newStatus });
+    }
+  };
+
+  // 對台灣專案執行狀態更新
+  taiwanProjects.forEach(updateProjectStatus);
+
+  // 計算台灣專案統計數據 - 使用實時計算的成功狀態
+  const successfulTaiwanProjects = taiwanProjects.filter(p => p.amount >= p.target);
   console.log('所有台灣專案:', taiwanProjects.length);
   console.log('成功台灣專案:', successfulTaiwanProjects.length);
-  console.log('專案狀態分布:', taiwanProjects.map(p => ({ name: p.name, status: p.status })));
+  console.log('專案狀態分布:', taiwanProjects.map(p => ({ 
+    name: p.name, 
+    status: p.status, 
+    amount: p.amount, 
+    target: p.target,
+    isSuccess: p.amount >= p.target 
+  })));
   
   const totalAmountSuccessful = successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0);
   const totalBackersSuccessful = successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0);
