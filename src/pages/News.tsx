@@ -1,9 +1,9 @@
 import Header from "@/components/Header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Calendar, ExternalLink, Search, Filter } from "lucide-react";
+import { Heart, MessageCircle, Search, Filter } from "lucide-react";
 import { useState } from "react";
 import { useNews } from "@/hooks/useNews";
 
@@ -13,13 +13,15 @@ const News = () => {
   
   const { data: news = [] } = useNews();
 
-  // Get unique categories from news data
-  const categories = ["全部", ...new Set(news.map(item => item.category))];
+  // Category tags for filtering
+  const categories = ["全部", "外部連結", "知識", "一般"];
 
   const filteredNews = news.filter(newsItem => {
     const matchesSearch = newsItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          newsItem.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "全部" || newsItem.category === selectedCategory;
+    const matchesCategory = selectedCategory === "全部" || 
+                          (selectedCategory === "外部連結" && newsItem.url) ||
+                          (selectedCategory !== "外部連結" && newsItem.category === selectedCategory);
     return matchesSearch && matchesCategory;
   });
 
@@ -39,110 +41,130 @@ const News = () => {
           </p>
         </div>
 
-        {/* 搜尋和篩選 */}
-        <div className="mb-8 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="搜尋新聞標題或內容..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <div className="flex flex-wrap gap-2">
-                {categories.map(category => (
-                  <Button
-                    key={category}
-                    variant={selectedCategory === category ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCategory(category)}
-                    className="text-xs"
-                  >
-                    {category}
-                  </Button>
-                ))}
-              </div>
-            </div>
+        {/* 搜尋欄 */}
+        <div className="mb-8">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="搜尋新聞標題或內容..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
         </div>
 
-        {/* 新聞列表 */}
-        <div className="space-y-6">
-          {filteredNews.map((news) => (
-            <Card key={news.id} className="group hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Badge variant="outline" className="text-xs">
-                        {news.category}
-                      </Badge>
-                      {news.url && (
-                        <Badge variant="destructive" className="text-xs">
-                          外部連結
-                        </Badge>
-                      )}
-                    </div>
-                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                      {news.title}
-                    </CardTitle>
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground gap-4">
-                    <div className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      {new Date(news.published_at).toLocaleDateString('zh-TW')}
-                    </div>
-                    <span>作者：{news.author}</span>
-                  </div>
-                 </div>
-               </CardHeader>
-               <CardContent>
-                  <div className="space-y-4">
-                    {news.featured_image && (
-                      <div className="w-32 h-24 flex-shrink-0 overflow-hidden rounded-lg float-left mr-4 mb-2">
-                        <img 
-                          src={news.featured_image} 
-                          alt={news.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="overflow-hidden">
-                      <p className="text-muted-foreground leading-relaxed">
-                        {news.excerpt}
-                      </p>
-                    </div>
-                  </div>
-                <div className="flex items-center justify-end clear-both pt-4">
-                  {news.url ? (
-                    <Button 
-                      variant="ghost" 
-                      className="group/btn"
-                      onClick={() => window.open(news.url, '_blank', 'noopener,noreferrer')}
-                    >
-                      查看外部連結
-                      <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover/btn:scale-110" />
-                    </Button>
-                  ) : (
-                    <Button variant="ghost" className="group/btn">
-                      閱讀完整文章
-                      <span className="ml-2 transition-transform group-hover/btn:translate-x-1">→</span>
-                    </Button>
-                  )}
+        {/* 分類篩選標籤 */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {categories.map((category) => (
+            <Badge
+              key={category}
+              variant={selectedCategory === category ? "default" : "secondary"}
+              className={`px-4 py-2 text-sm cursor-pointer transition-all hover:scale-105 ${
+                selectedCategory === category
+                  ? "bg-primary text-primary-foreground" 
+                  : "bg-muted hover:bg-muted/80"
+              }`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </Badge>
+          ))}
+          <div className="flex items-center gap-2 ml-auto">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Button variant="outline" size="sm">
+              全部
+            </Button>
+            <Button variant="outline" size="sm" className="bg-blue-500 text-white border-blue-500">
+              一般
+            </Button>
+            <Button variant="outline" size="sm">
+              知識
+            </Button>
+          </div>
+        </div>
+
+        {/* 新聞網格 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+          {filteredNews.map((news, index) => (
+            <Card 
+              key={news.id} 
+              className="group overflow-hidden border-0 bg-card/50 hover:bg-card hover:shadow-xl transition-all duration-300 cursor-pointer backdrop-blur-sm"
+            >
+              <div className="relative">
+                {/* 主圖片 */}
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img 
+                    src={news.featured_image || "/placeholder.svg"} 
+                    alt={news.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  {/* 漸變遮罩 */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 </div>
-              </CardContent>
+
+                {/* 分類標籤 */}
+                <Badge 
+                  className={`absolute top-3 left-3 backdrop-blur-sm border-0 ${
+                    news.url 
+                      ? "bg-red-500/90 text-white" 
+                      : news.category === "知識" 
+                        ? "bg-primary/90 text-primary-foreground"
+                        : "bg-gray-500/90 text-white"
+                  }`}
+                >
+                  {news.url ? "外部連結" : news.category || "一般"}
+                </Badge>
+
+                {/* 內容覆蓋 */}
+                <CardContent className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                  <h3 className="font-bold text-sm mb-3 line-clamp-2 leading-tight">
+                    {news.title}
+                  </h3>
+                  
+                  {/* 互動統計 */}
+                  <div className="flex items-center justify-between text-xs opacity-80">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Heart className="h-3 w-3" />
+                        <span>{Math.floor(Math.random() * 100) + 10}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MessageCircle className="h-3 w-3" />
+                        <span>{Math.floor(Math.random() * 50) + 5}</span>
+                      </div>
+                    </div>
+                    <div className="text-xs">
+                      {new Date(news.published_at).toLocaleDateString('zh-TW', { 
+                        month: 'numeric', 
+                        day: 'numeric' 
+                      })}
+                    </div>
+                  </div>
+                  
+                  {/* 作者信息 */}
+                  <div className="text-xs opacity-60 mt-2">
+                    作者：{news.author || "未知作者"}
+                  </div>
+                </CardContent>
+              </div>
             </Card>
           ))}
         </div>
 
+        {/* 查看外部連結按鈕 */}
+        <div className="text-right mb-8">
+          <Button variant="ghost" className="text-primary hover:text-primary/80">
+            查看外部連結 
+            <span className="ml-1">↗</span>
+          </Button>
+        </div>
+
         {/* 載入更多 */}
-        <div className="text-center mt-12">
-          <Button variant="outline" size="lg">
+        <div className="text-center">
+          <Button variant="outline" size="lg" className="group">
             載入更多新聞
+            <span className="ml-2 transition-transform group-hover:translate-y-1">↓</span>
           </Button>
         </div>
       </main>
