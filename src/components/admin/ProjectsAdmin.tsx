@@ -166,7 +166,7 @@ export const ProjectsAdmin = () => {
   const successfulProjects = taiwanProjects.filter(p => p.amount >= p.target && p.target > 0);
   
   const taiwanStats = {
-    totalProjects: successfulProjects.length, // 改為只顯示成功專案數
+    totalProjects: taiwanProjects.length, // 顯示所有專案數量（不論狀態）
     totalAmount: successfulProjects.reduce((sum, p) => sum + p.amount, 0),
     totalBackers: successfulProjects.reduce((sum, p) => sum + p.backers, 0),
     successRate: taiwanProjects.length > 0 ? Math.round((successfulProjects.length / taiwanProjects.length) * 100) : 0,
