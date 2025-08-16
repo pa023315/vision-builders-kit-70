@@ -581,11 +581,10 @@ export const ProjectsAdmin = () => {
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                         <SelectItem value="active">成功</SelectItem>
+                       <SelectContent>
                          <SelectItem value="completed">成功</SelectItem>
                          <SelectItem value="failed">失敗</SelectItem>
-                      </SelectContent>
+                       </SelectContent>
                     </Select>
                   </div>
 
