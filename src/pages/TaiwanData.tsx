@@ -19,25 +19,20 @@ const TaiwanData = () => {
     );
   }
 
-  // 計算統計數據
+  // 計算統計數據 - 根據Excel正確數字
   const stats = {
-    totalProjects: taiwanProjects.length,
-    totalAmount: taiwanProjects.reduce((sum, p) => sum + p.amount, 0),
-    totalBackers: taiwanProjects.reduce((sum, p) => sum + p.backers, 0),
+    totalProjects: 134, // 專案總數
+    totalAmount: 70930608, // 成功贊助總金額
+    totalBackers: 58801, // 成功贊助人數
     successRate: taiwanProjects.length > 0 
-      ? Math.round(taiwanProjects.filter(p => p.status === 'completed').length / taiwanProjects.length * 100)
+      ? Math.round(taiwanProjects.filter(p => p.status === 'completed').length / 134 * 100)
       : 0,
-    medianAmount: taiwanProjects.length > 0 
-      ? [...taiwanProjects].sort((a, b) => a.amount - b.amount)[Math.floor(taiwanProjects.length / 2)]?.amount || 0
-      : 0,
-    medianBackers: taiwanProjects.length > 0 
-      ? [...taiwanProjects].sort((a, b) => a.backers - b.backers)[Math.floor(taiwanProjects.length / 2)]?.backers || 0
-      : 0,
+    medianAmount: 223628, // 中位數金額
+    medianBackers: 156, // 中位數人數
   };
 
-  const avgTicket = stats.totalBackers > 0 
-    ? Math.round(stats.totalAmount / stats.totalBackers)
-    : 0;
+  const avgTicket = 1192; // 中位數每人贊助
+  const avgAmount = Math.round(70930608 / 134); // 平均金額
 
   return (
     <div className="min-h-screen bg-background">
@@ -90,9 +85,9 @@ const TaiwanData = () => {
         {/* 詳細統計 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <DataCard
-            title="中位數金額"
-            value={`NT$ ${(stats.medianAmount / 1000).toFixed(0)}K`}
-            subtitle="專案中位數"
+            title="平均金額"
+            value={`NT$ ${(avgAmount / 1000).toFixed(0)}K`}
+            subtitle="專案平均金額"
             icon={TrendingUp}
           />
           <DataCard
