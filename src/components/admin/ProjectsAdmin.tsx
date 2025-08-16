@@ -162,19 +162,33 @@ export const ProjectsAdmin = () => {
   const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
 
-  // 計算台灣專案統計數據（只計算成功專案）
+  // 計算台灣專案統計數據
   const successfulTaiwanProjects = taiwanProjects.filter(p => p.status === 'completed');
+  const totalAmount = taiwanProjects.reduce((sum, p) => sum + p.amount, 0);
+  const totalBackers = taiwanProjects.reduce((sum, p) => sum + p.backers, 0);
+  
   const taiwanStats = {
-    totalAmount: successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0),
-    totalBackers: successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0),
-    medianAmount: successfulTaiwanProjects.length > 0 ? 
+    totalProjects: taiwanProjects.length,
+    totalAmount,
+    totalBackers,
+    successRate: taiwanProjects.length > 0 ? Math.round((successfulTaiwanProjects.length / taiwanProjects.length) * 100) : 0,
+    medianAmount: taiwanProjects.length > 0 ? 
       (() => {
-        const sortedAmounts = successfulTaiwanProjects.map(p => p.amount).sort((a, b) => a - b);
+        const sortedAmounts = taiwanProjects.map(p => p.amount).sort((a, b) => a - b);
         const mid = Math.floor(sortedAmounts.length / 2);
         return sortedAmounts.length % 2 === 0 
           ? (sortedAmounts[mid - 1] + sortedAmounts[mid]) / 2 
           : sortedAmounts[mid];
       })() : 0,
+    medianBackers: taiwanProjects.length > 0 ? 
+      (() => {
+        const sortedBackers = taiwanProjects.map(p => p.backers).sort((a, b) => a - b);
+        const mid = Math.floor(sortedBackers.length / 2);
+        return sortedBackers.length % 2 === 0 
+          ? (sortedBackers[mid - 1] + sortedBackers[mid]) / 2 
+          : sortedBackers[mid];
+      })() : 0,
+    averageOrderValue: totalBackers > 0 ? totalAmount / totalBackers : 0,
   };
 
   const handleBulkDelete = (projectList: Project[], title: string) => {
@@ -319,32 +333,71 @@ export const ProjectsAdmin = () => {
   return (
     <div className="space-y-6">
       {/* 統計數據顯示 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">總贊助金額</CardTitle>
+            <CardTitle className="text-sm font-medium">專案總數</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">NT$ {taiwanStats.totalAmount.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">僅計算成功專案</p>
+            <div className="text-2xl font-bold">{taiwanStats.totalProjects}</div>
+            <p className="text-xs text-muted-foreground">件活躍專案</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">總贊助人數</CardTitle>
+            <CardTitle className="text-sm font-medium">累計金額</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">NT$ {(taiwanStats.totalAmount / 1000000).toFixed(1)}M</div>
+            <p className="text-xs text-muted-foreground">總募資金額</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">支持人數</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{taiwanStats.totalBackers.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">僅計算成功專案</p>
+            <p className="text-xs text-muted-foreground">名支持者</p>
           </CardContent>
         </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">成功率</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{taiwanStats.successRate}%</div>
+            <p className="text-xs text-muted-foreground">平均成功率</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium">中位數金額</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">NT$ {Math.round(taiwanStats.medianAmount).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">成功專案中位數</p>
+            <div className="text-2xl font-bold">NT$ {(taiwanStats.medianAmount / 1000).toFixed(0)}K</div>
+            <p className="text-xs text-muted-foreground">專案中位數</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">中位數人數</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{Math.round(taiwanStats.medianBackers)}</div>
+            <p className="text-xs text-muted-foreground">支持者中位數</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">平均客單價</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">NT$ {Math.round(taiwanStats.averageOrderValue).toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">平均客單價</p>
           </CardContent>
         </Card>
       </div>
