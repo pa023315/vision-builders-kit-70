@@ -3,10 +3,10 @@ import DataCard from "@/components/DataCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, DollarSign, Target, Award, BarChart } from "lucide-react";
-import { useTaiwanProjects } from "@/hooks/useProjects";
+import { useAllTaiwanProjects } from "@/hooks/useProjects";
 
 const TaiwanData = () => {
-  const { data: taiwanProjects = [], isLoading } = useTaiwanProjects();
+  const { data: taiwanProjects = [], isLoading } = useAllTaiwanProjects();
   
   if (isLoading) {
     return (
@@ -119,7 +119,7 @@ const TaiwanData = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {taiwanProjects.slice(0, 10).map((project, index) => (
+              {taiwanProjects.filter(p => p.status === 'completed').slice(0, 10).map((project, index) => (
                 <div
                   key={project.id}
                   className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"

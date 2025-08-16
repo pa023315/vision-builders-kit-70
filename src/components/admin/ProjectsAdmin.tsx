@@ -129,7 +129,7 @@ export const ProjectsAdmin = () => {
                      row['狀態'] === '失敗' ? 'failed' : 
                      row['status'] || 'active') as "active" | "completed" | "failed",
              image_url: row['網址'] || row['圖片網址'] || row['image_url'] || '',
-             success_rate: parseInt(row['達成率'] || '0') || Math.round((parseInt(row['贊助金額'] || row['amount'] || '0') / parseInt(row['目標金額'] || row['target'] || '1')) * 100),
+              success_rate: parseInt(row['達成率'] || '0') || Math.round((parseInt(row['贊助金額'] || row['amount'] || '0') / parseInt(row['目標金額'] || row['target'] || '1')) * 100),
            };
 
           if (projectData.name && projectData.description) {

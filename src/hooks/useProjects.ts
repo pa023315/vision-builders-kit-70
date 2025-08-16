@@ -34,6 +34,22 @@ export const useTaiwanProjects = () => {
   })
 }
 
+export const useAllTaiwanProjects = () => {
+  return useQuery({
+    queryKey: ['all-taiwan-projects'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('country', '台灣')
+        .order('amount', { ascending: false })
+      
+      if (error) throw error
+      return data as Project[]
+    },
+  })
+}
+
 export const useGlobalProjects = () => {
   return useQuery({
     queryKey: ['global-projects'],
@@ -69,6 +85,7 @@ export const useCreateProject = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] })
       queryClient.invalidateQueries({ queryKey: ['taiwan-projects'] })
+      queryClient.invalidateQueries({ queryKey: ['all-taiwan-projects'] })
       queryClient.invalidateQueries({ queryKey: ['global-projects'] })
       toast({
         title: "專案已創建",
@@ -104,6 +121,7 @@ export const useUpdateProject = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] })
       queryClient.invalidateQueries({ queryKey: ['taiwan-projects'] })
+      queryClient.invalidateQueries({ queryKey: ['all-taiwan-projects'] })
       queryClient.invalidateQueries({ queryKey: ['global-projects'] })
       toast({
         title: "專案已更新",
@@ -136,6 +154,7 @@ export const useDeleteProject = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] })
       queryClient.invalidateQueries({ queryKey: ['taiwan-projects'] })
+      queryClient.invalidateQueries({ queryKey: ['all-taiwan-projects'] })
       queryClient.invalidateQueries({ queryKey: ['global-projects'] })
       toast({
         title: "專案已刪除",
