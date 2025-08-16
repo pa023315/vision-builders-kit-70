@@ -56,12 +56,14 @@ export const ProjectsAdmin = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    const amount = parseInt(formData.amount);
+    const target = parseInt(formData.target);
     const projectData = {
       ...formData,
-      amount: parseInt(formData.amount),
-      target: parseInt(formData.target),
+      amount,
+      target,
       backers: parseInt(formData.backers),
-      success_rate: Math.round((parseInt(formData.amount) / parseInt(formData.target)) * 100),
+      success_rate: target > 0 ? Math.round((amount / target) * 100) : 0,
     };
 
     if (editingProject) {
@@ -417,10 +419,11 @@ export const ProjectsAdmin = () => {
                       </Select>
                     </div>
                     <div>
-                      <Label htmlFor="launch_date">上線日期</Label>
+                      <Label htmlFor="launch_date">時程</Label>
                       <Input
                         id="launch_date"
-                        type="date"
+                        type="text"
+                        placeholder="例如：2024-01-15 或 2024年1月"
                         value={formData.launch_date}
                         onChange={(e) => setFormData({ ...formData, launch_date: e.target.value })}
                         required
