@@ -56,13 +56,13 @@ export const ProjectsAdmin = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const amount = parseInt(formData.amount);
-    const target = parseInt(formData.target);
+    const amount = parseFloat(formData.amount) || 0;
+    const target = parseFloat(formData.target) || 1;
     const projectData = {
       ...formData,
-      amount,
-      target,
-      backers: parseInt(formData.backers),
+      amount: Math.round(amount),
+      target: Math.round(target),
+      backers: parseInt(formData.backers) || 0,
       success_rate: target > 0 ? Math.round((amount / target) * 100) : 0,
     };
 

@@ -119,7 +119,11 @@ const TaiwanData = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {taiwanProjects.filter(p => p.status === 'completed').slice(0, 10).map((project, index) => (
+              {taiwanProjects
+                .filter(p => p.status === 'completed')
+                .sort((a, b) => b.amount - a.amount)
+                .slice(0, 10)
+                .map((project, index) => (
                 <div
                   key={project.id}
                   className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
