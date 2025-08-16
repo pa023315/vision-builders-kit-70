@@ -123,8 +123,8 @@ export const ProjectsAdmin = () => {
              amount: amount,
              target: target,
              backers: parseInt(row['人數'] || row['支持人數'] || row['backers'] || '0'),
-             platform: row['平台'] || row['platform'] || '',
-             category: row['類型'] || row['分類'] || row['category'] || '',
+              platform: row['平台'] || row['platform'] || '',
+              category: (row['類型'] || row['分類'] || row['category'] || '').replace(/^手$/, '手機'),
              country: '台灣', // 固定為台灣
              launch_date: row['時程'] || row['上線日期'] || row['launch_date'] || '',
              status: (row['狀態'] === '成功' || row['狀態'] === '已完成' ? 'completed' : 
@@ -247,8 +247,8 @@ export const ProjectsAdmin = () => {
                        project.status === "completed" ? "default" :
                        project.status === "active" ? "secondary" : "destructive"
                      }>
-                        {project.status === "completed" ? "成功" :
-                         project.status === "active" ? "進行中" : "失敗"}
+                         {project.status === "completed" ? "成功" :
+                          project.status === "active" ? "成功" : "失敗"}
                      </Badge>
                    </TableCell>
                    <TableCell>{project.platform}</TableCell>
@@ -464,9 +464,9 @@ export const ProjectsAdmin = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="active">進行中</SelectItem>
-                        <SelectItem value="completed">成功</SelectItem>
-                        <SelectItem value="failed">失敗</SelectItem>
+                         <SelectItem value="active">成功</SelectItem>
+                         <SelectItem value="completed">成功</SelectItem>
+                         <SelectItem value="failed">失敗</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -561,7 +561,7 @@ export const ProjectsAdmin = () => {
                                project.status === "active" ? "secondary" : "destructive"
                              }>
                                 {project.status === "completed" ? "成功" :
-                                 project.status === "active" ? "進行中" : "失敗"}
+                                 project.status === "active" ? "成功" : "失敗"}
                              </Badge>
                            </TableCell>
                            <TableCell>{project.platform}</TableCell>
