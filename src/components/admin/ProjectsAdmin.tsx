@@ -156,10 +156,57 @@ export const ProjectsAdmin = () => {
   const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
 
-  const renderProjectTable = (projectList: Project[], title: string) => (
+  const handleBulkDelete = (projectList: Project[], title: string) => {
+    if (confirm(`確定要刪除所有${title}嗎？`)) {
+      projectList.forEach(project => {
+        deleteProject.mutate(project.id);
+      });
+    }
+  };
+
+  const renderProjectTable = (projectList: Project[], title: string, showActions: boolean = false) => (
     <Card className="mb-6">
       <CardHeader>
-        <CardTitle className="text-lg">{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">{title}</CardTitle>
+          {showActions && (
+            <div className="flex gap-2">
+              <input
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleExcelImport}
+                style={{ display: 'none' }}
+                id={`excel-upload-${title.replace(/\s+/g, '-')}`}
+              />
+              <Button 
+                variant="outline"
+                size="sm"
+                onClick={() => document.getElementById(`excel-upload-${title.replace(/\s+/g, '-')}`)?.click()}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Excel 匯入
+              </Button>
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm" onClick={resetForm}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    新增專案
+                  </Button>
+                </DialogTrigger>
+              </Dialog>
+              {title === "台灣專案" && projectList.length > 0 && (
+                <Button 
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleBulkDelete(projectList, title)}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  刪除所有數據
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
@@ -424,12 +471,12 @@ export const ProjectsAdmin = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {renderProjectTable(taiwanProjects, "台灣專案")}
+            {renderProjectTable(taiwanProjects, "台灣專案", true)}
             
             <div className="space-y-4">
               <h3 className="text-xl font-semibold">國際專案</h3>
-              {renderProjectTable(kickstarterProjects, "Kickstarter 平台")}
-              {renderProjectTable(campfireProjects, "日本 Campfire 平台")}
+              {renderProjectTable(kickstarterProjects, "Kickstarter 平台", true)}
+              {renderProjectTable(campfireProjects, "日本 Campfire 平台", true)}
             </div>
           </div>
         </CardContent>

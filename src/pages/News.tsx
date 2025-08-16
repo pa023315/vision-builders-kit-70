@@ -101,20 +101,20 @@ const News = () => {
                  </div>
                </CardHeader>
                <CardContent>
-                 <div className="space-y-4">
-                   {news.featured_image && (
-                     <div className="aspect-video overflow-hidden rounded-lg">
-                       <img 
-                         src={news.featured_image} 
-                         alt={news.title}
-                         className="w-full h-full object-cover"
-                       />
-                     </div>
-                   )}
-                   <p className="text-muted-foreground leading-relaxed">
-                     {news.excerpt}
-                   </p>
-                 </div>
+                  <div className="space-y-4">
+                    {news.featured_image && (
+                      <div className="w-48 h-32 overflow-hidden rounded-lg float-left mr-4 mb-2">
+                        <img 
+                          src={news.featured_image} 
+                          alt={news.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <p className="text-muted-foreground leading-relaxed">
+                      {news.excerpt}
+                    </p>
+                  </div>
                 <div className="flex items-center justify-end">
                   {news.url ? (
                     <Button 
