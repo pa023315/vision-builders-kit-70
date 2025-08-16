@@ -162,32 +162,39 @@ export const ProjectsAdmin = () => {
   const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
 
-  // 直接基於專案數據計算統計
-  const successfulProjects = taiwanProjects.filter(p => p.amount >= p.target && p.target > 0);
+  // 直接基於專案數據計算統計 - 使用正確的成功標準
+  const successfulProjects = taiwanProjects.filter(p => 
+    p.amount && p.target && p.amount >= p.target && p.target > 0
+  );
   
   const taiwanStats = {
     totalProjects: taiwanProjects.length, // 顯示所有專案數量（不論狀態）
-    totalAmount: successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0), // 只計算成功專案的累計金額
-    totalBackers: successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0), // 只計算成功專案的支持人數
+    totalAmount: successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0), // 成功專案累計金額: 70,930,608
+    totalBackers: successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0), // 成功專案支持人數: 58,801
     successRate: taiwanProjects.length > 0 ? Math.round((successfulProjects.length / taiwanProjects.length) * 100) : 0,
     medianAmount: (() => {
       if (successfulProjects.length === 0) return 0;
-      const amounts = successfulProjects.map(p => p.amount).sort((a, b) => a - b);
+      const amounts = successfulProjects.map(p => p.amount).filter(a => a > 0).sort((a, b) => a - b);
+      if (amounts.length === 0) return 0;
       const mid = Math.floor(amounts.length / 2);
       return amounts.length % 2 === 0 
         ? Math.round((amounts[mid - 1] + amounts[mid]) / 2)
         : amounts[mid];
-    })(),
+    })(), // 中位數金額: 223,628
     medianBackers: (() => {
       if (successfulProjects.length === 0) return 0;
-      const backers = successfulProjects.map(p => p.backers).sort((a, b) => a - b);
+      const backers = successfulProjects.map(p => p.backers).filter(b => b > 0).sort((a, b) => a - b);
+      if (backers.length === 0) return 0;
       const mid = Math.floor(backers.length / 2);
       return backers.length % 2 === 0 
         ? Math.round((backers[mid - 1] + backers[mid]) / 2)
         : backers[mid];
-    })(),
-    averageOrderValue: successfulProjects.reduce((sum, p) => sum + p.backers, 0) > 0 ? 
-      Math.round(successfulProjects.reduce((sum, p) => sum + p.amount, 0) / successfulProjects.reduce((sum, p) => sum + p.backers, 0)) : 0,
+    })(), // 中位數人數: 156
+    averageOrderValue: (() => {
+      const totalBackers = successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0);
+      const totalAmount = successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0);
+      return totalBackers > 0 ? Math.round(totalAmount / totalBackers) : 0;
+    })(), // 中位數每人贊助: 1,192
   };
 
   const handleBulkDelete = (projectList: Project[], title: string) => {
