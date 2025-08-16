@@ -167,6 +167,14 @@ export const ProjectsAdmin = () => {
   const taiwanStats = {
     totalAmount: successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0),
     totalBackers: successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0),
+    medianAmount: successfulTaiwanProjects.length > 0 ? 
+      (() => {
+        const sortedAmounts = successfulTaiwanProjects.map(p => p.amount).sort((a, b) => a - b);
+        const mid = Math.floor(sortedAmounts.length / 2);
+        return sortedAmounts.length % 2 === 0 
+          ? (sortedAmounts[mid - 1] + sortedAmounts[mid]) / 2 
+          : sortedAmounts[mid];
+      })() : 0,
   };
 
   const handleBulkDelete = (projectList: Project[], title: string) => {
@@ -310,6 +318,37 @@ export const ProjectsAdmin = () => {
 
   return (
     <div className="space-y-6">
+      {/* 統計數據顯示 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">總贊助金額</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">NT$ {taiwanStats.totalAmount.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">僅計算成功專案</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">總贊助人數</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{taiwanStats.totalBackers.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">僅計算成功專案</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">中位數金額</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">NT$ {Math.round(taiwanStats.medianAmount).toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">成功專案中位數</p>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
