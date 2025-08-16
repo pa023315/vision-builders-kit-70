@@ -162,6 +162,12 @@ export const ProjectsAdmin = () => {
   const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
 
+  // 計算台灣專案統計數據
+  const taiwanStats = {
+    totalAmount: taiwanProjects.reduce((sum, p) => sum + p.amount, 0),
+    totalBackers: taiwanProjects.reduce((sum, p) => sum + p.backers, 0),
+  };
+
   const handleBulkDelete = (projectList: Project[], title: string) => {
     if (confirm(`確定要刪除所有${title}嗎？`)) {
       projectList.forEach(project => {
@@ -480,7 +486,125 @@ export const ProjectsAdmin = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {renderProjectTable(taiwanProjects, "台灣專案", true)}
+            <Card className="mb-6">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg">台灣專案 ({taiwanProjects.length})</CardTitle>
+                    <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
+                      <span>總贊助金額: NT$ {(taiwanStats.totalAmount / 1000000).toFixed(1)}M</span>
+                      <span>總贊助人數: {taiwanStats.totalBackers.toLocaleString()}人</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="file"
+                      accept=".xlsx,.xls"
+                      onChange={handleExcelImport}
+                      style={{ display: 'none' }}
+                      id="excel-upload-taiwan"
+                    />
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('excel-upload-taiwan')?.click()}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Excel 匯入
+                    </Button>
+                    <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="sm" onClick={resetForm}>
+                          <Plus className="h-4 w-4 mr-2" />
+                          新增專案
+                        </Button>
+                      </DialogTrigger>
+                    </Dialog>
+                    {taiwanProjects.length > 0 && (
+                      <Button 
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleBulkDelete(taiwanProjects, "台灣專案")}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        刪除所有數據
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                         <TableHead>狀態</TableHead>
+                         <TableHead>平台</TableHead>
+                         <TableHead>時程</TableHead>
+                         <TableHead>類型</TableHead>
+                         <TableHead>名稱</TableHead>
+                         <TableHead>目標金額</TableHead>
+                         <TableHead>贊助金額</TableHead>
+                         <TableHead>達成率</TableHead>
+                         <TableHead>人數</TableHead>
+                         <TableHead>網址</TableHead>
+                         <TableHead>操作</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                       {taiwanProjects.map((project) => (
+                         <TableRow key={project.id}>
+                           <TableCell>
+                             <Badge variant={
+                               project.status === "completed" ? "default" :
+                               project.status === "active" ? "secondary" : "destructive"
+                             }>
+                                {project.status === "completed" ? "成功" :
+                                 project.status === "active" ? "進行中" : "失敗"}
+                             </Badge>
+                           </TableCell>
+                           <TableCell>{project.platform}</TableCell>
+                           <TableCell>{project.launch_date}</TableCell>
+                           <TableCell>{project.category}</TableCell>
+                           <TableCell className="font-medium">{project.name}</TableCell>
+                           <TableCell>{project.target.toLocaleString()}</TableCell>
+                           <TableCell>{project.amount.toLocaleString()}</TableCell>
+                           <TableCell>
+                             {project.target > 0 ? Math.round((project.amount / project.target) * 100) : 0}%
+                           </TableCell>
+                           <TableCell>{project.backers}</TableCell>
+                           <TableCell>
+                             {project.image_url ? (
+                               <a href={project.image_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                 連結
+                               </a>
+                             ) : "無"}
+                           </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleEdit(project)}
+                              >
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleDelete(project.id)}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
             
             <div className="space-y-4">
               <h3 className="text-xl font-semibold">國際專案</h3>
