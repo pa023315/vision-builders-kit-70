@@ -250,7 +250,9 @@ export const ProjectsAdmin = () => {
                    <TableCell className="font-medium">{project.name}</TableCell>
                    <TableCell>{project.target.toLocaleString()}</TableCell>
                    <TableCell>{project.amount.toLocaleString()}</TableCell>
-                   <TableCell>{project.success_rate}%</TableCell>
+                    <TableCell>
+                      {project.target > 0 ? Math.round((project.amount / project.target) * 100) : 0}%
+                    </TableCell>
                    <TableCell>{project.backers}</TableCell>
                    <TableCell>
                      {project.image_url ? (
