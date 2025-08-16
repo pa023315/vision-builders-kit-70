@@ -603,6 +603,10 @@ export const ProjectsAdmin = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg">台灣專案 ({taiwanProjects.length})</CardTitle>
+                    <div className="flex gap-4 mt-2 text-sm text-muted-foreground">
+                      <span>總贊助金額: NT$ {(successfulTaiwanProjects.reduce((sum, p) => sum + p.amount, 0) / 1000000).toFixed(1)}M</span>
+                      <span>總贊助人數: {successfulTaiwanProjects.reduce((sum, p) => sum + p.backers, 0).toLocaleString()}人</span>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <input
