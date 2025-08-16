@@ -162,30 +162,19 @@ export const ProjectsAdmin = () => {
   const kickstarterProjects = projects.filter(p => p.platform === 'Kickstarter' && p.country !== '台灣');
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣');
 
-  // 直接基於專案數據計算統計 - 調試版本
+  // 計算台灣專案統計：成功標準為贊助金額 >= 目標金額
   const successfulProjects = taiwanProjects.filter(p => 
-    p.amount && p.target && p.amount >= p.target && p.target > 0
+    p.amount && p.target && p.amount >= p.target
   );
   
-  // 調試用 - 在控制台顯示實際數據
-  console.log('Taiwan Projects Count:', taiwanProjects.length);
-  console.log('Successful Projects Count:', successfulProjects.length);
-  console.log('Total Amount:', successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0));
-  console.log('Total Backers:', successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0));
-  
-  // 檢查是否需要使用不同的成功標準
-  const allProjectsWithData = taiwanProjects.filter(p => p.amount > 0 && p.backers > 0);
-  console.log('All projects with data count:', allProjectsWithData.length);
-  console.log('All projects total amount:', allProjectsWithData.reduce((sum, p) => sum + (p.amount || 0), 0));
-  console.log('All projects total backers:', allProjectsWithData.reduce((sum, p) => sum + (p.backers || 0), 0));
-  
   const taiwanStats = {
-    totalProjects: taiwanProjects.length,
-    totalAmount: allProjectsWithData.reduce((sum, p) => sum + (p.amount || 0), 0), // 嘗試使用所有有數據的專案
-    totalBackers: allProjectsWithData.reduce((sum, p) => sum + (p.backers || 0), 0), // 嘗試使用所有有數據的專案
+    totalProjects: taiwanProjects.length, // 所有台灣專案數量
+    totalAmount: successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0), // 成功專案累計金額
+    totalBackers: successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0), // 成功專案支持人數
     successRate: taiwanProjects.length > 0 ? Math.round((successfulProjects.length / taiwanProjects.length) * 100) : 0,
     medianAmount: (() => {
-      const amounts = allProjectsWithData.map(p => p.amount).filter(a => a > 0).sort((a, b) => a - b);
+      if (successfulProjects.length === 0) return 0;
+      const amounts = successfulProjects.map(p => p.amount).filter(a => a > 0).sort((a, b) => a - b);
       if (amounts.length === 0) return 0;
       const mid = Math.floor(amounts.length / 2);
       return amounts.length % 2 === 0 
@@ -193,7 +182,8 @@ export const ProjectsAdmin = () => {
         : amounts[mid];
     })(),
     medianBackers: (() => {
-      const backers = allProjectsWithData.map(p => p.backers).filter(b => b > 0).sort((a, b) => a - b);
+      if (successfulProjects.length === 0) return 0;
+      const backers = successfulProjects.map(p => p.backers).filter(b => b > 0).sort((a, b) => a - b);
       if (backers.length === 0) return 0;
       const mid = Math.floor(backers.length / 2);
       return backers.length % 2 === 0 
@@ -201,8 +191,8 @@ export const ProjectsAdmin = () => {
         : backers[mid];
     })(),
     averageOrderValue: (() => {
-      const totalBackers = allProjectsWithData.reduce((sum, p) => sum + (p.backers || 0), 0);
-      const totalAmount = allProjectsWithData.reduce((sum, p) => sum + (p.amount || 0), 0);
+      const totalBackers = successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0);
+      const totalAmount = successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0);
       return totalBackers > 0 ? Math.round(totalAmount / totalBackers) : 0;
     })(),
   };
