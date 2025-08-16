@@ -19,20 +19,19 @@ const TaiwanData = () => {
     );
   }
 
-  // 計算統計數據 - 根據Excel正確數字
-  const stats = {
-    totalProjects: 134, // 專案總數
-    totalAmount: 70930608, // 成功贊助總金額
-    totalBackers: 58801, // 成功贊助人數
+  // 根據Excel正確數字的統計數據
+  const correctStats = {
+    totalProjects: 134,           // 專案總數
+    totalAmount: 70930608,        // 成功贊助總金額 (70,930,608)
+    totalBackers: 58801,          // 成功贊助人數 (58,801)
+    avgAmount: 529183,            // 平均金額 (70,930,608 / 134 = 529,183)
+    medianAmount: 223628,         // 中位數金額 (223,628)
+    medianBackers: 156,           // 中位數人數 (156)
+    avgTicket: 1192,              // 中位數每人贊助 (1,192)
     successRate: taiwanProjects.length > 0 
-      ? Math.round(taiwanProjects.filter(p => p.status === 'completed').length / 134 * 100)
+      ? Math.round(taiwanProjects.filter(p => p.status === 'completed').length / taiwanProjects.length * 100)
       : 0,
-    medianAmount: 223628, // 中位數金額
-    medianBackers: 156, // 中位數人數
   };
-
-  const avgTicket = 1192; // 中位數每人贊助
-  const avgAmount = Math.round(70930608 / 134); // 平均金額
 
   return (
     <div className="min-h-screen bg-background">
@@ -54,28 +53,28 @@ const TaiwanData = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <DataCard
             title="專案總數"
-            value={stats.totalProjects.toString()}
+            value={correctStats.totalProjects.toString()}
             subtitle="件活躍專案"
             icon={BarChart}
             trend="up"
           />
           <DataCard
             title="累計金額"
-            value={`NT$ ${(stats.totalAmount / 1000000).toFixed(1)}M`}
+            value={`NT$ ${(correctStats.totalAmount / 1000000).toFixed(1)}M`}
             subtitle="總集資金額"
             icon={DollarSign}
             trend="up"
           />
           <DataCard
             title="支持人數"
-            value={stats.totalBackers.toLocaleString()}
+            value={correctStats.totalBackers.toLocaleString()}
             subtitle="名支持者"
             icon={Users}
             trend="up"
           />
           <DataCard
             title="成功率"
-            value={`${stats.successRate}%`}
+            value={`${correctStats.successRate}%`}
             subtitle="平均成功率"
             icon={Target}
             trend="neutral"
@@ -86,19 +85,19 @@ const TaiwanData = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <DataCard
             title="平均金額"
-            value={`NT$ ${(avgAmount / 1000).toFixed(0)}K`}
+            value={`NT$ ${(correctStats.avgAmount / 1000).toFixed(0)}K`}
             subtitle="專案平均金額"
             icon={TrendingUp}
           />
           <DataCard
             title="中位數人數"
-            value={stats.medianBackers.toString()}
+            value={correctStats.medianBackers.toString()}
             subtitle="支持者中位數"
             icon={Users}
           />
           <DataCard
             title="平均客單價"
-            value={`NT$ ${avgTicket.toLocaleString()}`}
+            value={`NT$ ${correctStats.avgTicket.toLocaleString()}`}
             subtitle="平均客單價"
             icon={DollarSign}
           />
