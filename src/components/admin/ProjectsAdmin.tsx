@@ -115,11 +115,13 @@ export const ProjectsAdmin = () => {
 
          // 批量創建專案 - 支援新格式：狀態|平台|時程|類型|名稱|目標金額|贊助金額|達成率|人數|網址
          jsonData.forEach((row: any) => {
+           const amount = parseInt(row['贊助金額'] || row['募資金額'] || row['amount'] || '0');
+           const target = parseInt(row['目標金額'] || row['target'] || '1');
            const projectData = {
              name: row['名稱'] || row['專案名稱'] || row['name'] || '',
              description: row['描述'] || row['專案描述'] || row['description'] || row['名稱'] || '',
-             amount: parseInt(row['贊助金額'] || row['募資金額'] || row['amount'] || '0'),
-             target: parseInt(row['目標金額'] || row['target'] || '0'),
+             amount: amount,
+             target: target,
              backers: parseInt(row['人數'] || row['支持人數'] || row['backers'] || '0'),
              platform: row['平台'] || row['platform'] || '',
              category: row['類型'] || row['分類'] || row['category'] || '',
@@ -129,7 +131,9 @@ export const ProjectsAdmin = () => {
                      row['狀態'] === '失敗' ? 'failed' : 
                      row['status'] || 'active') as "active" | "completed" | "failed",
              image_url: row['網址'] || row['圖片網址'] || row['image_url'] || '',
-              success_rate: parseInt(row['達成率'] || '0') || Math.round((parseInt(row['贊助金額'] || row['amount'] || '0') / parseInt(row['目標金額'] || row['target'] || '1')) * 100),
+             // 優先使用Excel中的達成率，否則計算
+             success_rate: row['達成率'] ? parseInt(row['達成率'].toString().replace('%', '')) : 
+                          (target > 0 ? Math.round((amount / target) * 100) : 0),
            };
 
           if (projectData.name && projectData.description) {

@@ -114,14 +114,12 @@ const TaiwanData = () => {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Award className="h-5 w-5 mr-2 text-primary" />
-              台灣前十名成功案例
+              台灣前十名集資案例
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {taiwanProjects
-                .filter(p => p.status === 'completed')
-                .sort((a, b) => b.amount - a.amount)
                 .slice(0, 10)
                 .map((project, index) => (
                 <div
