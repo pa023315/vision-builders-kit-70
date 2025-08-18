@@ -133,7 +133,8 @@ export const TaiwanProjectsAdmin = () => {
             status: (row['狀態'] === '成功' || row['狀態'] === '已完成' ? 'completed' : 
                     row['狀態'] === '失敗' ? 'failed' : 
                     row['status'] || 'active') as "active" | "completed" | "failed",
-            image_url: row['網址'] || row['圖片網址'] || row['image_url'] || '',
+            image_url: row['圖片網址'] || row['image_url'] || '',
+            project_url: row['網址'] || row['專案網址'] || row['project_url'] || '',
             success_rate: row['達成率'] ? parseInt(row['達成率'].toString().replace('%', '')) : 
                          (target > 0 ? Math.round((amount / target) * 100) : 0),
           };
@@ -158,6 +159,10 @@ export const TaiwanProjectsAdmin = () => {
   }
 
   const taiwanProjects = projects.filter(p => p.country === '台灣').sort((a, b) => b.amount - a.amount);
+  
+  // Debug: 檢查專案資料和 project_url
+  console.log('台灣專案資料:', taiwanProjects);
+  console.log('專案網址檢查:', taiwanProjects.map(p => ({ name: p.name, project_url: p.project_url })));
   
   const successfulProjects = taiwanProjects.filter(p => 
     p.amount && p.target && p.amount >= p.target
