@@ -14,14 +14,12 @@ const News = () => {
   const { data: news = [] } = useNews();
 
   // Category tags for filtering
-  const categories = ["全部", "外部連結", "知識", "一般"];
+  const categories = ["全部", "知識", "一般"];
 
   const filteredNews = news.filter(newsItem => {
     const matchesSearch = newsItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          newsItem.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "全部" || 
-                          (selectedCategory === "外部連結" && newsItem.url) ||
-                          (selectedCategory !== "外部連結" && newsItem.category === selectedCategory);
+    const matchesCategory = selectedCategory === "全部" || newsItem.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -90,6 +88,11 @@ const News = () => {
             <Card 
               key={news.id} 
               className="group overflow-hidden border-0 bg-card/50 hover:bg-card hover:shadow-xl transition-all duration-300 cursor-pointer backdrop-blur-sm"
+              onClick={() => {
+                if (news.url) {
+                  window.open(news.url, '_blank');
+                }
+              }}
             >
               <div className="relative">
                 {/* 主圖片 */}
@@ -106,14 +109,12 @@ const News = () => {
                 {/* 分類標籤 */}
                 <Badge 
                   className={`absolute top-3 left-3 backdrop-blur-sm border-0 ${
-                    news.url 
-                      ? "bg-red-500/90 text-white" 
-                      : news.category === "知識" 
-                        ? "bg-primary/90 text-primary-foreground"
-                        : "bg-gray-500/90 text-white"
+                    news.category === "知識" 
+                      ? "bg-primary/90 text-primary-foreground"
+                      : "bg-gray-500/90 text-white"
                   }`}
                 >
-                  {news.url ? "外部連結" : news.category || "一般"}
+                  {news.category || "一般"}
                 </Badge>
 
                 {/* 內容覆蓋 */}
@@ -152,13 +153,6 @@ const News = () => {
           ))}
         </div>
 
-        {/* 查看外部連結按鈕 */}
-        <div className="text-right mb-8">
-          <Button variant="ghost" className="text-primary hover:text-primary/80">
-            查看外部連結 
-            <span className="ml-1">↗</span>
-          </Button>
-        </div>
 
         {/* 載入更多 */}
         <div className="text-center">
