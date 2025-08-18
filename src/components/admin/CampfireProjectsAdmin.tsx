@@ -157,6 +157,41 @@ export const CampfireProjectsAdmin = () => {
 
   const campfireProjects = projects.filter(p => p.platform === 'Campfire' && p.country !== '台灣').sort((a, b) => b.amount - a.amount);
 
+  // 計算 Campfire 專案統計：成功標準為贊助金額 >= 目標金額
+  const successfulProjects = campfireProjects.filter(p => 
+    p.amount && p.target && p.amount >= p.target
+  );
+  
+  const campfireStats = {
+    totalProjects: campfireProjects.length, // 所有 Campfire 專案數量
+    totalAmount: successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0), // 成功專案累計金額
+    totalBackers: successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0), // 成功專案支持人數
+    successRate: campfireProjects.length > 0 ? Math.round((successfulProjects.length / campfireProjects.length) * 100) : 0,
+    medianAmount: (() => {
+      if (successfulProjects.length === 0) return 0;
+      const amounts = successfulProjects.map(p => p.amount).filter(a => a > 0).sort((a, b) => a - b);
+      if (amounts.length === 0) return 0;
+      const mid = Math.floor(amounts.length / 2);
+      return amounts.length % 2 === 0 
+        ? Math.round((amounts[mid - 1] + amounts[mid]) / 2)
+        : amounts[mid];
+    })(),
+    medianBackers: (() => {
+      if (successfulProjects.length === 0) return 0;
+      const backers = successfulProjects.map(p => p.backers).filter(b => b > 0).sort((a, b) => a - b);
+      if (backers.length === 0) return 0;
+      const mid = Math.floor(backers.length / 2);
+      return backers.length % 2 === 0 
+        ? Math.round((backers[mid - 1] + backers[mid]) / 2)
+        : backers[mid];
+    })(),
+    averageOrderValue: (() => {
+      const totalBackers = successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0);
+      const totalAmount = successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0);
+      return totalBackers > 0 ? Math.round(totalAmount / totalBackers) : 0;
+    })(),
+  };
+
   const handleBulkDelete = () => {
     if (confirm(`確定要刪除所有Campfire專案嗎？`)) {
       campfireProjects.forEach(project => {
@@ -167,6 +202,76 @@ export const CampfireProjectsAdmin = () => {
 
   return (
     <div className="space-y-6">
+      {/* 統計數據顯示 */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">專案總數</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{campfireStats.totalProjects}</div>
+            <p className="text-xs text-muted-foreground">件活躍專案</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">累計金額</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">¥ {(campfireStats.totalAmount / 1000000).toFixed(1)}M</div>
+            <p className="text-xs text-muted-foreground">總募資金額</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">支持人數</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{campfireStats.totalBackers.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">名支持者</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">成功率</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{campfireStats.successRate}%</div>
+            <p className="text-xs text-muted-foreground">平均成功率</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">中位數金額</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">¥ {(campfireStats.medianAmount / 1000).toFixed(0)}K</div>
+            <p className="text-xs text-muted-foreground">專案中位數</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">中位數人數</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{Math.round(campfireStats.medianBackers)}</div>
+            <p className="text-xs text-muted-foreground">支持者中位數</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">平均客單價</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">¥ {Math.round(campfireStats.averageOrderValue).toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">平均客單價</p>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Campfire 專案管理 */}
       <Card>
         <CardHeader>
