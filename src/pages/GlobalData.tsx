@@ -4,14 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Users, DollarSign, Globe, Award, BarChart } from "lucide-react";
-import { useGlobalProjects } from "@/hooks/useProjects";
+import { useKickstarterProjects, useCampfireProjects } from "@/hooks/useProjects";
 import { useState } from "react";
 
 const GlobalData = () => {
-  const { data: globalProjects = [], isLoading } = useGlobalProjects();
+  const { data: kickstarterProjects = [], isLoading: isKickstarterLoading } = useKickstarterProjects();
+  const { data: campfireProjects = [], isLoading: isCampfireLoading } = useCampfireProjects();
   const [activeTab, setActiveTab] = useState<"kickstarter" | "campfire">("kickstarter");
   
-  if (isLoading) {
+  if (isKickstarterLoading || isCampfireLoading) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -22,13 +23,16 @@ const GlobalData = () => {
     );
   }
 
+  // 根據當前分頁選擇對應的專案數據
+  const currentProjects = activeTab === "kickstarter" ? kickstarterProjects : campfireProjects;
+
   // 計算統計數據
   const stats = {
-    totalProjects: globalProjects.length,
-    totalAmount: globalProjects.reduce((sum, p) => sum + p.amount, 0),
-    totalBackers: globalProjects.reduce((sum, p) => sum + p.backers, 0),
-    successRate: globalProjects.length > 0 
-      ? Math.round(globalProjects.filter(p => p.status === 'completed').length / globalProjects.length * 100)
+    totalProjects: currentProjects.length,
+    totalAmount: currentProjects.reduce((sum, p) => sum + p.amount, 0),
+    totalBackers: currentProjects.reduce((sum, p) => sum + p.backers, 0),
+    successRate: currentProjects.length > 0 
+      ? Math.round(currentProjects.filter(p => p.status === 'completed').length / currentProjects.length * 100)
       : 0,
   };
 
@@ -129,7 +133,7 @@ const GlobalData = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {globalProjects.slice(0, 10).map((project, index) => (
+                  {kickstarterProjects.slice(0, 10).map((project, index) => (
                     <div
                       key={project.id}
                       className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
@@ -180,29 +184,30 @@ const GlobalData = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <DataCard
-                    title="遊戲總數"
-                    value="1,234"
-                    subtitle="累計專案數"
+                    title="專案總數"
+                    value={campfireProjects.length.toString()}
+                    subtitle="Campfire專案"
                     icon={BarChart}
-                    trend="up"
                   />
                   <DataCard
-                    title="集資金額"
-                    value="¥2.8B"
-                    subtitle="總募資金額"
+                    title="累計金額"
+                    value={`¥${(campfireProjects.reduce((sum, p) => sum + p.amount, 0) / 1000000).toFixed(1)}M`}
+                    subtitle="總集資金額"
                     icon={DollarSign}
                     trend="up"
                   />
                   <DataCard
-                    title="贊助人數"
-                    value="245K"
+                    title="支持人數"
+                    value={campfireProjects.reduce((sum, p) => sum + p.backers, 0).toLocaleString()}
                     subtitle="總支持者數"
                     icon={Users}
                     trend="up"
                   />
                   <DataCard
                     title="成功率"
-                    value="71%"
+                    value={`${campfireProjects.length > 0 
+                      ? Math.round(campfireProjects.filter(p => p.status === 'completed').length / campfireProjects.length * 100)
+                      : 0}%`}
                     subtitle="平均成功率"
                     icon={TrendingUp}
                     trend="up"
@@ -221,42 +226,42 @@ const GlobalData = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
-                        1
+                  {campfireProjects.slice(0, 10).map((project, index) => (
+                    <div
+                      key={project.id}
+                      className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
+                          {index + 1}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">{project.name}</h3>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <Badge variant="outline" className="text-xs">
+                              {project.country}
+                            </Badge>
+                            <Badge variant="secondary" className="text-xs">
+                              {project.category}
+                            </Badge>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold">RPG遊戲專案</h3>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <Badge variant="outline" className="text-xs">日本</Badge>
-                          <Badge variant="secondary" className="text-xs">RPG</Badge>
+                      <div className="text-right">
+                        <div className="font-bold text-lg text-green-600">
+                          ¥{(project.amount / 1000000).toFixed(1)}M
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {project.backers.toLocaleString()} 名支持者
                         </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="font-bold text-lg text-green-600">¥45.2M</div>
-                      <div className="text-sm text-muted-foreground">2,340 名支持者</div>
+                  ))}
+                  {campfireProjects.length === 0 && (
+                    <div className="text-center text-muted-foreground py-8">
+                      暫無 Campfire 專案資料
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
-                        2
-                      </div>
-                      <div>
-                        <h3 className="font-semibold">卡牌遊戲</h3>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <Badge variant="outline" className="text-xs">日本</Badge>
-                          <Badge variant="secondary" className="text-xs">卡牌</Badge>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-bold text-lg text-green-600">¥32.8M</div>
-                      <div className="text-sm text-muted-foreground">1,890 名支持者</div>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

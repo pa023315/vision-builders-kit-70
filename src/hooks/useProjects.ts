@@ -67,6 +67,42 @@ export const useGlobalProjects = () => {
   })
 }
 
+export const useKickstarterProjects = () => {
+  return useQuery({
+    queryKey: ['kickstarter-projects'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('platform', 'Kickstarter')
+        .neq('country', '台灣')
+        .order('amount', { ascending: false })
+        .limit(10)
+      
+      if (error) throw error
+      return data as Project[]
+    },
+  })
+}
+
+export const useCampfireProjects = () => {
+  return useQuery({
+    queryKey: ['campfire-projects'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('platform', 'Campfire')
+        .neq('country', '台灣')
+        .order('amount', { ascending: false })
+        .limit(10)
+      
+      if (error) throw error
+      return data as Project[]
+    },
+  })
+}
+
 export const useCreateProject = () => {
   const { toast } = useToast()
   const queryClient = useQueryClient()
@@ -87,6 +123,8 @@ export const useCreateProject = () => {
       queryClient.invalidateQueries({ queryKey: ['taiwan-projects'] })
       queryClient.invalidateQueries({ queryKey: ['all-taiwan-projects'] })
       queryClient.invalidateQueries({ queryKey: ['global-projects'] })
+      queryClient.invalidateQueries({ queryKey: ['kickstarter-projects'] })
+      queryClient.invalidateQueries({ queryKey: ['campfire-projects'] })
       toast({
         title: "專案已創建",
         description: "新專案已成功添加到資料庫",
@@ -123,6 +161,8 @@ export const useUpdateProject = () => {
       queryClient.invalidateQueries({ queryKey: ['taiwan-projects'] })
       queryClient.invalidateQueries({ queryKey: ['all-taiwan-projects'] })
       queryClient.invalidateQueries({ queryKey: ['global-projects'] })
+      queryClient.invalidateQueries({ queryKey: ['kickstarter-projects'] })
+      queryClient.invalidateQueries({ queryKey: ['campfire-projects'] })
       toast({
         title: "專案已更新",
         description: "專案資料已成功更新",
@@ -156,6 +196,8 @@ export const useDeleteProject = () => {
       queryClient.invalidateQueries({ queryKey: ['taiwan-projects'] })
       queryClient.invalidateQueries({ queryKey: ['all-taiwan-projects'] })
       queryClient.invalidateQueries({ queryKey: ['global-projects'] })
+      queryClient.invalidateQueries({ queryKey: ['kickstarter-projects'] })
+      queryClient.invalidateQueries({ queryKey: ['campfire-projects'] })
       toast({
         title: "專案已刪除",
         description: "專案已從資料庫中移除",
