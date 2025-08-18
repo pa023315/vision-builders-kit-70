@@ -120,9 +120,26 @@ export const TaiwanProjectsAdmin = () => {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        jsonData.forEach((row: any) => {
+        console.log('Excel 資料:', jsonData); // Debug: 查看原始 Excel 資料
+        console.log('第一筆資料的所有欄位:', Object.keys(jsonData[0] || {})); // Debug: 查看所有欄位名稱
+
+        jsonData.forEach((row: any, index: number) => {
           const amount = parseInt(row['贊助金額'] || row['募資金額'] || row['amount'] || '0');
           const target = parseInt(row['目標金額'] || row['target'] || '1');
+          
+          // 嘗試多種可能的網址欄位名稱
+          const possibleUrlFields = ['網址', '專案網址', 'project_url', '連結', '專案連結', 'url', '網站', '專案網站'];
+          let projectUrl = '';
+          
+          for (const field of possibleUrlFields) {
+            if (row[field]) {
+              projectUrl = row[field];
+              break;
+            }
+          }
+
+          console.log(`第 ${index + 1} 筆資料網址:`, projectUrl); // Debug: 顯示每筆資料的網址
+
           const projectData = {
             name: row['名稱'] || row['專案名稱'] || row['name'] || '',
             description: row['描述'] || row['專案描述'] || row['description'] || row['名稱'] || '',
@@ -137,10 +154,12 @@ export const TaiwanProjectsAdmin = () => {
                     row['狀態'] === '失敗' ? 'failed' : 
                     row['status'] || 'active') as "active" | "completed" | "failed",
             image_url: row['圖片網址'] || row['image_url'] || '',
-            project_url: row['網址'] || row['專案網址'] || row['project_url'] || '',
+            project_url: projectUrl, // 使用找到的網址
             success_rate: row['達成率'] ? parseInt(row['達成率'].toString().replace('%', '')) : 
                          (target > 0 ? Math.round((amount / target) * 100) : 0),
           };
+
+          console.log(`準備匯入專案 ${index + 1}:`, projectData); // Debug: 顯示即將匯入的資料
 
           if (projectData.name && projectData.description) {
             createProject.mutate(projectData);
