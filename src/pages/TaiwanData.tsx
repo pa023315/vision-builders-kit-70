@@ -84,9 +84,9 @@ const TaiwanData = () => {
         {/* 詳細統計 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <DataCard
-            title="平均金額"
-            value={`NT$ ${(correctStats.avgAmount / 1000).toFixed(0)}K`}
-            subtitle="專案平均金額"
+            title="中位數金額"
+            value={`NT$ ${(correctStats.medianAmount / 1000).toFixed(0)}K`}
+            subtitle="專案中位數金額"
             icon={TrendingUp}
           />
           <DataCard
