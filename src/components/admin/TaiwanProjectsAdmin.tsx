@@ -29,6 +29,7 @@ export const TaiwanProjectsAdmin = () => {
     launch_date: "",
     status: "active" as "active" | "completed" | "failed",
     image_url: "",
+    project_url: "",
   });
 
   const { data: projects = [], isLoading } = useProjects();
@@ -49,6 +50,7 @@ export const TaiwanProjectsAdmin = () => {
       launch_date: "",
       status: "active" as "active" | "completed" | "failed",
       image_url: "",
+      project_url: "",
     });
     setEditingProject(null);
   };
@@ -91,6 +93,7 @@ export const TaiwanProjectsAdmin = () => {
       launch_date: project.launch_date,
       status: project.status,
       image_url: project.image_url || "",
+      project_url: project.project_url || "",
     });
     setIsAddDialogOpen(true);
   };
@@ -411,13 +414,23 @@ export const TaiwanProjectsAdmin = () => {
                       </div>
                     </div>
 
-                    <div>
-                      <Label>專案圖片</Label>
-                      <ImageUpload
-                        onChange={(url) => setFormData({ ...formData, image_url: url })}
-                        value={formData.image_url}
-                      />
-                    </div>
+                     <div>
+                       <Label htmlFor="project_url">專案網址</Label>
+                       <Input
+                         id="project_url"
+                         value={formData.project_url}
+                         onChange={(e) => setFormData({ ...formData, project_url: e.target.value })}
+                         placeholder="https://..."
+                       />
+                     </div>
+
+                     <div>
+                       <Label>專案圖片</Label>
+                       <ImageUpload
+                         onChange={(url) => setFormData({ ...formData, image_url: url })}
+                         value={formData.image_url}
+                       />
+                     </div>
 
                     <div className="flex justify-end gap-2">
                       <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
@@ -476,20 +489,31 @@ export const TaiwanProjectsAdmin = () => {
                     <TableCell>{project.platform}</TableCell>
                     <TableCell>{project.launch_date}</TableCell>
                     <TableCell>{project.category}</TableCell>
-                    <TableCell className="font-medium">{project.name}</TableCell>
+                     <TableCell className="font-medium">
+                       {project.project_url ? (
+                         <button
+                           onClick={() => window.open(project.project_url, '_blank')}
+                           className="text-primary hover:underline text-left"
+                         >
+                           {project.name}
+                         </button>
+                       ) : (
+                         project.name
+                       )}
+                     </TableCell>
                     <TableCell>{project.target.toLocaleString()}</TableCell>
                     <TableCell>{project.amount.toLocaleString()}</TableCell>
                     <TableCell>
                       {project.target > 0 ? Math.round((project.amount / project.target) * 100) : 0}%
                     </TableCell>
                     <TableCell>{project.backers}</TableCell>
-                    <TableCell>
-                      {project.image_url ? (
-                        <a href={project.image_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                          連結
-                        </a>
-                      ) : "無"}
-                    </TableCell>
+                     <TableCell>
+                       {project.project_url ? (
+                         <a href={project.project_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                           專案連結
+                         </a>
+                       ) : "無"}
+                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Button
