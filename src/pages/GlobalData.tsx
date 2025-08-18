@@ -63,67 +63,35 @@ const GlobalData = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <DataCard
-                title="遊戲總數"
+                title="專案總數"
                 value={stats.totalProjects.toString()}
-                subtitle="+12%"
-                icon={BarChart}
-                trend="up"
+                subtitle="國際專案"
+                icon={Globe}
               />
               <DataCard
-                title="成功專案"
-                value={globalProjects.filter(p => p.status === 'completed').length.toString()}
-                subtitle="+8%"
-                icon={Award}
-                trend="up"
-              />
-              <DataCard
-                title="總集資額"
+                title="累計金額"
                 value={`$${(stats.totalAmount / 1000000).toFixed(1)}M`}
-                subtitle="+15%"
+                subtitle="總集資金額"
                 icon={DollarSign}
                 trend="up"
               />
               <DataCard
-                title="平均金額"
-                value={`$${stats.totalProjects > 0 ? Math.round(stats.totalAmount / stats.totalProjects / 1000) : 0}K`}
-                subtitle="+3%"
-                icon={TrendingUp}
+                title="支持人數"
+                value={stats.totalBackers.toLocaleString()}
+                subtitle="全球支持者"
+                icon={Users}
                 trend="up"
+              />
+              <DataCard
+                title="成功率"
+                value={`${stats.successRate}%`}
+                subtitle="全球平均"
+                icon={TrendingUp}
+                trend="neutral"
               />
             </div>
           </CardContent>
         </Card>
-
-        {/* 全球市場概覽 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <DataCard
-            title="專案總數"
-            value={stats.totalProjects.toString()}
-            subtitle="國際專案"
-            icon={Globe}
-          />
-          <DataCard
-            title="累計金額"
-            value={`$${(stats.totalAmount / 1000000).toFixed(1)}M`}
-            subtitle="總集資金額"
-            icon={DollarSign}
-            trend="up"
-          />
-          <DataCard
-            title="支持人數"
-            value={stats.totalBackers.toLocaleString()}
-            subtitle="全球支持者"
-            icon={Users}
-            trend="up"
-          />
-          <DataCard
-            title="成功率"
-            value={`${stats.successRate}%`}
-            subtitle="全球平均"
-            icon={TrendingUp}
-            trend="neutral"
-          />
-        </div>
 
         {/* Kickstarter 史上前十名 */}
         <Card>
