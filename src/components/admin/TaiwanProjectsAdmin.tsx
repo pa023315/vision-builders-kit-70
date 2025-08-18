@@ -67,7 +67,10 @@ export const TaiwanProjectsAdmin = () => {
       backers: parseInt(formData.backers) || 0,
       success_rate: target > 0 ? Math.round((amount / target) * 100) : 0,
       country: "台灣", // 強制設定為台灣
+      project_url: formData.project_url || null, // 確保 project_url 正確處理
     };
+
+    console.log('提交的專案資料:', projectData); // Debug
 
     if (editingProject) {
       updateProject.mutate({ id: editingProject.id, ...projectData });
