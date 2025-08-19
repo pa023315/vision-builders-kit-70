@@ -6,7 +6,9 @@ import { Award, ExternalLink, Calendar, Users, DollarSign, TrendingUp } from "lu
 import { useCrowdfundingCases } from "@/hooks/useCrowdfundingCases";
 
 const Cases = () => {
+  console.log('Cases component rendered');
   const { data: crowdfundingCases = [], isLoading } = useCrowdfundingCases();
+  console.log('Crowdfunding cases data:', crowdfundingCases);
   
   if (isLoading) {
     return (
