@@ -143,7 +143,20 @@ const GlobalData = () => {
                           {index + 1}
                         </div>
                         <div>
-                          <h3 className="font-semibold">{project.name}</h3>
+                          {project.project_url ? (
+                            <h3 className="font-semibold">
+                              <a 
+                                href={project.project_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-primary hover:text-primary/80 transition-colors cursor-pointer"
+                              >
+                                {project.name}
+                              </a>
+                            </h3>
+                          ) : (
+                            <h3 className="font-semibold">{project.name}</h3>
+                          )}
                           <div className="flex items-center space-x-2 mt-1">
                             <Badge variant="outline" className="text-xs">
                               {project.country}
@@ -236,7 +249,20 @@ const GlobalData = () => {
                           {index + 1}
                         </div>
                         <div>
-                          <h3 className="font-semibold">{project.name}</h3>
+                          {project.project_url ? (
+                            <h3 className="font-semibold">
+                              <a 
+                                href={project.project_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-primary hover:text-primary/80 transition-colors cursor-pointer"
+                              >
+                                {project.name}
+                              </a>
+                            </h3>
+                          ) : (
+                            <h3 className="font-semibold">{project.name}</h3>
+                          )}
                           <div className="flex items-center space-x-2 mt-1">
                             <Badge variant="outline" className="text-xs">
                               {project.country}
