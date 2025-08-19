@@ -124,6 +124,8 @@ export const TaiwanProjectsAdmin = () => {
         console.log('第一筆資料的所有欄位:', Object.keys(jsonData[0] || {})); // Debug: 查看所有欄位名稱
 
         jsonData.forEach((row: any, index: number) => {
+          console.log(`處理第 ${index + 1} 筆資料:`, row); // Debug log
+          
           const amount = parseInt(row['贊助金額'] || row['募資金額'] || row['amount'] || '0');
           const target = parseInt(row['目標金額'] || row['target'] || '1');
           
@@ -140,29 +142,39 @@ export const TaiwanProjectsAdmin = () => {
 
           console.log(`第 ${index + 1} 筆資料網址:`, projectUrl); // Debug: 顯示每筆資料的網址
 
+          // 確保必要欄位有值
+          const projectName = row['名稱'] || row['專案名稱'] || row['name'] || `專案${index + 1}`;
+          const projectDescription = row['描述'] || row['專案描述'] || row['description'] || projectName;
+
           const projectData = {
-            name: row['名稱'] || row['專案名稱'] || row['name'] || '',
-            description: row['描述'] || row['專案描述'] || row['description'] || row['名稱'] || '',
-            amount: amount,
-            target: target,
-            backers: parseInt(row['人數'] || row['支持人數'] || row['backers'] || '0'),
-            platform: row['平台'] || row['platform'] || '',
-            category: (row['類型'] || row['分類'] || row['category'] || '').replace(/^手$/, '手機'),
+            name: projectName,
+            description: projectDescription,
+            amount: Math.max(0, amount),
+            target: Math.max(1, target),
+            backers: Math.max(0, parseInt(row['人數'] || row['支持人數'] || row['backers'] || '0')),
+            platform: row['平台'] || row['platform'] || 'Other',
+            category: (row['類型'] || row['分類'] || row['category'] || 'Other').replace(/^手$/, '手機'),
             country: '台灣',
-            launch_date: row['時程'] || row['上線日期'] || row['launch_date'] || '',
+            launch_date: row['時程'] || row['上線日期'] || row['launch_date'] || new Date().toISOString().split('T')[0],
             status: (row['狀態'] === '成功' ? 'completed' : 
                     row['狀態'] === '失敗' ? 'failed' : 
                     row['狀態'] === '進行中' ? 'active' : 'active') as "active" | "completed" | "failed",
             image_url: row['圖片網址'] || row['image_url'] || '',
-            project_url: projectUrl, // 使用找到的網址
+            project_url: projectUrl || '',
             success_rate: row['達成率'] ? parseInt(row['達成率'].toString().replace('%', '')) : 
                          (target > 0 ? Math.round((amount / target) * 100) : 0),
           };
 
           console.log(`準備匯入專案 ${index + 1}:`, projectData); // Debug: 顯示即將匯入的資料
 
-          if (projectData.name && projectData.description) {
-            createProject.mutate(projectData);
+          // 確保有基本必要資料再匯入
+          if (projectData.name && projectData.description && projectData.name.trim() !== '') {
+            // 使用 setTimeout 來避免太快的連續請求
+            setTimeout(() => {
+              createProject.mutate(projectData);
+            }, index * 100); // 每筆資料間隔100ms
+          } else {
+            console.warn(`跳過第 ${index + 1} 筆資料，缺少必要欄位:`, projectData);
           }
         });
 
