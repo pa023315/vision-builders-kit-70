@@ -301,7 +301,7 @@ export const KickstarterProjectsAdmin = () => {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="active">進行中</SelectItem>
-                            <SelectItem value="completed">已完成</SelectItem>
+                            <SelectItem value="completed">成功</SelectItem>
                             <SelectItem value="failed">失敗</SelectItem>
                           </SelectContent>
                         </Select>
