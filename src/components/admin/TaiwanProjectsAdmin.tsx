@@ -29,6 +29,7 @@ export const TaiwanProjectsAdmin = () => {
     launch_date: "",
     status: "active" as "active" | "completed" | "failed",
     image_url: "",
+    project_url: "",
   });
 
   const { data: projects = [], isLoading } = useProjects();
@@ -49,6 +50,7 @@ export const TaiwanProjectsAdmin = () => {
       launch_date: "",
       status: "active" as "active" | "completed" | "failed",
       image_url: "",
+      project_url: "",
     });
     setEditingProject(null);
   };
@@ -65,6 +67,7 @@ export const TaiwanProjectsAdmin = () => {
       backers: parseInt(formData.backers) || 0,
       success_rate: target > 0 ? Math.round((amount / target) * 100) : 0,
       country: "台灣", // 強制設定為台灣
+      project_url: formData.project_url || "",
     };
 
     console.log('提交的專案資料:', projectData); // Debug
@@ -93,6 +96,7 @@ export const TaiwanProjectsAdmin = () => {
       launch_date: project.launch_date,
       status: project.status,
       image_url: project.image_url || "",
+      project_url: project.project_url || "",
     });
     setIsAddDialogOpen(true);
   };
@@ -123,7 +127,18 @@ export const TaiwanProjectsAdmin = () => {
           const amount = parseInt(row['贊助金額'] || row['募資金額'] || row['amount'] || '0');
           const target = parseInt(row['目標金額'] || row['target'] || '1');
           
-          console.log(`第 ${index + 1} 筆資料:`, row); // Debug: 顯示每筆資料
+          // 嘗試多種可能的網址欄位名稱
+          const possibleUrlFields = ['網址', '專案網址', 'project_url', '連結', '專案連結', 'url', '網站', '專案網站'];
+          let projectUrl = '';
+          
+          for (const field of possibleUrlFields) {
+            if (row[field]) {
+              projectUrl = row[field];
+              break;
+            }
+          }
+
+          console.log(`第 ${index + 1} 筆資料網址:`, projectUrl); // Debug: 顯示每筆資料的網址
 
           const projectData = {
             name: row['名稱'] || row['專案名稱'] || row['name'] || '',
@@ -139,6 +154,7 @@ export const TaiwanProjectsAdmin = () => {
                     row['狀態'] === '失敗' ? 'failed' : 
                     row['status'] || 'active') as "active" | "completed" | "failed",
             image_url: row['圖片網址'] || row['image_url'] || '',
+            project_url: projectUrl, // 使用找到的網址
             success_rate: row['達成率'] ? parseInt(row['達成率'].toString().replace('%', '')) : 
                          (target > 0 ? Math.round((amount / target) * 100) : 0),
           };
@@ -429,6 +445,16 @@ export const TaiwanProjectsAdmin = () => {
                          onChange={(url) => setFormData({ ...formData, image_url: url })}
                          value={formData.image_url}
                        />
+                      </div>
+
+                     <div>
+                       <Label htmlFor="project_url">專案網址</Label>
+                       <Input
+                         id="project_url"
+                         value={formData.project_url}
+                         onChange={(e) => setFormData({ ...formData, project_url: e.target.value })}
+                         placeholder="https://..."
+                       />
                      </div>
 
                     <div className="flex justify-end gap-2">
@@ -488,14 +514,31 @@ export const TaiwanProjectsAdmin = () => {
                     <TableCell>{project.platform}</TableCell>
                     <TableCell>{project.launch_date}</TableCell>
                     <TableCell>{project.category}</TableCell>
-                     <TableCell className="font-medium">{project.name}</TableCell>
+                     <TableCell className="font-medium">
+                       {project.project_url ? (
+                         <button
+                           onClick={() => window.open(project.project_url, '_blank')}
+                           className="text-primary hover:underline text-left"
+                         >
+                           {project.name}
+                         </button>
+                       ) : (
+                         project.name
+                       )}
+                     </TableCell>
                     <TableCell>{project.target.toLocaleString()}</TableCell>
                     <TableCell>{project.amount.toLocaleString()}</TableCell>
                     <TableCell>
                       {project.target > 0 ? Math.round((project.amount / project.target) * 100) : 0}%
                     </TableCell>
                     <TableCell>{project.backers}</TableCell>
-                     <TableCell>無</TableCell>
+                     <TableCell>
+                       {project.project_url ? (
+                         <a href={project.project_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                           專案連結
+                         </a>
+                       ) : "無"}
+                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Button
