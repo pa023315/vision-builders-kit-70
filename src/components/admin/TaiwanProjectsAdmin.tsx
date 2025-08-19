@@ -152,7 +152,7 @@ export const TaiwanProjectsAdmin = () => {
             launch_date: row['時程'] || row['上線日期'] || row['launch_date'] || '',
             status: (row['狀態'] === '成功' || row['狀態'] === '已完成' ? 'completed' : 
                     row['狀態'] === '失敗' ? 'failed' : 
-                    row['status'] || 'active') as "active" | "completed" | "failed",
+                    row['狀態'] === '進行中' ? 'active' : 'active') as "active" | "completed" | "failed",
             image_url: row['圖片網址'] || row['image_url'] || '',
             project_url: projectUrl, // 使用找到的網址
             success_rate: row['達成率'] ? parseInt(row['達成率'].toString().replace('%', '')) : 
@@ -429,11 +429,11 @@ export const TaiwanProjectsAdmin = () => {
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="active">進行中</SelectItem>
-                            <SelectItem value="completed">已完成</SelectItem>
-                            <SelectItem value="failed">失敗</SelectItem>
-                          </SelectContent>
+                           <SelectContent className="bg-background border z-50">
+                             <SelectItem value="active">進行中</SelectItem>
+                             <SelectItem value="completed">成功</SelectItem>
+                             <SelectItem value="failed">失敗</SelectItem>
+                           </SelectContent>
                         </Select>
                       </div>
                     </div>
@@ -507,8 +507,8 @@ export const TaiwanProjectsAdmin = () => {
                         project.status === "completed" ? "default" :
                         project.status === "active" ? "secondary" : "destructive"
                       }>
-                        {project.status === "completed" ? "成功" :
-                         project.status === "active" ? "成功" : "失敗"}
+                         {project.status === "completed" ? "成功" :
+                          project.status === "active" ? "進行中" : "失敗"}
                       </Badge>
                     </TableCell>
                     <TableCell>{project.platform}</TableCell>
