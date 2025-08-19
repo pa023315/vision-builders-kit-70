@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Award, ExternalLink, Calendar, Users, DollarSign, TrendingUp } from "lucide-react";
-import { useCaseStudies } from "@/hooks/useCaseStudies";
+import { useCrowdfundingCases } from "@/hooks/useCrowdfundingCases";
 
 const Cases = () => {
-  const { data: caseStudies = [], isLoading } = useCaseStudies();
+  const { data: crowdfundingCases = [], isLoading } = useCrowdfundingCases();
   
   if (isLoading) {
     return (
@@ -20,7 +20,34 @@ const Cases = () => {
   }
 
   // 使用實際的案例數據，如果沒有則顯示模擬數據
-  const featuredCases = caseStudies && caseStudies.length > 0 ? caseStudies : [
+  const featuredCases = crowdfundingCases && crowdfundingCases.length > 0 ? crowdfundingCases.map(caseItem => ({
+    id: caseItem.id,
+    name: caseItem.name,
+    description: caseItem.description,
+    amount: `$${caseItem.amount.toLocaleString()}`,
+    target: `$${caseItem.target.toLocaleString()}`,
+    success_rate: `${caseItem.success_rate}%`,
+    backers: caseItem.backers,
+    platform: "群眾集資",
+    category: "遊戲專案",
+    country: "未知",
+    launch_date: new Date(caseItem.created_at).getFullYear().toString(),
+    highlights: [
+      "資金目標成功達成",
+      "群眾支持熱烈", 
+      "專案執行順利",
+      "產品品質優良"
+    ],
+    key_factors: [
+      "明確的產品定位",
+      "有效的行銷策略",
+      "良好的社群互動", 
+      "透明的進度更新"
+    ],
+    image_url: caseItem.image_url || "/placeholder.svg",
+    created_at: caseItem.created_at,
+    updated_at: caseItem.updated_at
+  })) : [
     {
       id: "demo-1",
       name: "Bloodstained: Ritual of the Night",
