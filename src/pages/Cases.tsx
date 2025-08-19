@@ -19,8 +19,8 @@ const Cases = () => {
     );
   }
 
-  // 如果沒有案例數據，顯示模擬數據
-  const featuredCases = caseStudies.length > 0 ? caseStudies : [
+  // 使用實際的案例數據，如果沒有則顯示模擬數據
+  const featuredCases = caseStudies && caseStudies.length > 0 ? caseStudies : [
     {
       id: "demo-1",
       name: "Bloodstained: Ritual of the Night",
