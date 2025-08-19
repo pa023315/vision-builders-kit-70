@@ -150,7 +150,7 @@ export const TaiwanProjectsAdmin = () => {
             category: (row['類型'] || row['分類'] || row['category'] || '').replace(/^手$/, '手機'),
             country: '台灣',
             launch_date: row['時程'] || row['上線日期'] || row['launch_date'] || '',
-            status: (row['狀態'] === '成功' || row['狀態'] === '已完成' ? 'completed' : 
+            status: (row['狀態'] === '成功' ? 'completed' : 
                     row['狀態'] === '失敗' ? 'failed' : 
                     row['狀態'] === '進行中' ? 'active' : 'active') as "active" | "completed" | "failed",
             image_url: row['圖片網址'] || row['image_url'] || '',
