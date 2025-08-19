@@ -160,6 +160,7 @@ export const TaiwanProjectsAdmin = () => {
                     row['狀態'] === '失敗' ? 'failed' : 
                     row['狀態'] === '進行中' ? 'active' : 'active') as "active" | "completed" | "failed",
             image_url: row['圖片網址'] || row['image_url'] || '',
+            project_url: row['專案網址'] || row['網址'] || row['project_url'] || '',
             success_rate: row['達成率'] ? parseInt(row['達成率'].toString().replace('%', '')) : 
                          (target > 0 ? Math.round((amount / target) * 100) : 0),
           };
