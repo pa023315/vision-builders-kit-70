@@ -68,18 +68,6 @@ const News = () => {
               {category}
             </Badge>
           ))}
-          <div className="flex items-center gap-2 ml-auto">
-            <Filter className="h-4 w-4 text-muted-foreground" />
-            <Button variant="outline" size="sm">
-              全部
-            </Button>
-            <Button variant="outline" size="sm" className="bg-blue-500 text-white border-blue-500">
-              一般
-            </Button>
-            <Button variant="outline" size="sm">
-              知識
-            </Button>
-          </div>
         </div>
 
         {/* 新聞網格 */}
