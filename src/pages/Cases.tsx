@@ -201,9 +201,19 @@ const Cases = () => {
                   </CardContent>
                 </div>
                 <div className="flex items-center justify-center bg-muted/30 p-8">
-                  <div className="text-center text-muted-foreground">
-                    <div className="w-32 h-32 bg-muted rounded-lg mb-4 flex items-center justify-center">
-                      遊戲截圖
+                  <div className="text-center">
+                    <div className="w-48 h-32 bg-muted rounded-lg mb-4 overflow-hidden">
+                      {caseItem.image_url ? (
+                        <img 
+                          src={caseItem.image_url} 
+                          alt={`${caseItem.name} 遊戲截圖`}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                          遊戲截圖
+                        </div>
+                      )}
                     </div>
                     <Button variant="outline" size="sm">
                       查看詳細案例
