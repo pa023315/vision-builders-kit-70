@@ -25,7 +25,7 @@ All colors MUST be HSL.
     --secondary: 50 100% 60%; /* Yellow-green accent */
     --secondary-foreground: 0 0% 0%;
 
-    --accent: 330 100% 60%; /* Hot pink accent */
+    --accent: 15 85% 65%; /* Coral accent */
     --accent-foreground: 0 0% 100%;
 
     --muted: 0 0% 15%;
@@ -77,7 +77,7 @@ All colors MUST be HSL.
     --secondary: 50 100% 65%;
     --secondary-foreground: 0 0% 0%;
 
-    --accent: 330 100% 65%;
+    --accent: 15 85% 70%;
     --accent-foreground: 0 0% 100%;
 
     --muted: 0 0% 12%;
