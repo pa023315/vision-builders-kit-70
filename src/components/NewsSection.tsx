@@ -11,9 +11,6 @@ const NewsSection = () => {
   // Show latest 8 news items for better grid layout
   const newsItems = news.slice(0, 8);
 
-  // Category tags for filtering
-  const categories = ["焦點", "手機", "PC", "TV", "動漫畫", "新聞", "宿物", "活動", "電玩瘋"];
-
   return (
     <section className="py-20 bg-background">
       <div className="container">
@@ -27,23 +24,6 @@ const NewsSection = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             掌握數位遊戲群眾集資的最新動態、市場趨勢與成功案例分析
           </p>
-        </div>
-
-        {/* Category Filter Tabs */}
-        <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {categories.map((category, index) => (
-            <Badge
-              key={category}
-              variant={index === 0 ? "default" : "secondary"}
-              className={`px-4 py-2 text-sm cursor-pointer transition-all hover:scale-105 ${
-                index === 0 
-                  ? "bg-primary text-primary-foreground" 
-                  : "bg-muted hover:bg-muted/80"
-              }`}
-            >
-              {category}
-            </Badge>
-          ))}
         </div>
 
         {/* News Grid */}
