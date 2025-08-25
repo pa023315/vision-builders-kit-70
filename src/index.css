@@ -40,10 +40,10 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    /* Gaming/Tech gradients inspired by avalanche */
-    --gradient-primary: linear-gradient(135deg, hsl(280 100% 70%), hsl(330 100% 60%));
-    --gradient-accent: linear-gradient(135deg, hsl(330 100% 60%), hsl(50 100% 60%));
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 5%), hsl(280 50% 10%));
+    /* Gaming/Tech solid colors */
+    --gradient-primary: hsl(280 100% 70%);
+    --gradient-accent: hsl(330 100% 60%);
+    --gradient-hero: hsl(0 0% 8%);
     
     /* Gaming/Tech shadows */
     --shadow-glow: 0 0 40px hsl(280 100% 70% / 0.3);
@@ -90,10 +90,10 @@ All colors MUST be HSL.
     --input: 0 0% 12%;
     --ring: 280 100% 75%;
 
-    /* Dark mode gaming/tech gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(280 100% 75%), hsl(330 100% 65%));
-    --gradient-accent: linear-gradient(135deg, hsl(330 100% 65%), hsl(50 100% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 2%), hsl(280 50% 8%));
+    /* Dark mode gaming/tech solid colors */
+    --gradient-primary: hsl(280 100% 75%);
+    --gradient-accent: hsl(330 100% 65%);
+    --gradient-hero: hsl(0 0% 3%);
     
     /* Dark mode gaming/tech shadows */
     --shadow-glow: 0 0 50px hsl(280 100% 75% / 0.4);
