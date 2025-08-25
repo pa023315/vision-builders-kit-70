@@ -14,7 +14,7 @@ const News = () => {
   const { data: news = [] } = useNews();
 
   // Category tags for filtering
-  const categories = ["全部", "知識", "一般"];
+  const categories = ["全部", "知識", "新聞"];
 
   const filteredNews = news.filter(newsItem => {
     const matchesSearch = newsItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -102,7 +102,7 @@ const News = () => {
                       : "bg-gray-500/90 text-white"
                   }`}
                 >
-                  {news.category || "一般"}
+                  {news.category || "新聞"}
                 </Badge>
 
                 {/* 內容覆蓋 */}
