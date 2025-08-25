@@ -30,7 +30,7 @@ const News = () => {
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">
             新聞與
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="text-primary">
               深度報導
             </span>
           </h1>
@@ -91,7 +91,7 @@ const News = () => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   {/* 漸變遮罩 */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-black/60" />
                 </div>
 
                 {/* 分類標籤 */}

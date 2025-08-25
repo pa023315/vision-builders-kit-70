@@ -17,7 +17,7 @@ const NewsSection = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold mb-4">
             最新資訊與
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="text-primary">
               深度分析
             </span>
           </h2>
@@ -42,7 +42,7 @@ const NewsSection = () => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-black/60" />
                 </div>
 
                 {/* Platform Badge */}

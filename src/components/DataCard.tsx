@@ -33,7 +33,7 @@ const DataCard = ({ title, value, subtitle, icon: Icon, trend, className }: Data
         )}
       </CardHeader>
       <CardContent>
-        <div className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        <div className="text-3xl font-bold text-primary">
           {value}
         </div>
         {subtitle && (

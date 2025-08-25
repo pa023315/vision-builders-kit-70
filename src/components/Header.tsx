@@ -23,10 +23,10 @@ const Header = () => {
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
-          <div className="p-2 rounded-lg bg-gradient-to-br from-primary to-secondary">
+          <div className="p-2 rounded-lg bg-primary">
             <GamepadIcon className="h-6 w-6 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <span className="text-xl font-bold text-primary">
             Digital Game Crowdfunding
           </span>
         </Link>

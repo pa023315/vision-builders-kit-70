@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-background via-background to-accent/5">
+    <section className="relative overflow-hidden bg-background">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
@@ -17,7 +17,7 @@ const HeroSection = () => {
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
                 數位遊戲
-                <span className="block bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                <span className="block text-primary">
                   群眾集資
                 </span>
                 洞察平台
@@ -45,7 +45,7 @@ const HeroSection = () => {
 
           {/* Right Content - Illustration/Visual */}
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl blur-xl"></div>
+            <div className="absolute inset-0 bg-primary/10 rounded-3xl blur-xl"></div>
             <div className="relative bg-card/50 backdrop-blur-sm border rounded-3xl p-8">
               <div className="text-center space-y-4">
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">

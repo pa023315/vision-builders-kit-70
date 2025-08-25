@@ -18,7 +18,7 @@ const Admin = () => {
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold">
               後台管理
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent ml-2">
+              <span className="text-primary ml-2">
                 系統
               </span>
             </h1>

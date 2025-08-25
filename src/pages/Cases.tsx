@@ -124,7 +124,7 @@ const Cases = () => {
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">
             成功案例
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="text-primary">
               深度解析
             </span>
           </h1>

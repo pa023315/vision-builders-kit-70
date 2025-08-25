@@ -174,7 +174,7 @@ const Resources = () => {
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">
             資源與
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="text-primary">
               工具庫
             </span>
           </h1>
