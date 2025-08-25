@@ -18,9 +18,9 @@ All colors MUST be HSL.
     --popover-foreground: 0 0% 95%;
 
     /* Gaming/Tech theme colors inspired by avalanche */
-    --primary: 280 100% 70%; /* Purple-magenta accent */
+    --primary: 15 85% 65%; /* Coral accent */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 280 100% 80%;
+    --primary-glow: 15 85% 75%;
 
     --secondary: 50 100% 60%; /* Yellow-green accent */
     --secondary-foreground: 0 0% 0%;
@@ -36,7 +36,7 @@ All colors MUST be HSL.
 
     --border: 0 0% 20%;
     --input: 0 0% 15%;
-    --ring: 280 100% 70%;
+    --ring: 15 85% 65%;
 
     --radius: 0.75rem;
 
@@ -70,9 +70,9 @@ All colors MUST be HSL.
     --popover-foreground: 0 0% 98%;
 
     /* Dark mode gaming/tech colors */
-    --primary: 280 100% 75%;
+    --primary: 15 85% 70%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 280 100% 85%;
+    --primary-glow: 15 85% 80%;
 
     --secondary: 50 100% 65%;
     --secondary-foreground: 0 0% 0%;
@@ -88,7 +88,7 @@ All colors MUST be HSL.
 
     --border: 0 0% 18%;
     --input: 0 0% 12%;
-    --ring: 280 100% 75%;
+    --ring: 15 85% 70%;
 
     /* Dark mode gaming/tech solid colors */
     --gradient-primary: hsl(280 100% 75%);
