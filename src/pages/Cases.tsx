@@ -206,12 +206,12 @@ const Cases = () => {
                       {caseItem.image_url ? (
                         <img 
                           src={caseItem.image_url} 
-                          alt={`${caseItem.name} 遊戲截圖`}
+                          alt={`${caseItem.name} 專案圖片`}
                           className="w-full h-full object-cover"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                          遊戲截圖
+                          專案圖片
                         </div>
                       )}
                     </div>
