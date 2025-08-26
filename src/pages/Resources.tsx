@@ -85,14 +85,21 @@ const Resources = () => {
   ];
 
   const quickLinks = [
-    { name: "嘖嘖官網", url: "#", category: "平台" },
-    { name: "FlyingV官網", url: "#", category: "平台" },
-    { name: "Kickstarter", url: "#", category: "平台" },
-    { name: "Indiegogo", url: "#", category: "平台" },
-    { name: "台灣遊戲產業振興會", url: "#", category: "組織" },
-    { name: "獨立遊戲開發者協會", url: "#", category: "組織" },
-    { name: "遊戲產業研究報告", url: "#", category: "研究" },
-    { name: "群眾集資法規指南", url: "#", category: "法規" }
+    { name: "FlyingV", url: "https://www.flyingv.cc/", category: "平台" },
+    { name: "嘖嘖", url: "https://www.zeczec.com/", category: "平台" },
+    { name: "挖貝 Wabay", url: "https://wabay.tw/", category: "平台" },
+    { name: "Pinkoi", url: "https://www.pinkoi.com/topic/crowdfunding", category: "平台" },
+    { name: "度度客", url: "https://dodoker.com/", category: "平台" },
+    { name: "Kickstarter", url: "https://www.kickstarter.com/", category: "平台" },
+    { name: "Indiegogo", url: "https://www.indiegogo.com/", category: "平台" },
+    { name: "gofundme", url: "https://www.gofundme.com/", category: "平台" },
+    { name: "makuake", url: "https://www.makuake.com/", category: "平台" },
+    { name: "Campfire", url: "https://camp-fire.jp/", category: "平台" },
+    { name: "ubgoe", url: "https://ubgoe.com/", category: "平台" },
+    { name: "GREEN FUNDING", url: "https://greenfunding.jp/", category: "平台" },
+    { name: "摩點", url: "https://www.modian.com/", category: "平台" },
+    { name: "readyfor", url: "https://readyfor.jp/", category: "平台" },
+    { name: "Wadiz", url: "https://www.wadiz.kr/home", category: "平台" }
   ];
 
   return (
@@ -192,15 +199,20 @@ const Resources = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {quickLinks.map((link, index) => (
-                <div key={index} className="group">
-                  <div className="text-xs text-muted-foreground mb-1">{link.category}</div>
-                  <Button variant="outline" size="sm" className="w-full justify-start group-hover:border-primary">
-                    {link.name}
-                    <ExternalLink className="ml-auto h-3 w-3" />
-                  </Button>
-                </div>
+                <Button 
+                  key={index} 
+                  variant="outline" 
+                  size="sm" 
+                  className="justify-start group-hover:border-primary h-auto p-3"
+                  asChild
+                >
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">
+                    <span className="truncate">{link.name}</span>
+                    <ExternalLink className="ml-auto h-3 w-3 flex-shrink-0" />
+                  </a>
+                </Button>
               ))}
             </div>
           </CardContent>
