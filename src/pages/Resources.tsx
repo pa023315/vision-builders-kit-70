@@ -4,76 +4,39 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
   BookOpen, 
-  Video, 
   FileText, 
   Link as LinkIcon, 
   Download, 
   ExternalLink, 
-  Users, 
   MessageCircle,
   Lightbulb,
-  Target
+  Target,
+  Mail
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const Resources = () => {
+  const { data: beginnerGuides } = useQuery({
+    queryKey: ['beginner-guides'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('beginner_guides')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
   const resourceCategories = [
     {
       title: "新手指南",
       icon: BookOpen,
       description: "群眾集資入門必讀",
       color: "text-blue-600",
-      resources: [
-        {
-          title: "群眾集資完全攻略",
-          type: "PDF指南",
-          description: "從策劃到執行的完整指南，包含實際案例分析",
-          link: "#",
-          isExternal: false
-        },
-        {
-          title: "平台選擇比較表",
-          type: "比較工具",
-          description: "台灣與國際主要平台的詳細比較分析",
-          link: "#",
-          isExternal: false
-        },
-        {
-          title: "資金規劃計算器",
-          type: "線上工具",
-          description: "協助計算合理的集資目標與成本分析",
-          link: "#",
-          isExternal: false
-        }
-      ]
-    },
-    {
-      title: "教學影片",
-      icon: Video,
-      description: "專家經驗分享",
-      color: "text-red-600",
-      resources: [
-        {
-          title: "群眾集資策劃工作坊",
-          type: "線上課程",
-          description: "6小時完整課程，涵蓋策劃、行銷、執行",
-          link: "#",
-          isExternal: true
-        },
-        {
-          title: "成功開發者訪談系列",
-          type: "訪談影片",
-          description: "與成功開發者的深度對談，分享實戰經驗",
-          link: "#",
-          isExternal: true
-        },
-        {
-          title: "平台操作教學",
-          type: "教學影片",
-          description: "各大平台的詳細操作流程說明",
-          link: "#",
-          isExternal: false
-        }
-      ]
+      resources: beginnerGuides || []
     },
     {
       title: "範本工具",
@@ -83,53 +46,18 @@ const Resources = () => {
       resources: [
         {
           title: "專案企劃書範本",
-          type: "Word範本",
           description: "標準化的專案企劃書格式與範例",
-          link: "#",
-          isExternal: false
+          url: "#"
         },
         {
           title: "預算規劃表",
-          type: "Excel範本",
           description: "詳細的成本分析與預算規劃工具",
-          link: "#",
-          isExternal: false
+          url: "#"
         },
         {
           title: "行銷時程表",
-          type: "項目管理",
           description: "群眾集資行銷活動的時程規劃範本",
-          link: "#",
-          isExternal: false
-        }
-      ]
-    },
-    {
-      title: "社群資源",
-      icon: Users,
-      description: "開發者交流平台",
-      color: "text-purple-600",
-      resources: [
-        {
-          title: "台灣遊戲開發者社群",
-          type: "Discord群組",
-          description: "與其他開發者交流經驗、尋求建議",
-          link: "#",
-          isExternal: true
-        },
-        {
-          title: "群眾集資經驗分享區",
-          type: "論壇",
-          description: "專門討論群眾集資的社群平台",
-          link: "#",
-          isExternal: true
-        },
-        {
-          title: "每月線上聚會",
-          type: "活動",
-          description: "定期舉辦的線上交流會與工作坊",
-          link: "#",
-          isExternal: false
+          url: "#"
         }
       ]
     }
@@ -239,18 +167,13 @@ const Resources = () => {
                   {category.resources.map((resource, idx) => (
                     <div key={idx} className="flex items-start justify-between p-3 rounded-lg border hover:bg-accent/50 transition-colors">
                       <div className="flex-1">
-                        <h4 className="font-medium">{resource.title}</h4>
+                        <h4 className="font-medium">{resource.title || resource.name}</h4>
                         <p className="text-xs text-muted-foreground mt-1">{resource.description}</p>
-                        <Badge variant="outline" className="text-xs mt-2">
-                          {resource.type}
-                        </Badge>
                       </div>
-                      <Button variant="ghost" size="sm">
-                        {resource.isExternal ? (
+                      <Button variant="ghost" size="sm" asChild>
+                        <a href={resource.url} target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="h-4 w-4" />
-                        ) : (
-                          <Download className="h-4 w-4" />
-                        )}
+                        </a>
                       </Button>
                     </div>
                   ))}
@@ -283,30 +206,25 @@ const Resources = () => {
           </CardContent>
         </Card>
 
-        {/* 聯絡與支援 */}
+        {/* 專家諮詢 */}
         <Card className="mt-8">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <MessageCircle className="h-5 w-5 mr-2 text-primary" />
-              需要協助？
+              <Target className="h-5 w-5 mr-2 text-primary" />
+              專家諮詢
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-center">
-                <MessageCircle className="h-6 w-6 mb-2" />
-                <span className="font-medium">線上諮詢</span>
-                <span className="text-xs text-muted-foreground">即時回答您的問題</span>
-              </Button>
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-center">
-                <Users className="h-6 w-6 mb-2" />
-                <span className="font-medium">加入社群</span>
-                <span className="text-xs text-muted-foreground">與其他開發者交流</span>
-              </Button>
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-center">
-                <Target className="h-6 w-6 mb-2" />
-                <span className="font-medium">專家諮詢</span>
-                <span className="text-xs text-muted-foreground">一對一專業建議</span>
+            <div className="text-center p-6">
+              <Mail className="h-12 w-12 mx-auto mb-4 text-primary" />
+              <h3 className="text-lg font-medium mb-2">需要專業建議？</h3>
+              <p className="text-muted-foreground mb-4">
+                我們的專家團隊隨時為您提供一對一諮詢服務
+              </p>
+              <Button asChild>
+                <a href="mailto:service@pa023315.com">
+                  請來信 service@pa023315.com
+                </a>
               </Button>
             </div>
           </CardContent>
