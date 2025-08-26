@@ -58,17 +58,6 @@ const NewsSection = () => {
                     {item.title}
                   </h3>
                   
-                  {/* Interaction Stats */}
-                  <div className="flex items-center gap-4 text-xs opacity-80">
-                    <div className="flex items-center gap-1">
-                      <Heart className="h-3 w-3" />
-                      <span>{Math.floor(Math.random() * 100) + 10}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <MessageCircle className="h-3 w-3" />
-                      <span>{Math.floor(Math.random() * 50) + 5}</span>
-                    </div>
-                  </div>
                 </CardContent>
               </div>
             </Card>
