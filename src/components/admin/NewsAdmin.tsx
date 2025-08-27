@@ -195,7 +195,7 @@ export const NewsAdmin = () => {
                     <Label htmlFor="published_at">發布日期</Label>
                     <Input
                       id="published_at"
-                      type="datetime-local"
+                      type="date"
                       value={formData.published_at}
                       onChange={(e) => setFormData({ ...formData, published_at: e.target.value })}
                       required
