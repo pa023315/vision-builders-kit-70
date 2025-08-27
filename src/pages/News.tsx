@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Heart, MessageCircle, Search, Filter } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { useState } from "react";
 import { useNews } from "@/hooks/useNews";
 
@@ -111,24 +111,12 @@ const News = () => {
                     {news.title}
                   </h3>
                   
-                  {/* 互動統計 */}
-                  <div className="flex items-center justify-between text-xs opacity-80">
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-1">
-                        <Heart className="h-3 w-3" />
-                        <span>{Math.floor(Math.random() * 100) + 10}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <MessageCircle className="h-3 w-3" />
-                        <span>{Math.floor(Math.random() * 50) + 5}</span>
-                      </div>
-                    </div>
-                    <div className="text-xs">
-                      {new Date(news.published_at).toLocaleDateString('zh-TW', { 
-                        month: 'numeric', 
-                        day: 'numeric' 
-                      })}
-                    </div>
+                  {/* 發布日期 */}
+                  <div className="text-xs opacity-80">
+                    {new Date(news.published_at).toLocaleDateString('zh-TW', { 
+                      month: 'numeric', 
+                      day: 'numeric' 
+                    })}
                   </div>
                   
                   {/* 作者信息 */}
