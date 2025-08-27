@@ -4,10 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Award, ExternalLink, Calendar, Users, DollarSign, TrendingUp } from "lucide-react";
 import { useCrowdfundingCases } from "@/hooks/useCrowdfundingCases";
+import { useGameShowcases } from "@/hooks/useGameShowcases";
 
 const Cases = () => {
   console.log('Cases component rendered');
   const { data: crowdfundingCases = [], isLoading } = useCrowdfundingCases();
+  const { data: gameShowcases = [], isLoading: gameLoading } = useGameShowcases();
   console.log('Crowdfunding cases data:', crowdfundingCases);
   
   if (isLoading) {
