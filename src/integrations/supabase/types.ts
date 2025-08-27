@@ -141,6 +141,7 @@ export type Database = {
           launch_date: string | null
           name: string
           platform: string
+          project_url: string | null
           status: string
           success_rate: number
           target: number
@@ -158,6 +159,7 @@ export type Database = {
           launch_date?: string | null
           name: string
           platform: string
+          project_url?: string | null
           status?: string
           success_rate?: number
           target?: number
@@ -175,6 +177,7 @@ export type Database = {
           launch_date?: string | null
           name?: string
           platform?: string
+          project_url?: string | null
           status?: string
           success_rate?: number
           target?: number
