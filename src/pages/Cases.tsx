@@ -268,46 +268,6 @@ const Cases = () => {
           </div>
         )}
 
-        {/* 成功要素分析 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Award className="h-5 w-5 mr-2 text-primary" />
-                成功關鍵要素
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {caseAnalysis.successFactors.map((factor, index) => (
-                  <div key={index} className="border-l-4 border-primary pl-4">
-                    <h4 className="font-semibold mb-1">{factor.title}</h4>
-                    <p className="text-sm text-muted-foreground">{factor.description}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <TrendingUp className="h-5 w-5 mr-2 text-destructive" />
-                常見失敗原因
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {caseAnalysis.commonMistakes.map((mistake, index) => (
-                  <div key={index} className="flex items-center">
-                    <span className="w-2 h-2 bg-destructive rounded-full mr-3"></span>
-                    <span className="text-sm">{mistake}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
 
       </main>
     </div>
