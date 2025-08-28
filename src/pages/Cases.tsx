@@ -170,36 +170,6 @@ const Cases = () => {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h4 className="font-semibold mb-2 flex items-center">
-                          <Award className="h-4 w-4 mr-2 text-primary" />
-                          成功亮點
-                        </h4>
-                        <ul className="space-y-1">
-                          {caseItem.highlights.map((highlight, index) => (
-                            <li key={index} className="text-sm text-muted-foreground flex items-center">
-                              <span className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></span>
-                              {highlight}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <h4 className="font-semibold mb-2 flex items-center">
-                          <TrendingUp className="h-4 w-4 mr-2 text-primary" />
-                          關鍵因素
-                        </h4>
-                        <ul className="space-y-1">
-                          {caseItem.key_factors.map((factor, index) => (
-                            <li key={index} className="text-sm text-muted-foreground flex items-center">
-                              <span className="w-1.5 h-1.5 bg-secondary rounded-full mr-2"></span>
-                              {factor}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
                   </CardContent>
                 </div>
                 <div className="flex items-center justify-center bg-muted/30 p-8">
