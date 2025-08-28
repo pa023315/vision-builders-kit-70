@@ -228,6 +228,87 @@ const Cases = () => {
           ))}
         </div>
 
+        {/* 遊戲內呈現案例 */}
+        {gameShowcases && gameShowcases.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold mb-6">遊戲內呈現案例</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {gameShowcases.map((showcase) => (
+                <Card key={showcase.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="aspect-video bg-muted relative overflow-hidden">
+                    {showcase.image_url ? (
+                      <img 
+                        src={showcase.image_url} 
+                        alt={`${showcase.name} 遊戲截圖`}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                        遊戲截圖
+                      </div>
+                    )}
+                  </div>
+                  <CardHeader>
+                    <CardTitle className="text-xl">{showcase.name}</CardTitle>
+                    <p className="text-muted-foreground line-clamp-3">{showcase.description}</p>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    {showcase.game_url && (
+                      <Button variant="outline" size="sm" className="w-full" asChild>
+                        <a href={showcase.game_url} target="_blank" rel="noopener noreferrer">
+                          查看遊戲
+                          <ExternalLink className="ml-2 h-3 w-3" />
+                        </a>
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 成功要素分析 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Award className="h-5 w-5 mr-2 text-primary" />
+                成功關鍵要素
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {caseAnalysis.successFactors.map((factor, index) => (
+                  <div key={index} className="border-l-4 border-primary pl-4">
+                    <h4 className="font-semibold mb-1">{factor.title}</h4>
+                    <p className="text-sm text-muted-foreground">{factor.description}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <TrendingUp className="h-5 w-5 mr-2 text-destructive" />
+                常見失敗原因
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {caseAnalysis.commonMistakes.map((mistake, index) => (
+                  <div key={index} className="flex items-center">
+                    <span className="w-2 h-2 bg-destructive rounded-full mr-3"></span>
+                    <span className="text-sm">{mistake}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
       </main>
     </div>
   );
