@@ -153,7 +153,7 @@ const Cases = () => {
                   <CardContent>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-green-600">{caseItem.amount}</div>
+                        <div className="text-2xl font-bold text-primary">{caseItem.amount}</div>
                         <div className="text-xs text-muted-foreground">最終金額</div>
                       </div>
                       <div className="text-center">

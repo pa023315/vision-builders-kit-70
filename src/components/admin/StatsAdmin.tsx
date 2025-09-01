@@ -214,7 +214,7 @@ export const StatsAdmin = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold text-primary">
                 {[...taiwanProjects, ...globalProjects].filter(p => p.status === 'completed').length}
               </div>
               <div className="text-sm text-muted-foreground">已完成</div>

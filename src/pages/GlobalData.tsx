@@ -168,7 +168,7 @@ const GlobalData = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold text-lg text-green-600">
+                        <div className="font-bold text-lg text-primary">
                           ${(project.amount / 1000000).toFixed(1)}M
                         </div>
                         <div className="text-sm text-muted-foreground">
@@ -274,7 +274,7 @@ const GlobalData = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold text-lg text-green-600">
+                        <div className="font-bold text-lg text-primary">
                           ¥{(project.amount / 1000000).toFixed(1)}M
                         </div>
                         <div className="text-sm text-muted-foreground">

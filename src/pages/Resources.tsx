@@ -42,7 +42,7 @@ const Resources = () => {
       title: "範本工具",
       icon: FileText,
       description: "實用文件範本",
-      color: "text-green-600",
+      color: "text-primary",
       resources: [
         {
           title: "專案企劃書範本",

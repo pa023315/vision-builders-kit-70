@@ -14,7 +14,7 @@ const DataCard = ({ title, value, subtitle, icon: Icon, trend, className }: Data
   const getTrendColor = () => {
     switch (trend) {
       case "up":
-        return "text-green-500";
+        return "text-primary";
       case "down":
         return "text-red-500";
       default:

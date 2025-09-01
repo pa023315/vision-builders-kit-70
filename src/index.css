@@ -17,15 +17,15 @@ All colors MUST be HSL.
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 95%;
 
-    /* Gaming/Tech theme colors inspired by avalanche */
-    --primary: 15 85% 65%; /* Coral accent */
+    /* Purple/Pink theme colors */
+    --primary: 280 100% 70%; /* Purple primary */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 15 85% 75%;
+    --primary-glow: 280 100% 80%;
 
-    --secondary: 50 100% 60%; /* Yellow-green accent */
-    --secondary-foreground: 0 0% 0%;
+    --secondary: 0 0% 45%; /* Neutral gray */
+    --secondary-foreground: 0 0% 98%;
 
-    --accent: 15 85% 65%; /* Coral accent */
+    --accent: 330 100% 65%; /* Pink accent */
     --accent-foreground: 0 0% 100%;
 
     --muted: 0 0% 15%;
@@ -36,16 +36,16 @@ All colors MUST be HSL.
 
     --border: 0 0% 20%;
     --input: 0 0% 15%;
-    --ring: 15 85% 65%;
+    --ring: 280 100% 70%;
 
     --radius: 0.75rem;
 
-    /* Gaming/Tech solid colors */
+    /* Purple/Pink theme gradients */
     --gradient-primary: hsl(280 100% 70%);
-    --gradient-accent: hsl(330 100% 60%);
+    --gradient-accent: hsl(330 100% 65%);
     --gradient-hero: hsl(0 0% 8%);
     
-    /* Gaming/Tech shadows */
+    /* Purple/Pink theme shadows */
     --shadow-glow: 0 0 40px hsl(280 100% 70% / 0.3);
     --shadow-card: 0 8px 32px -8px hsl(280 100% 70% / 0.15);
 
@@ -69,15 +69,15 @@ All colors MUST be HSL.
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
 
-    /* Dark mode gaming/tech colors */
-    --primary: 15 85% 70%;
+    /* Dark mode purple/pink colors */
+    --primary: 280 100% 75%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 15 85% 80%;
+    --primary-glow: 280 100% 85%;
 
-    --secondary: 50 100% 65%;
-    --secondary-foreground: 0 0% 0%;
+    --secondary: 0 0% 50%;
+    --secondary-foreground: 0 0% 98%;
 
-    --accent: 15 85% 70%;
+    --accent: 330 100% 70%;
     --accent-foreground: 0 0% 100%;
 
     --muted: 0 0% 12%;
@@ -88,14 +88,14 @@ All colors MUST be HSL.
 
     --border: 0 0% 18%;
     --input: 0 0% 12%;
-    --ring: 15 85% 70%;
+    --ring: 280 100% 75%;
 
-    /* Dark mode gaming/tech solid colors */
+    /* Dark mode purple/pink gradients */
     --gradient-primary: hsl(280 100% 75%);
-    --gradient-accent: hsl(330 100% 65%);
+    --gradient-accent: hsl(330 100% 70%);
     --gradient-hero: hsl(0 0% 3%);
     
-    /* Dark mode gaming/tech shadows */
+    /* Dark mode purple/pink shadows */
     --shadow-glow: 0 0 50px hsl(280 100% 75% / 0.4);
     --shadow-card: 0 8px 40px -8px hsl(280 100% 75% / 0.2);
 
