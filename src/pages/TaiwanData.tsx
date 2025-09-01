@@ -50,7 +50,7 @@ const TaiwanData = () => {
         </div>
 
         {/* 核心統計數據 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           <DataCard
             title="專案總數"
             value={correctStats.totalProjects.toString()}
@@ -82,7 +82,7 @@ const TaiwanData = () => {
         </div>
 
         {/* 詳細統計 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <DataCard
             title="中位數金額"
             value={`NT$ ${(correctStats.medianAmount / 1000).toFixed(0)}K`}
