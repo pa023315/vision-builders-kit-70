@@ -4,9 +4,121 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Users, DollarSign, Target, Award, BarChart } from "lucide-react";
 import { useAllTaiwanProjects } from "@/hooks/useProjects";
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import { useMemo } from 'react';
 
 const TaiwanData = () => {
   const { data: taiwanProjects = [], isLoading } = useAllTaiwanProjects();
+  
+  // 年度專案數量資料
+  const yearlyData = [
+    { year: 2013, count: 3 },
+    { year: 2014, count: 10 },
+    { year: 2015, count: 12 },
+    { year: 2016, count: 7 },
+    { year: 2017, count: 11 },
+    { year: 2018, count: 11 },
+    { year: 2019, count: 7 },
+    { year: 2020, count: 15 },
+    { year: 2021, count: 22 },
+    { year: 2022, count: 11 },
+    { year: 2023, count: 12 },
+    { year: 2024, count: 8 },
+    { year: 2025, count: 5 },
+  ];
+
+  // Highcharts 配置
+  const chartOptions = useMemo(() => {
+    // 獲取 CSS 變數值
+    const getThemeColor = (cssVar: string) => {
+      if (typeof window !== 'undefined') {
+        const computedStyle = getComputedStyle(document.documentElement);
+        const hslValue = computedStyle.getPropertyValue(cssVar).trim();
+        if (hslValue) {
+          return `hsl(${hslValue})`;
+        }
+      }
+      return '#C59B6D'; // 預設主色
+    };
+
+    return {
+      chart: {
+        type: 'line',
+        backgroundColor: 'transparent',
+        style: {
+          fontFamily: 'inherit'
+        }
+      },
+      title: {
+        text: null
+      },
+      xAxis: {
+        categories: yearlyData.map(d => d.year.toString()),
+        gridLineColor: getThemeColor('--border'),
+        lineColor: getThemeColor('--border'),
+        tickColor: getThemeColor('--border'),
+        labels: {
+          style: {
+            color: getThemeColor('--muted-foreground')
+          }
+        }
+      },
+      yAxis: {
+        title: {
+          text: '專案數量',
+          style: {
+            color: getThemeColor('--muted-foreground')
+          }
+        },
+        gridLineColor: getThemeColor('--border'),
+        lineColor: getThemeColor('--border'),
+        labels: {
+          style: {
+            color: getThemeColor('--muted-foreground')
+          }
+        }
+      },
+      series: [{
+        name: '專案數量',
+        data: yearlyData.map(d => d.count),
+        color: getThemeColor('--primary'),
+        marker: {
+          fillColor: getThemeColor('--primary'),
+          lineColor: getThemeColor('--primary-foreground'),
+          lineWidth: 2
+        }
+      }],
+      legend: {
+        enabled: false
+      },
+      tooltip: {
+        backgroundColor: getThemeColor('--popover'),
+        borderColor: getThemeColor('--border'),
+        style: {
+          color: getThemeColor('--popover-foreground')
+        },
+        formatter: function() {
+          return `<b>${this.x}年</b><br/>專案數量: ${this.y}`;
+        }
+      },
+      credits: {
+        enabled: false
+      },
+      responsive: {
+        rules: [{
+          condition: {
+            maxWidth: 500
+          },
+          chartOptions: {
+            legend: {
+              enabled: false
+            }
+          }
+        }]
+      }
+    };
+  }, []);
   
   if (isLoading) {
     return (
@@ -102,6 +214,24 @@ const TaiwanData = () => {
             icon={DollarSign}
           />
         </div>
+
+        {/* 年度專案數量趨勢圖 */}
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <TrendingUp className="h-5 w-5 mr-2 text-primary" />
+              年度專案數量趨勢（2013-2025）
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={chartOptions}
+              />
+            </div>
+          </CardContent>
+        </Card>
 
         {/* 台灣前十名案例 */}
         <Card>
