@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react';
 
 const TaiwanData = () => {
   const { data: taiwanProjects = [], isLoading } = useAllTaiwanProjects();
-  const [chartType, setChartType] = useState<'line' | 'column'>('line');
+  const [chartType, setChartType] = useState<'line' | 'column' | 'both'>('line');
   
   // 年度專案數量資料
   const yearlyData = [
@@ -233,6 +233,143 @@ const TaiwanData = () => {
       }
     };
   }, []);
+
+  // Highcharts 雙軸對照圖配置
+  const bothOptions = useMemo(() => {
+    const getThemeColor = (cssVar: string) => {
+      if (typeof window !== 'undefined') {
+        const computedStyle = getComputedStyle(document.documentElement);
+        const hslValue = computedStyle.getPropertyValue(cssVar).trim();
+        if (hslValue) {
+          return `hsl(${hslValue})`;
+        }
+      }
+      return '#C59B6D'; // 預設主色
+    };
+
+    const deepGold = '#8C6A2E'; // 深金色
+
+    return {
+      chart: {
+        backgroundColor: 'transparent',
+        spacingBottom: 28,
+        style: {
+          fontFamily: 'inherit'
+        }
+      },
+      title: {
+        text: null
+      },
+      xAxis: {
+        categories: yearlyData.map(d => d.year.toString()),
+        gridLineColor: getThemeColor('--border'),
+        lineColor: getThemeColor('--border'),
+        tickColor: getThemeColor('--border'),
+        labels: {
+          style: {
+            color: getThemeColor('--muted-foreground')
+          }
+        }
+      },
+      yAxis: [
+        {
+          // 左軸 - 贊助金額
+          title: {
+            text: '贊助金額 (NT$)',
+            style: {
+              color: getThemeColor('--muted-foreground')
+            }
+          },
+          gridLineColor: getThemeColor('--border'),
+          lineColor: getThemeColor('--border'),
+          labels: {
+            style: {
+              color: getThemeColor('--muted-foreground')
+            }
+          }
+        },
+        {
+          // 右軸 - 專案數量
+          title: {
+            text: '專案數量',
+            style: {
+              color: getThemeColor('--muted-foreground')
+            }
+          },
+          opposite: true,
+          gridLineWidth: 0,
+          lineColor: getThemeColor('--border'),
+          labels: {
+            style: {
+              color: getThemeColor('--muted-foreground')
+            }
+          }
+        }
+      ],
+      series: [
+        {
+          name: '贊助金額',
+          type: 'column',
+          yAxis: 0,
+          data: yearlyAmountData.map(d => d.amount),
+          color: getThemeColor('--primary'),
+          borderRadius: 4,
+          pointPadding: 0.1,
+          borderWidth: 0
+        },
+        {
+          name: '專案數量',
+          type: 'line',
+          yAxis: 1,
+          data: yearlyData.map(d => d.count),
+          color: deepGold,
+          lineWidth: 3,
+          marker: {
+            fillColor: deepGold,
+            lineColor: getThemeColor('--primary-foreground'),
+            lineWidth: 2
+          }
+        }
+      ],
+      legend: {
+        enabled: false
+      },
+      tooltip: {
+        shared: true,
+        backgroundColor: getThemeColor('--popover'),
+        borderColor: getThemeColor('--border'),
+        style: {
+          color: getThemeColor('--popover-foreground')
+        },
+        formatter: function() {
+          let tooltip = `<b>${this.x}年</b><br/>`;
+          this.points.forEach((point) => {
+            if (point.series.name === '贊助金額') {
+              tooltip += `贊助金額: NT$ ${point.y.toLocaleString()}<br/>`;
+            } else {
+              tooltip += `專案數量: ${point.y}`;
+            }
+          });
+          return tooltip;
+        }
+      },
+      credits: {
+        enabled: false
+      },
+      responsive: {
+        rules: [{
+          condition: {
+            maxWidth: 500
+          },
+          chartOptions: {
+            legend: {
+              enabled: false
+            }
+          }
+        }]
+      }
+    };
+  }, []);
   
   if (isLoading) {
     return (
@@ -337,13 +474,16 @@ const TaiwanData = () => {
                 <TrendingUp className="h-5 w-5 mr-2 text-primary" />
                 {chartType === 'line' 
                   ? '年度專案數量趨勢（2013-2025年份）' 
-                  : '年度贊助金額趨勢（2013-2025年份）'
+                  : chartType === 'column'
+                  ? '年度贊助金額趨勢（2013-2025年份）'
+                  : '年度專案數量與贊助金額對照（2013-2025年份）'
                 }
               </CardTitle>
-              <Tabs value={chartType} onValueChange={(value) => setChartType(value as 'line' | 'column')}>
+              <Tabs value={chartType} onValueChange={(value) => setChartType(value as 'line' | 'column' | 'both')}>
                 <TabsList>
                   <TabsTrigger value="line">專案數量</TabsTrigger>
                   <TabsTrigger value="column">贊助金額</TabsTrigger>
+                  <TabsTrigger value="both">二者對照</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
@@ -352,7 +492,7 @@ const TaiwanData = () => {
             <div className="h-72 md:h-80 lg:h-96">
               <HighchartsReact
                 highcharts={Highcharts}
-                options={chartType === 'line' ? lineOptions : columnOptions}
+                options={chartType === 'line' ? lineOptions : chartType === 'column' ? columnOptions : bothOptions}
               />
             </div>
           </CardContent>
