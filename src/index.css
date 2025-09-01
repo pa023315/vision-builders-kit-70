@@ -38,7 +38,7 @@ All colors MUST be HSL.
     --input: 0 0% 15%;
     --ring: 37 38% 59%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem;
 
     /* Warm Beige theme gradients */
     --gradient-primary: hsl(37 38% 59%);
