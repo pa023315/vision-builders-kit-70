@@ -2,14 +2,16 @@ import Header from "@/components/Header";
 import DataCard from "@/components/DataCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, Users, DollarSign, Target, Award, BarChart } from "lucide-react";
 import { useAllTaiwanProjects } from "@/hooks/useProjects";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 const TaiwanData = () => {
   const { data: taiwanProjects = [], isLoading } = useAllTaiwanProjects();
+  const [chartType, setChartType] = useState<'line' | 'column'>('line');
   
   // 年度專案數量資料
   const yearlyData = [
@@ -28,9 +30,25 @@ const TaiwanData = () => {
     { year: 2025, count: 5 },
   ];
 
-  // Highcharts 配置
-  const chartOptions = useMemo(() => {
-    // 獲取 CSS 變數值
+  // 年度贊助金額資料
+  const yearlyAmountData = [
+    { year: 2013, amount: 83995 },
+    { year: 2014, amount: 3036239 },
+    { year: 2015, amount: 2065154 },
+    { year: 2016, amount: 4093520 },
+    { year: 2017, amount: 2635305 },
+    { year: 2018, amount: 8209424 },
+    { year: 2019, amount: 1056186 },
+    { year: 2020, amount: 11652996 },
+    { year: 2021, amount: 18476963 },
+    { year: 2022, amount: 18092498 },
+    { year: 2023, amount: 2058142 },
+    { year: 2024, amount: 882468 },
+    { year: 2025, amount: 292280 },
+  ];
+
+  // Highcharts 折線圖配置
+  const lineOptions = useMemo(() => {
     const getThemeColor = (cssVar: string) => {
       if (typeof window !== 'undefined') {
         const computedStyle = getComputedStyle(document.documentElement);
@@ -101,6 +119,101 @@ const TaiwanData = () => {
         },
         formatter: function() {
           return `<b>${this.x}年</b><br/>專案數量: ${this.y}`;
+        }
+      },
+      credits: {
+        enabled: false
+      },
+      responsive: {
+        rules: [{
+          condition: {
+            maxWidth: 500
+          },
+          chartOptions: {
+            legend: {
+              enabled: false
+            }
+          }
+        }]
+      }
+    };
+  }, []);
+
+  // Highcharts 柱狀圖配置
+  const columnOptions = useMemo(() => {
+    const getThemeColor = (cssVar: string) => {
+      if (typeof window !== 'undefined') {
+        const computedStyle = getComputedStyle(document.documentElement);
+        const hslValue = computedStyle.getPropertyValue(cssVar).trim();
+        if (hslValue) {
+          return `hsl(${hslValue})`;
+        }
+      }
+      return '#C59B6D'; // 預設主色
+    };
+
+    return {
+      chart: {
+        type: 'column',
+        backgroundColor: 'transparent',
+        spacingBottom: 28,
+        style: {
+          fontFamily: 'inherit'
+        }
+      },
+      title: {
+        text: null
+      },
+      xAxis: {
+        categories: yearlyAmountData.map(d => d.year.toString()),
+        gridLineColor: getThemeColor('--border'),
+        lineColor: getThemeColor('--border'),
+        tickColor: getThemeColor('--border'),
+        labels: {
+          style: {
+            color: getThemeColor('--muted-foreground')
+          }
+        }
+      },
+      yAxis: {
+        title: {
+          text: '贊助金額 (NT$)',
+          style: {
+            color: getThemeColor('--muted-foreground')
+          }
+        },
+        gridLineColor: getThemeColor('--border'),
+        lineColor: getThemeColor('--border'),
+        labels: {
+          style: {
+            color: getThemeColor('--muted-foreground')
+          }
+        }
+      },
+      plotOptions: {
+        column: {
+          borderRadius: 4,
+          pointPadding: 0.1,
+          borderWidth: 0,
+          color: getThemeColor('--primary')
+        }
+      },
+      series: [{
+        name: '贊助金額',
+        data: yearlyAmountData.map(d => d.amount),
+        color: getThemeColor('--primary')
+      }],
+      legend: {
+        enabled: false
+      },
+      tooltip: {
+        backgroundColor: getThemeColor('--popover'),
+        borderColor: getThemeColor('--border'),
+        style: {
+          color: getThemeColor('--popover-foreground')
+        },
+        formatter: function() {
+          return `<b>${this.x}年</b><br/>贊助金額: NT$ ${this.y.toLocaleString()}`;
         }
       },
       credits: {
@@ -216,19 +329,30 @@ const TaiwanData = () => {
           />
         </div>
 
-        {/* 年度專案數量趨勢圖 */}
+        {/* 年度趨勢圖表 */}
         <Card className="mb-4">
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <TrendingUp className="h-5 w-5 mr-2 text-primary" />
-              年度專案數量趨勢（2013-2025年份）
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center">
+                <TrendingUp className="h-5 w-5 mr-2 text-primary" />
+                {chartType === 'line' 
+                  ? '年度專案數量趨勢（2013-2025年份）' 
+                  : '年度贊助金額趨勢（2013-2025年份）'
+                }
+              </CardTitle>
+              <Tabs value={chartType} onValueChange={(value) => setChartType(value as 'line' | 'column')}>
+                <TabsList>
+                  <TabsTrigger value="line">折線圖</TabsTrigger>
+                  <TabsTrigger value="column">柱狀圖</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="h-72 md:h-80 lg:h-96">
               <HighchartsReact
                 highcharts={Highcharts}
-                options={chartOptions}
+                options={chartType === 'line' ? lineOptions : columnOptions}
               />
             </div>
           </CardContent>
