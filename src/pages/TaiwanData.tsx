@@ -73,6 +73,7 @@ const TaiwanData = () => {
         text: null
       },
       xAxis: {
+        type: 'category',
         categories: yearlyData.map(d => d.year.toString()),
         gridLineColor: getThemeColor('--border'),
         lineColor: getThemeColor('--border'),
@@ -118,7 +119,7 @@ const TaiwanData = () => {
           color: getThemeColor('--popover-foreground')
         },
         formatter: function() {
-          return `<b>${this.x}年</b><br/>專案數量: ${this.y}`;
+          return `<b>${this.point.category}年</b><br/>專案數量: ${this.y}`;
         }
       },
       credits: {
@@ -165,6 +166,7 @@ const TaiwanData = () => {
         text: null
       },
       xAxis: {
+        type: 'category',
         categories: yearlyAmountData.map(d => d.year.toString()),
         gridLineColor: getThemeColor('--border'),
         lineColor: getThemeColor('--border'),
@@ -213,7 +215,7 @@ const TaiwanData = () => {
           color: getThemeColor('--popover-foreground')
         },
         formatter: function() {
-          return `<b>${this.x}年</b><br/>贊助金額: NT$ ${this.y.toLocaleString()}`;
+          return `<b>${this.point.category}年</b><br/>贊助金額: NT$ ${this.y.toLocaleString()}`;
         }
       },
       credits: {
@@ -261,6 +263,7 @@ const TaiwanData = () => {
         text: null
       },
       xAxis: {
+        type: 'category',
         categories: yearlyData.map(d => d.year.toString()),
         gridLineColor: getThemeColor('--border'),
         lineColor: getThemeColor('--border'),
@@ -342,7 +345,7 @@ const TaiwanData = () => {
           color: getThemeColor('--popover-foreground')
         },
         formatter: function() {
-          let tooltip = `<b>${this.x}年</b><br/>`;
+          let tooltip = `<b>${this.points[0].point.category}年</b><br/>`;
           this.points.forEach((point) => {
             if (point.series.name === '贊助金額') {
               tooltip += `贊助金額: NT$ ${point.y.toLocaleString()}<br/>`;
