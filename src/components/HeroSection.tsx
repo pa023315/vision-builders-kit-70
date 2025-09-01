@@ -45,8 +45,8 @@ const HeroSection = () => {
 
           {/* Right Content - Illustration/Visual */}
           <div className="relative">
-            <div className="absolute inset-0 bg-primary/10 rounded-3xl blur-xl"></div>
-            <div className="relative bg-card/50 backdrop-blur-sm border rounded-3xl p-8">
+            <div className="absolute inset-0 bg-primary/10 rounded-lg blur-xl"></div>
+            <div className="relative bg-card/50 backdrop-blur-sm border rounded-lg p-8">
               <div className="text-center space-y-4">
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
                   <TrendingUp className="h-8 w-8 text-primary" />

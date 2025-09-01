@@ -38,7 +38,7 @@ All colors MUST be HSL.
     --input: 0 0% 15%;
     --ring: 25 95% 53%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     /* Warm Orange theme gradients */
     --gradient-primary: hsl(25 95% 53%);

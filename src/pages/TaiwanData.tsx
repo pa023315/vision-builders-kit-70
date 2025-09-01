@@ -112,33 +112,33 @@ const TaiwanData = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="divide-y divide-border border-t border-b">
               {taiwanProjects
                 .slice(0, 10)
                 .map((project, index) => (
                 <div
                   key={project.id}
-                  className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
+                  className="flex items-center justify-between py-4"
                 >
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
                       {index + 1}
                     </div>
                     <div>
-                      {project.project_url ? (
-                        <h3 className="font-semibold">
-                          <a 
-                            href={project.project_url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-primary hover:text-primary/80 transition-colors cursor-pointer"
-                          >
-                            {project.name}
-                          </a>
-                        </h3>
-                      ) : (
-                        <h3 className="font-semibold">{project.name}</h3>
-                      )}
+                          {project.project_url ? (
+                            <h3 className="font-semibold">
+                              <a 
+                                href={project.project_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-white hover:text-white/80 transition-colors cursor-pointer"
+                              >
+                                {project.name}
+                              </a>
+                            </h3>
+                          ) : (
+                            <h3 className="font-semibold text-white">{project.name}</h3>
+                          )}
                       <div className="flex items-center space-x-2 mt-1">
                         <Badge variant="outline" className="text-xs">
                           {project.platform}
