@@ -46,6 +46,7 @@ const TaiwanData = () => {
       chart: {
         type: 'line',
         backgroundColor: 'transparent',
+        spacingBottom: 28,
         style: {
           fontFamily: 'inherit'
         }
@@ -220,11 +221,11 @@ const TaiwanData = () => {
           <CardHeader>
             <CardTitle className="flex items-center">
               <TrendingUp className="h-5 w-5 mr-2 text-primary" />
-              年度專案數量趨勢（2013-2025）
+              年度專案數量趨勢（2013-2025年份）
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-80">
+            <div className="h-72 md:h-80 lg:h-96">
               <HighchartsReact
                 highcharts={Highcharts}
                 options={chartOptions}
