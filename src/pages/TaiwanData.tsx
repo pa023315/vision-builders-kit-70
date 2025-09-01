@@ -342,8 +342,8 @@ const TaiwanData = () => {
               </CardTitle>
               <Tabs value={chartType} onValueChange={(value) => setChartType(value as 'line' | 'column')}>
                 <TabsList>
-                  <TabsTrigger value="line">折線圖</TabsTrigger>
-                  <TabsTrigger value="column">柱狀圖</TabsTrigger>
+                  <TabsTrigger value="line">專案數量</TabsTrigger>
+                  <TabsTrigger value="column">贊助金額</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
