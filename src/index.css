@@ -17,10 +17,10 @@ All colors MUST be HSL.
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 95%;
 
-    /* Warm Orange theme colors */
-    --primary: 25 95% 53%; /* Warm orange primary */
+    /* Warm Beige theme colors */
+    --primary: 37 38% 59%; /* Warm beige primary */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 25 95% 63%;
+    --primary-glow: 37 38% 69%;
 
     --secondary: 0 0% 45%; /* Neutral gray */
     --secondary-foreground: 0 0% 98%;
@@ -36,18 +36,18 @@ All colors MUST be HSL.
 
     --border: 0 0% 20%;
     --input: 0 0% 15%;
-    --ring: 25 95% 53%;
+    --ring: 37 38% 59%;
 
     --radius: 0.5rem;
 
-    /* Warm Orange theme gradients */
-    --gradient-primary: hsl(25 95% 53%);
+    /* Warm Beige theme gradients */
+    --gradient-primary: hsl(37 38% 59%);
     --gradient-accent: hsl(0 0% 25%);
     --gradient-hero: hsl(0 0% 8%);
     
-    /* Warm Orange theme shadows */
-    --shadow-glow: 0 0 40px hsl(25 95% 53% / 0.3);
-    --shadow-card: 0 8px 32px -8px hsl(25 95% 53% / 0.15);
+    /* Warm Beige theme shadows */
+    --shadow-glow: 0 0 40px hsl(37 38% 59% / 0.3);
+    --shadow-card: 0 8px 32px -8px hsl(37 38% 59% / 0.15);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -69,10 +69,10 @@ All colors MUST be HSL.
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
 
-    /* Dark mode warm orange colors */
-    --primary: 25 95% 58%;
+    /* Dark mode warm beige colors */
+    --primary: 37 38% 64%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 25 95% 68%;
+    --primary-glow: 37 38% 74%;
 
     --secondary: 0 0% 50%;
     --secondary-foreground: 0 0% 98%;
@@ -88,16 +88,16 @@ All colors MUST be HSL.
 
     --border: 0 0% 18%;
     --input: 0 0% 12%;
-    --ring: 25 95% 58%;
+    --ring: 37 38% 64%;
 
-    /* Dark mode warm orange gradients */
-    --gradient-primary: hsl(25 95% 58%);
+    /* Dark mode warm beige gradients */
+    --gradient-primary: hsl(37 38% 64%);
     --gradient-accent: hsl(0 0% 30%);
     --gradient-hero: hsl(0 0% 3%);
     
-    /* Dark mode warm orange shadows */
-    --shadow-glow: 0 0 50px hsl(25 95% 58% / 0.4);
-    --shadow-card: 0 8px 40px -8px hsl(25 95% 58% / 0.2);
+    /* Dark mode warm beige shadows */
+    --shadow-glow: 0 0 50px hsl(37 38% 64% / 0.4);
+    --shadow-card: 0 8px 40px -8px hsl(37 38% 64% / 0.2);
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
