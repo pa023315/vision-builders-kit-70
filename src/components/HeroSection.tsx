@@ -17,7 +17,7 @@ const HeroSection = () => {
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
                 數位遊戲
-                <span className="block text-primary">
+                <span className="block text-muted-foreground">
                   群眾集資
                 </span>
                 洞察平台

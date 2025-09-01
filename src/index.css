@@ -17,16 +17,16 @@ All colors MUST be HSL.
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 95%;
 
-    /* Purple/Pink theme colors */
-    --primary: 280 100% 70%; /* Purple primary */
+    /* Warm Orange theme colors */
+    --primary: 25 95% 53%; /* Warm orange primary */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 280 100% 80%;
+    --primary-glow: 25 95% 63%;
 
     --secondary: 0 0% 45%; /* Neutral gray */
     --secondary-foreground: 0 0% 98%;
 
-    --accent: 330 100% 65%; /* Pink accent */
-    --accent-foreground: 0 0% 100%;
+    --accent: 0 0% 25%; /* Dark gray accent */
+    --accent-foreground: 0 0% 98%;
 
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 60%;
@@ -36,18 +36,18 @@ All colors MUST be HSL.
 
     --border: 0 0% 20%;
     --input: 0 0% 15%;
-    --ring: 280 100% 70%;
+    --ring: 25 95% 53%;
 
     --radius: 0.75rem;
 
-    /* Purple/Pink theme gradients */
-    --gradient-primary: hsl(280 100% 70%);
-    --gradient-accent: hsl(330 100% 65%);
+    /* Warm Orange theme gradients */
+    --gradient-primary: hsl(25 95% 53%);
+    --gradient-accent: hsl(0 0% 25%);
     --gradient-hero: hsl(0 0% 8%);
     
-    /* Purple/Pink theme shadows */
-    --shadow-glow: 0 0 40px hsl(280 100% 70% / 0.3);
-    --shadow-card: 0 8px 32px -8px hsl(280 100% 70% / 0.15);
+    /* Warm Orange theme shadows */
+    --shadow-glow: 0 0 40px hsl(25 95% 53% / 0.3);
+    --shadow-card: 0 8px 32px -8px hsl(25 95% 53% / 0.15);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -69,16 +69,16 @@ All colors MUST be HSL.
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
 
-    /* Dark mode purple/pink colors */
-    --primary: 280 100% 75%;
+    /* Dark mode warm orange colors */
+    --primary: 25 95% 58%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 280 100% 85%;
+    --primary-glow: 25 95% 68%;
 
     --secondary: 0 0% 50%;
     --secondary-foreground: 0 0% 98%;
 
-    --accent: 330 100% 70%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 0 0% 30%;
+    --accent-foreground: 0 0% 98%;
 
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 65%;
@@ -88,16 +88,16 @@ All colors MUST be HSL.
 
     --border: 0 0% 18%;
     --input: 0 0% 12%;
-    --ring: 280 100% 75%;
+    --ring: 25 95% 58%;
 
-    /* Dark mode purple/pink gradients */
-    --gradient-primary: hsl(280 100% 75%);
-    --gradient-accent: hsl(330 100% 70%);
+    /* Dark mode warm orange gradients */
+    --gradient-primary: hsl(25 95% 58%);
+    --gradient-accent: hsl(0 0% 30%);
     --gradient-hero: hsl(0 0% 3%);
     
-    /* Dark mode purple/pink shadows */
-    --shadow-glow: 0 0 50px hsl(280 100% 75% / 0.4);
-    --shadow-card: 0 8px 40px -8px hsl(280 100% 75% / 0.2);
+    /* Dark mode warm orange shadows */
+    --shadow-glow: 0 0 50px hsl(25 95% 58% / 0.4);
+    --shadow-card: 0 8px 40px -8px hsl(25 95% 58% / 0.2);
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;

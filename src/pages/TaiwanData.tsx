@@ -40,7 +40,7 @@ const TaiwanData = () => {
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">
             台灣數位遊戲
-            <span className="text-primary">
+            <span className="text-muted-foreground">
               群眾集資數據
             </span>
           </h1>
