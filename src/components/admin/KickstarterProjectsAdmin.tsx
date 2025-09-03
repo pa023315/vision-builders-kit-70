@@ -29,6 +29,7 @@ export const KickstarterProjectsAdmin = () => {
     launch_date: "",
     status: "active" as "active" | "completed" | "failed",
     image_url: "",
+    project_url: "",
   });
 
   const { data: projects = [], isLoading } = useProjects();
@@ -49,6 +50,7 @@ export const KickstarterProjectsAdmin = () => {
       launch_date: "",
       status: "active" as "active" | "completed" | "failed",
       image_url: "",
+      project_url: "",
     });
     setEditingProject(null);
   };
@@ -91,6 +93,7 @@ export const KickstarterProjectsAdmin = () => {
         launch_date: project.launch_date,
         status: project.status,
         image_url: project.image_url || "",
+        project_url: project.project_url || "",
       });
     setIsAddDialogOpen(true);
   };
@@ -310,6 +313,17 @@ export const KickstarterProjectsAdmin = () => {
 
 
                      <div>
+                       <Label htmlFor="project_url">專案網址</Label>
+                       <Input
+                         id="project_url"
+                         type="url"
+                         value={formData.project_url}
+                         onChange={(e) => setFormData({ ...formData, project_url: e.target.value })}
+                         placeholder="https://..."
+                       />
+                     </div>
+
+                     <div>
                        <Label>專案圖片</Label>
                        <ImageUpload
                          onChange={(url) => setFormData({ ...formData, image_url: url })}
@@ -381,7 +395,20 @@ export const KickstarterProjectsAdmin = () => {
                       {project.target > 0 ? Math.round((project.amount / project.target) * 100) : 0}%
                     </TableCell>
                     <TableCell>{project.backers}</TableCell>
-                     <TableCell>無</TableCell>
+                     <TableCell>
+                       {project.project_url ? (
+                         <a 
+                           href={project.project_url} 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           className="text-blue-600 hover:underline"
+                         >
+                           連結
+                         </a>
+                       ) : (
+                         "無"
+                       )}
+                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Button

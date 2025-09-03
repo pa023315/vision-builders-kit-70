@@ -485,7 +485,20 @@ export const CampfireProjectsAdmin = () => {
                       {project.target > 0 ? Math.round((project.amount / project.target) * 100) : 0}%
                     </TableCell>
                     <TableCell>{project.backers}</TableCell>
-                     <TableCell>無</TableCell>
+                     <TableCell>
+                       {project.project_url ? (
+                         <a 
+                           href={project.project_url} 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           className="text-blue-600 hover:underline"
+                         >
+                           連結
+                         </a>
+                       ) : (
+                         "無"
+                       )}
+                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Button
