@@ -177,7 +177,8 @@ const TaiwanData = () => {
         spacingBottom: 28,
         style: {
           fontFamily: 'inherit'
-        }
+        },
+        reflow: true
       },
       title: {
         text: null
@@ -206,8 +207,14 @@ const TaiwanData = () => {
         labels: {
           style: {
             color: getThemeColor('--muted-foreground')
+          },
+          formatter: function() {
+            return (this.value / 1000000).toFixed(1) + 'M';
           }
-        }
+        },
+        min: 0,
+        startOnTick: true,
+        endOnTick: true
       },
       plotOptions: {
         column: {
@@ -610,6 +617,7 @@ const TaiwanData = () => {
           <CardContent>
             <div className="h-72 md:h-80 lg:h-96">
               <HighchartsReact
+                key={chartType}
                 highcharts={Highcharts}
                 options={chartType === 'line' ? lineOptions : chartType === 'column' ? columnOptions : chartType === 'backers' ? backersOptions : bothOptions}
               />
