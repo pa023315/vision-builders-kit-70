@@ -32,19 +32,19 @@ const TaiwanData = () => {
 
   // 年度贊助金額資料
   const yearlyAmountData = [
-    { year: 2013, amount: 83995 },
-    { year: 2014, amount: 3036239 },
-    { year: 2015, amount: 2065154 },
-    { year: 2016, amount: 4093520 },
-    { year: 2017, amount: 2635305 },
-    { year: 2018, amount: 8209424 },
-    { year: 2019, amount: 1056186 },
-    { year: 2020, amount: 11652996 },
-    { year: 2021, amount: 18476963 },
-    { year: 2022, amount: 18092498 },
-    { year: 2023, amount: 2058142 },
-    { year: 2024, amount: 882468 },
-    { year: 2025, amount: 292280 },
+    { year: 2013, amount: 82995 },
+    { year: 2014, amount: 2949611 },
+    { year: 2015, amount: 1849204 },
+    { year: 2016, amount: 3905309 },
+    { year: 2017, amount: 2442585 },
+    { year: 2018, amount: 7944010 },
+    { year: 2019, amount: 1014746 },
+    { year: 2020, amount: 11591248 },
+    { year: 2021, amount: 18428298 },
+    { year: 2022, amount: 17954962 },
+    { year: 2023, amount: 1764237 },
+    { year: 2024, amount: 649516 },
+    { year: 2025, amount: 353887 },
   ];
 
   // Highcharts 折線圖配置
