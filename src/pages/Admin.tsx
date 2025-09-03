@@ -34,7 +34,7 @@ const Admin = () => {
 
       <main className="container py-8">
         <Tabs defaultValue="taiwan" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 lg:w-[800px]">
+          <TabsList className="grid w-full grid-cols-7 lg:w-[900px]">
             <TabsTrigger value="taiwan" className="flex items-center gap-2">
               <Award className="h-4 w-4" />
               台灣專案
