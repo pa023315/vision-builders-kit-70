@@ -260,7 +260,7 @@ const TaiwanData = () => {
     };
   }, []);
 
-  // Highcharts 雙軸對照圖配置
+  // Highcharts 三軸對照圖配置
   const bothOptions = useMemo(() => {
     const getThemeColor = (cssVar: string) => {
       if (typeof window !== 'undefined') {
@@ -316,6 +316,23 @@ const TaiwanData = () => {
           }
         },
         {
+          // 中軸 - 贊助人數  
+          title: {
+            text: '贊助人數',
+            style: {
+              color: getThemeColor('--muted-foreground')
+            }
+          },
+          gridLineWidth: 0,
+          lineColor: getThemeColor('--border'),
+          labels: {
+            style: {
+              color: getThemeColor('--muted-foreground')
+            }
+          },
+          max: Math.max(...yearlyBackersData.map(d => d.backers)) * 1.2
+        },
+        {
           // 右軸 - 專案數量
           title: {
             text: '專案數量',
@@ -345,9 +362,20 @@ const TaiwanData = () => {
           borderWidth: 0
         },
         {
+          name: '贊助人數',
+          type: 'column',
+          yAxis: 1,
+          data: yearlyBackersData.map(d => d.backers),
+          color: '#FFFFFF',
+          borderRadius: 4,
+          pointPadding: 0.1,
+          borderWidth: 1,
+          borderColor: getThemeColor('--border')
+        },
+        {
           name: '專案數量',
           type: 'line',
-          yAxis: 1,
+          yAxis: 2,
           data: yearlyData.map(d => d.count),
           color: deepGold,
           lineWidth: 3,
@@ -373,6 +401,8 @@ const TaiwanData = () => {
           this.points.forEach((point) => {
             if (point.series.name === '贊助金額') {
               tooltip += `贊助金額: NT$ ${point.y.toLocaleString()}<br/>`;
+            } else if (point.series.name === '贊助人數') {
+              tooltip += `贊助人數: ${point.y.toLocaleString()}<br/>`;
             } else {
               tooltip += `專案數量: ${point.y}`;
             }
@@ -601,7 +631,7 @@ const TaiwanData = () => {
                   ? '年度贊助金額趨勢（2013-2025年份）'
                   : chartType === 'backers'
                   ? '年度贊助人數趨勢（2013-2025年份）'
-                  : '年度專案數量與贊助金額對照（2013-2025年份）'
+                  : '年度專案數量、贊助金額與贊助人數對照（2013-2025年份）'
                 }
               </CardTitle>
               <Tabs value={chartType} onValueChange={(value) => setChartType(value as 'line' | 'column' | 'backers' | 'both')}>
@@ -609,7 +639,7 @@ const TaiwanData = () => {
                   <TabsTrigger value="line">專案數量</TabsTrigger>
                   <TabsTrigger value="column">贊助金額</TabsTrigger>
                   <TabsTrigger value="backers">專案人數</TabsTrigger>
-                  <TabsTrigger value="both">二者對照</TabsTrigger>
+                  <TabsTrigger value="both">三者對照</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
