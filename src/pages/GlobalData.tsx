@@ -97,16 +97,16 @@ const GlobalData = () => {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Globe className="h-5 w-5 mr-2 text-primary" />
-                  Kickstarter 2024年度統計
+                  Kickstarter 關鍵數據
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <DataCard
-                    title="2024年度募資金額"
-                    value="$26M"
-                    subtitle="美元"
-                    icon={DollarSign}
+                    title="累積數位遊戲專案"
+                    value="22,250"
+                    subtitle="個數位遊戲專案"
+                    icon={Globe}
                     trend="up"
                   />
                   <DataCard
