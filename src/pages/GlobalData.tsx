@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { TrendingUp, Users, DollarSign, Globe, Award, BarChart } from "lucide-react";
 import { useKickstarterProjects, useCampfireProjects } from "@/hooks/useProjects";
 import { useState } from "react";
+import { BarChart as RechartsBarChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Bar } from "recharts";
 
 const GlobalData = () => {
   const { data: kickstarterProjects = [], isLoading: isKickstarterLoading } = useKickstarterProjects();
@@ -36,11 +37,20 @@ const GlobalData = () => {
       : 0,
   };
 
-  const ksStats2024 = [
-    { category: "遊戲總數", value: "3,245", change: "+12%" },
-    { category: "成功專案", value: "1,876", change: "+8%" },
-    { category: "總集資額", value: "$142.5M", change: "+15%" },
-    { category: "平均金額", value: "$75,984", change: "+3%" }
+  const yearlyFundingData = [
+    { year: "2012", amount: 38 },
+    { year: "2013", amount: 48 },
+    { year: "2014", amount: 20 },
+    { year: "2015", amount: 41.5 },
+    { year: "2016", amount: 17 },
+    { year: "2017", amount: 17 },
+    { year: "2018", amount: 15 },
+    { year: "2019", amount: 16.3 },
+    { year: "2020", amount: 22.9 },
+    { year: "2021", amount: 21.8 },
+    { year: "2022", amount: 20 },
+    { year: "2023", amount: 20.4 },
+    { year: "2024", amount: 26.1 }
   ];
 
   return (
@@ -120,6 +130,49 @@ const GlobalData = () => {
                     icon={TrendingUp}
                     trend="up"
                   />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 年度贊助金額趨勢 */}
+            <Card className="mb-12">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <TrendingUp className="h-5 w-5 mr-2 text-primary" />
+                  年度贊助金額趨勢（2012-2024年份）
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-96">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RechartsBarChart data={yearlyFundingData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                      <XAxis 
+                        dataKey="year" 
+                        className="text-muted-foreground"
+                        tick={{ fontSize: 12 }}
+                      />
+                      <YAxis 
+                        className="text-muted-foreground"
+                        tick={{ fontSize: 12 }}
+                        label={{ value: '贊助金額 (M)', angle: -90, position: 'insideLeft' }}
+                      />
+                      <Tooltip 
+                        formatter={(value) => [`$${value}M`, '贊助金額']}
+                        labelFormatter={(label) => `${label}年`}
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--card))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '6px'
+                        }}
+                      />
+                      <Bar 
+                        dataKey="amount" 
+                        fill="hsl(var(--primary))"
+                        radius={[4, 4, 0, 0]}
+                      />
+                    </RechartsBarChart>
+                  </ResponsiveContainer>
                 </div>
               </CardContent>
             </Card>
