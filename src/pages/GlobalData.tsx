@@ -252,29 +252,27 @@ const GlobalData = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <DataCard
                     title="專案總數"
-                    value={campfireProjects.length.toString()}
+                    value="985"
                     subtitle="Campfire專案"
                     icon={BarChart}
                   />
                   <DataCard
                     title="累計金額"
-                    value={`¥${(campfireProjects.reduce((sum, p) => sum + p.amount, 0) / 1000000).toFixed(1)}M`}
+                    value="¥1,347M"
                     subtitle="總集資金額"
                     icon={DollarSign}
                     trend="up"
                   />
                   <DataCard
                     title="支持人數"
-                    value={campfireProjects.reduce((sum, p) => sum + p.backers, 0).toLocaleString()}
+                    value="78,697"
                     subtitle="總支持者數"
                     icon={Users}
                     trend="up"
                   />
                   <DataCard
                     title="成功率"
-                    value={`${campfireProjects.length > 0 
-                      ? Math.round(campfireProjects.filter(p => p.status === 'completed').length / campfireProjects.length * 100)
-                      : 0}%`}
+                    value="34%"
                     subtitle="平均成功率"
                     icon={TrendingUp}
                     trend="up"
