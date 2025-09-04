@@ -288,7 +288,7 @@ const GlobalData = () => {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Award className="h-5 w-5 mr-2 text-primary" />
-                  Campfire 熱門遊戲專案
+                  Campfire 史上前十名遊戲專案
                 </CardTitle>
               </CardHeader>
               <CardContent>
