@@ -249,7 +249,7 @@ const GlobalData = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <DataCard
                     title="專案總數"
                     value="985"
@@ -276,6 +276,20 @@ const GlobalData = () => {
                     subtitle="平均成功率"
                     icon={TrendingUp}
                     trend="up"
+                  />
+                  <DataCard
+                    title="贊助金額中位數"
+                    value="¥61萬"
+                    subtitle="中位數"
+                    icon={DollarSign}
+                    trend="neutral"
+                  />
+                  <DataCard
+                    title="贊助人數中位數"
+                    value="64"
+                    subtitle="人數中位數"
+                    icon={Users}
+                    trend="neutral"
                   />
                 </div>
               </CardContent>
