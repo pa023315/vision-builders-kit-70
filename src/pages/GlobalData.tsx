@@ -93,31 +93,32 @@ const GlobalData = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <DataCard
-                    title="專案總數"
-                    value={stats.totalProjects.toString()}
-                    subtitle="國際專案"
-                    icon={Globe}
-                  />
-                  <DataCard
-                    title="累計金額"
-                    value={`$${(stats.totalAmount / 1000000).toFixed(1)}M`}
-                    subtitle="總集資金額"
+                    title="2024年度募資金額"
+                    value="$26M"
+                    subtitle="美元"
                     icon={DollarSign}
                     trend="up"
                   />
                   <DataCard
-                    title="支持人數"
-                    value={stats.totalBackers.toLocaleString()}
-                    subtitle="全球支持者"
-                    icon={Users}
+                    title="全球遊戲市場佔比"
+                    value="67%"
+                    subtitle="約占全球遊戲類"
+                    icon={TrendingUp}
                     trend="up"
                   />
                   <DataCard
-                    title="成功率"
-                    value={`${stats.successRate}%`}
-                    subtitle="全球平均"
-                    icon={TrendingUp}
+                    title="數位遊戲成功率"
+                    value="40%"
+                    subtitle="平均成功率"
+                    icon={Users}
                     trend="neutral"
+                  />
+                  <DataCard
+                    title="高額專案比例"
+                    value="78%"
+                    subtitle="10萬美元以上在 Kickstarter"
+                    icon={TrendingUp}
+                    trend="up"
                   />
                 </div>
               </CardContent>
