@@ -6,40 +6,40 @@ const StatsSection = () => {
     <section className="py-16 bg-muted/30">
       <div className="container">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">平台數據總覽</h2>
+          <h2 className="text-3xl font-bold mb-4">Kickstarter 2024年度統計</h2>
           <p className="text-lg text-muted-foreground">
-            掌握數位遊戲群眾集資的最新趨勢與關鍵指標
+            全球最大遊戲群眾集資平台數據總覽
           </p>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <DataCard
-            title="專案總數"
-            value="134"
-            subtitle="件活躍專案"
-            icon={TrendingUp}
-            trend="up"
-          />
-          <DataCard
-            title="累計集資金額"
-            value="$70.9M"
-            subtitle="新台幣"
+            title="2024年度募資金額"
+            value="$26M"
+            subtitle="美元"
             icon={DollarSign}
             trend="up"
           />
           <DataCard
-            title="支持人數"
-            value="58.8K"
-            subtitle="名支持者"
-            icon={Users}
+            title="全球遊戲市場佔比"
+            value="67%"
+            subtitle="市場領導地位"
+            icon={TrendingUp}
             trend="up"
           />
           <DataCard
-            title="成功率"
-            value="68%"
+            title="數位遊戲成功率"
+            value="40%"
             subtitle="平均成功率"
-            icon={TrendingUp}
+            icon={Users}
             trend="neutral"
+          />
+          <DataCard
+            title="高額專案優勢"
+            value="78%"
+            subtitle="10萬美元以上專案"
+            icon={TrendingUp}
+            trend="up"
           />
         </div>
       </div>
