@@ -135,67 +135,85 @@ const Cases = () => {
           </p>
         </div>
 
-        {/* 精選案例 */}
-        <div className="space-y-8 mb-12">
-          {featuredCases.slice(0, 3).map((caseItem) => (
-            <Card key={caseItem.id} className="overflow-hidden">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                  <CardHeader>
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <Badge variant="outline">{caseItem.platform}</Badge>
-                      <Badge variant="secondary">{caseItem.category}</Badge>
-                      <Badge variant="outline">{caseItem.country}</Badge>
+        {/* 集資專案案例 */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl font-bold">集資專案</h2>
+            <div className="text-sm text-muted-foreground">
+              共 {featuredCases.length} 個專案
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredCases.map((caseItem) => (
+              <Card key={caseItem.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                <div className="aspect-video bg-muted relative overflow-hidden">
+                  {caseItem.image_url ? (
+                    <img 
+                      src={caseItem.image_url} 
+                      alt={`${caseItem.name} 專案圖片`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                      <Award className="h-12 w-12" />
                     </div>
-                    <CardTitle className="text-2xl">{caseItem.name}</CardTitle>
-                    <p className="text-muted-foreground">{caseItem.description}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-primary">{caseItem.amount}</div>
-                        <div className="text-xs text-muted-foreground">最終金額</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-primary">{caseItem.success_rate}</div>
-                        <div className="text-xs text-muted-foreground">達成率</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold">{typeof caseItem.backers === 'number' ? caseItem.backers.toLocaleString() : caseItem.backers}</div>
-                        <div className="text-xs text-muted-foreground">支持者</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold">{caseItem.target}</div>
-                        <div className="text-xs text-muted-foreground">目標金額</div>
-                      </div>
-                    </div>
-
-                  </CardContent>
-                </div>
-                <div className="flex items-center justify-center bg-muted/30 p-8">
-                  <div className="text-center">
-                    <div className="w-48 h-32 bg-muted rounded-lg mb-4 overflow-hidden">
-                      {caseItem.image_url ? (
-                        <img 
-                          src={caseItem.image_url} 
-                          alt={`${caseItem.name} 專案圖片`}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                          專案圖片
-                        </div>
-                      )}
-                    </div>
-                    <Button variant="outline" size="sm">
-                      查看詳細案例
-                      <ExternalLink className="ml-2 h-3 w-3" />
-                    </Button>
+                  )}
+                  <div className="absolute top-3 left-3 flex gap-2">
+                    <Badge variant="secondary" className="text-xs">
+                      {caseItem.category}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs bg-background/80">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      {caseItem.launch_date}
+                    </Badge>
                   </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+                
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-xl line-clamp-1">{caseItem.name}</CardTitle>
+                  <p className="text-muted-foreground text-sm line-clamp-2">{caseItem.description}</p>
+                </CardHeader>
+                
+                <CardContent className="pt-0">
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="text-center p-3 bg-primary/5 rounded-lg">
+                      <div className="text-lg font-bold text-primary flex items-center justify-center gap-1">
+                        <DollarSign className="h-4 w-4" />
+                        {caseItem.amount}
+                      </div>
+                      <div className="text-xs text-muted-foreground">最終金額</div>
+                    </div>
+                    <div className="text-center p-3 bg-green-500/5 rounded-lg">
+                      <div className="text-lg font-bold text-green-600 flex items-center justify-center gap-1">
+                        <TrendingUp className="h-4 w-4" />
+                        {caseItem.success_rate}
+                      </div>
+                      <div className="text-xs text-muted-foreground">達成率</div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="text-center p-3 bg-muted/30 rounded-lg">
+                      <div className="text-lg font-bold flex items-center justify-center gap-1">
+                        <Users className="h-4 w-4" />
+                        {typeof caseItem.backers === 'number' ? caseItem.backers.toLocaleString() : caseItem.backers}
+                      </div>
+                      <div className="text-xs text-muted-foreground">支持者</div>
+                    </div>
+                    <div className="text-center p-3 bg-muted/30 rounded-lg">
+                      <div className="text-lg font-bold">{caseItem.target}</div>
+                      <div className="text-xs text-muted-foreground">目標金額</div>
+                    </div>
+                  </div>
+                  
+                  <Button variant="outline" size="sm" className="w-full">
+                    查看詳細案例
+                    <ExternalLink className="ml-2 h-3 w-3" />
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
         {/* 遊戲內呈現案例 */}
