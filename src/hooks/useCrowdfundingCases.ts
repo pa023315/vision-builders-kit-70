@@ -23,13 +23,17 @@ export const useCreateCrowdfundingCase = () => {
   
   return useMutation({
     mutationFn: async (caseData: Omit<CrowdfundingCase, 'id' | 'created_at' | 'updated_at'>) => {
+      console.log('Creating crowdfunding case with data:', caseData)
       const { data, error } = await supabase
         .from('crowdfunding_cases')
         .insert([caseData])
         .select()
         .single()
       
-      if (error) throw error
+      if (error) {
+        console.error('Error creating crowdfunding case:', error)
+        throw error
+      }
       return data
     },
     onSuccess: () => {
@@ -39,10 +43,11 @@ export const useCreateCrowdfundingCase = () => {
         description: "新的集資專案案例已成功添加",
       })
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Create crowdfunding case mutation error:', error)
       toast({
-        title: "新增失敗",
-        description: "無法新增集資案例，請重試",
+        title: "新增失敗", 
+        description: `無法新增集資案例：${error.message || '請重試'}`,
         variant: "destructive",
       })
     },
