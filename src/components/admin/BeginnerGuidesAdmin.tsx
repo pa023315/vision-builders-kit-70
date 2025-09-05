@@ -13,11 +13,13 @@ import { z } from "zod";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
+import { ImageUpload } from "@/components/ImageUpload";
 
 const guideSchema = z.object({
   name: z.string().min(1, "名稱為必填項目"),
   description: z.string().min(1, "描述為必填項目"),
-  url: z.string().url("請輸入有效的網址")
+  url: z.string().url("請輸入有效的網址"),
+  image_url: z.string().optional()
 });
 
 type GuideFormData = z.infer<typeof guideSchema>;
@@ -27,6 +29,7 @@ interface BeginnerGuide {
   name: string;
   description: string;
   url: string;
+  image_url?: string;
   created_at: string;
   updated_at: string;
 }
@@ -42,7 +45,8 @@ const BeginnerGuidesAdmin = () => {
     defaultValues: {
       name: "",
       description: "",
-      url: ""
+      url: "",
+      image_url: ""
     }
   });
 
@@ -145,7 +149,8 @@ const BeginnerGuidesAdmin = () => {
     form.reset({
       name: guide.name,
       description: guide.description,
-      url: guide.url
+      url: guide.url,
+      image_url: guide.image_url || ""
     });
     setIsDialogOpen(true);
   };
@@ -225,6 +230,23 @@ const BeginnerGuidesAdmin = () => {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="image_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>圖片</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value}
+                            onChange={field.onChange}
+                            label="上傳指南圖片"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <div className="flex justify-end gap-2">
                     <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                       取消
@@ -243,6 +265,7 @@ const BeginnerGuidesAdmin = () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>圖片</TableHead>
               <TableHead>名稱</TableHead>
               <TableHead>描述</TableHead>
               <TableHead>連結</TableHead>
@@ -253,6 +276,19 @@ const BeginnerGuidesAdmin = () => {
           <TableBody>
             {guides?.map((guide) => (
               <TableRow key={guide.id}>
+                <TableCell>
+                  {guide.image_url ? (
+                    <img 
+                      src={guide.image_url} 
+                      alt={guide.name}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 bg-muted rounded flex items-center justify-center text-xs">
+                      無圖片
+                    </div>
+                  )}
+                </TableCell>
                 <TableCell className="font-medium">{guide.name}</TableCell>
                 <TableCell>{guide.description}</TableCell>
                 <TableCell>

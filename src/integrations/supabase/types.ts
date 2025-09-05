@@ -19,6 +19,7 @@ export type Database = {
           created_at: string
           description: string
           id: string
+          image_url: string | null
           name: string
           updated_at: string
           url: string
@@ -27,6 +28,7 @@ export type Database = {
           created_at?: string
           description: string
           id?: string
+          image_url?: string | null
           name: string
           updated_at?: string
           url: string
@@ -35,6 +37,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          image_url?: string | null
           name?: string
           updated_at?: string
           url?: string
