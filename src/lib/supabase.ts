@@ -47,6 +47,9 @@ export interface CrowdfundingCase {
   target: number
   backers: number
   success_rate: number
+  currency?: string
+  game_type?: string
+  project_year?: number
   image_url?: string
   project_url?: string
   created_at: string

@@ -49,11 +49,14 @@ export type Database = {
           amount: number
           backers: number
           created_at: string
+          currency: string | null
           description: string
+          game_type: string | null
           id: string
           image_url: string | null
           name: string
           project_url: string | null
+          project_year: number | null
           success_rate: number
           target: number
           updated_at: string
@@ -62,11 +65,14 @@ export type Database = {
           amount: number
           backers: number
           created_at?: string
+          currency?: string | null
           description: string
+          game_type?: string | null
           id?: string
           image_url?: string | null
           name: string
           project_url?: string | null
+          project_year?: number | null
           success_rate: number
           target: number
           updated_at?: string
@@ -75,11 +81,14 @@ export type Database = {
           amount?: number
           backers?: number
           created_at?: string
+          currency?: string | null
           description?: string
+          game_type?: string | null
           id?: string
           image_url?: string | null
           name?: string
           project_url?: string | null
+          project_year?: number | null
           success_rate?: number
           target?: number
           updated_at?: string

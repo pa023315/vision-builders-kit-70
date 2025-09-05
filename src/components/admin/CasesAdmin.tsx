@@ -25,6 +25,9 @@ export const CasesAdmin = () => {
     amount: "",
     target: "",
     backers: "",
+    currency: "USD",
+    game_type: "",
+    project_year: "",
     image_url: "",
     project_url: "",
   });
@@ -54,6 +57,9 @@ export const CasesAdmin = () => {
       amount: "",
       target: "",
       backers: "",
+      currency: "USD",
+      game_type: "",
+      project_year: "",
       image_url: "",
       project_url: "",
     });
@@ -82,6 +88,7 @@ export const CasesAdmin = () => {
       amount,
       target,
       backers: parseInt(crowdfundingForm.backers),
+      project_year: crowdfundingForm.project_year ? parseInt(crowdfundingForm.project_year) : undefined,
       success_rate,
     };
 
@@ -116,6 +123,9 @@ export const CasesAdmin = () => {
       amount: case_.amount.toString(),
       target: case_.target.toString(),
       backers: case_.backers.toString(),
+      currency: case_.currency || "USD",
+      game_type: case_.game_type || "",
+      project_year: case_.project_year ? case_.project_year.toString() : "",
       image_url: case_.image_url || "",
       project_url: case_.project_url || "",
     });
@@ -229,6 +239,39 @@ export const CasesAdmin = () => {
                         </div>
                       </div>
 
+                      <div className="grid grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="cf-currency">幣值</Label>
+                          <Input
+                            id="cf-currency"
+                            value={crowdfundingForm.currency}
+                            onChange={(e) => setCrowdfundingForm({ ...crowdfundingForm, currency: e.target.value })}
+                            placeholder="USD, TWD, JPY..."
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="cf-game-type">遊戲類型</Label>
+                          <Input
+                            id="cf-game-type"
+                            value={crowdfundingForm.game_type}
+                            onChange={(e) => setCrowdfundingForm({ ...crowdfundingForm, game_type: e.target.value })}
+                            placeholder="動作、角色扮演、策略..."
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="cf-project-year">專案年份</Label>
+                          <Input
+                            id="cf-project-year"
+                            type="number"
+                            value={crowdfundingForm.project_year}
+                            onChange={(e) => setCrowdfundingForm({ ...crowdfundingForm, project_year: e.target.value })}
+                            placeholder="2024"
+                            min="2000"
+                            max="2030"
+                          />
+                        </div>
+                      </div>
+
                       <div>
                         <ImageUpload
                           label="專案圖片"
@@ -273,6 +316,9 @@ export const CasesAdmin = () => {
                       <TableHead>目標金額</TableHead>
                       <TableHead>達成率</TableHead>
                       <TableHead>贊助人數</TableHead>
+                      <TableHead>幣值</TableHead>
+                      <TableHead>遊戲類型</TableHead>
+                      <TableHead>專案年份</TableHead>
                       <TableHead>操作</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -284,6 +330,9 @@ export const CasesAdmin = () => {
                         <TableCell>{case_.target.toLocaleString()}</TableCell>
                         <TableCell>{case_.success_rate}%</TableCell>
                         <TableCell>{case_.backers}</TableCell>
+                        <TableCell>{case_.currency || 'USD'}</TableCell>
+                        <TableCell>{case_.game_type || '-'}</TableCell>
+                        <TableCell>{case_.project_year || '-'}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             {case_.project_url && (
