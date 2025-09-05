@@ -231,12 +231,12 @@ const Resources = () => {
           </CardContent>
         </Card>
 
-        {/* 快速連結 */}
+        {/* 全球知名群眾募資平台 */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
               <LinkIcon className="h-5 w-5 mr-2 text-primary" />
-              快速連結
+              全球知名群眾募資平台
             </CardTitle>
           </CardHeader>
           <CardContent>
