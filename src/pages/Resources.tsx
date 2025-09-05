@@ -55,9 +55,9 @@ const Resources = () => {
           url: "#"
         },
         {
-          title: "行銷時程表",
-          description: "群眾集資行銷活動的時程規劃範本",
-          url: "#"
+          title: "準備流程表",
+          description: "群眾集資專案的準備流程規劃範本",
+          url: "https://pa023315.com/game-crowdfunding-prep-checklist/"
         }
       ]
     }
