@@ -125,20 +125,14 @@ const Cases = () => {
       <main className="container py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">
-            成功案例
-            <span className="text-primary">
-              深度解析
-            </span>
+            經典案例
           </h1>
-          <p className="text-lg text-muted-foreground">
-            研究知名群眾集資遊戲專案的成功秘訣，學習最佳實務與策略
-          </p>
         </div>
 
         {/* 集資專案案例 */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-bold">集資專案</h2>
+            <h2 className="text-3xl font-bold"></h2>
             <div className="text-sm text-muted-foreground">
               共 {featuredCases.length} 個專案
             </div>
