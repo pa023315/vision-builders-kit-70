@@ -238,7 +238,7 @@ const Cases = () => {
                     {showcase.game_url && (
                       <Button variant="outline" size="sm" className="w-full" asChild>
                         <a href={showcase.game_url} target="_blank" rel="noopener noreferrer">
-                          查看遊戲
+                          查看專案
                           <ExternalLink className="ml-2 h-3 w-3" />
                         </a>
                       </Button>
