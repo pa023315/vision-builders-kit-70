@@ -81,7 +81,9 @@ const Resources = () => {
     { name: "Wadiz", url: "https://www.wadiz.kr/home", category: "平台" },
     { name: "Tumblbug", url: "https://tumblbug.com/", category: "平台" },
     { name: "Ulule", url: "https://www.ulule.com/", category: "平台" },
-    { name: "Fig", url: "https://republic.com/fig", category: "平台" }
+    { name: "Fig", url: "https://republic.com/fig", category: "平台" },
+    { name: "BackerKit", url: "https://www.backerkit.com/", category: "平台" },
+    { name: "Gamefound", url: "https://gamefound.com/en", category: "平台" }
   ];
 
   return (
