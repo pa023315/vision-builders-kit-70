@@ -51,7 +51,7 @@ const Resources = () => {
         {
           title: "預算規劃表",
           description: "詳細的成本分析與預算規劃工具",
-          url: "#"
+          url: "https://pa023315.com/game-crowdfunding-cost-guide/"
         },
         {
           title: "準備流程表",
