@@ -78,7 +78,10 @@ const Resources = () => {
     { name: "GREEN FUNDING", url: "https://greenfunding.jp/", category: "平台" },
     { name: "摩點", url: "https://www.modian.com/", category: "平台" },
     { name: "readyfor", url: "https://readyfor.jp/", category: "平台" },
-    { name: "Wadiz", url: "https://www.wadiz.kr/home", category: "平台" }
+    { name: "Wadiz", url: "https://www.wadiz.kr/home", category: "平台" },
+    { name: "Tumblbug", url: "https://tumblbug.com/", category: "平台" },
+    { name: "Ulule", url: "https://www.ulule.com/", category: "平台" },
+    { name: "Fig", url: "https://republic.com/fig", category: "平台" }
   ];
 
   return (
