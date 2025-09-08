@@ -9,7 +9,6 @@ import {
   Download, 
   ExternalLink, 
   MessageCircle,
-  Lightbulb,
   Target,
   Mail
 } from "lucide-react";
@@ -63,26 +62,6 @@ const Resources = () => {
     }
   ];
 
-  const featuredTools = [
-    {
-      name: "集資目標計算器",
-      description: "根據遊戲類型、開發規模等因素，計算合理的集資目標",
-      features: ["成本分析", "風險評估", "回饋設計建議"],
-      status: "免費使用"
-    },
-    {
-      name: "行銷時程規劃器",
-      description: "為群眾集資專案制定詳細的行銷時程與檢查點",
-      features: ["時程管理", "任務提醒", "進度追蹤"],
-      status: "免費使用"
-    },
-    {
-      name: "回饋選項建議工具",
-      description: "基於類似專案數據，建議最適合的回饋選項與定價",
-      features: ["定價建議", "回饋分析", "競品比較"],
-      status: "付費工具"
-    }
-  ];
 
   const quickLinks = [
     { name: "FlyingV", url: "https://www.flyingv.cc/", category: "平台" },
@@ -118,45 +97,6 @@ const Resources = () => {
           </p>
         </div>
 
-        {/* 精選工具 */}
-        <Card className="mb-12">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Lightbulb className="h-5 w-5 mr-2 text-primary" />
-              精選實用工具
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {featuredTools.map((tool, index) => (
-                <Card key={index} className="border-2 hover:border-primary/50 transition-colors">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{tool.name}</CardTitle>
-                      <Badge variant={tool.status === "免費使用" ? "secondary" : "default"}>
-                        {tool.status}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{tool.description}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 mb-4">
-                      {tool.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-center text-sm">
-                          <span className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></span>
-                          {feature}
-                        </div>
-                      ))}
-                    </div>
-                    <Button size="sm" className="w-full">
-                      開始使用
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
 
         {/* 範本工具 */}
         <Card className="mb-12">
