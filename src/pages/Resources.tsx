@@ -44,9 +44,9 @@ const Resources = () => {
       color: "text-primary",
       resources: [
         {
-          title: "專案企劃書範本",
+          title: "專案企劃書指南",
           description: "標準化的專案企劃書格式與範例",
-          url: "#"
+          url: "https://pa023315.com/game-crowdfunding-plan-writing-guide/"
         },
         {
           title: "預算規劃表",
