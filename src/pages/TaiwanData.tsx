@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import DataCard from "@/components/DataCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -713,6 +714,7 @@ const TaiwanData = () => {
           </CardContent>
         </Card>
       </main>
+      <Footer />
     </div>
   );
 };
