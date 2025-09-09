@@ -48,8 +48,8 @@ const TimelineSection = () => {
                 </div>
                 
                 {/* Event card */}
-                <Card className="w-full max-w-xs">
-                  <CardContent className="p-4 text-center">
+                <Card className="w-full max-w-xs h-32 flex flex-col">
+                  <CardContent className="p-4 text-center flex-1 flex flex-col justify-between">
                     <h3 className="text-lg font-semibold text-primary mb-2">
                       {event.year}
                     </h3>
