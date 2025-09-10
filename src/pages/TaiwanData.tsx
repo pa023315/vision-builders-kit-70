@@ -147,13 +147,18 @@ const TaiwanData = () => {
       },
       responsive: {
         rules: [{
-          condition: {
-            maxWidth: 500
-          },
+          condition: { maxWidth: 640 },
           chartOptions: {
-            legend: {
-              enabled: false
-            }
+            chart: { spacingBottom: 64, marginBottom: 80 },
+            xAxis: {
+              labels: {
+                rotation: 0,
+                style: { fontSize: '10px' },
+                y: 16,
+                step: 2
+              }
+            },
+            legend: { enabled: false }
           }
         }]
       }
@@ -252,13 +257,18 @@ const TaiwanData = () => {
       },
       responsive: {
         rules: [{
-          condition: {
-            maxWidth: 500
-          },
+          condition: { maxWidth: 640 },
           chartOptions: {
-            legend: {
-              enabled: false
-            }
+            chart: { spacingBottom: 64, marginBottom: 80 },
+            xAxis: {
+              labels: {
+                rotation: 0,
+                style: { fontSize: '10px' },
+                y: 16,
+                step: 2
+              }
+            },
+            legend: { enabled: false }
           }
         }]
       }
@@ -422,13 +432,18 @@ const TaiwanData = () => {
       },
       responsive: {
         rules: [{
-          condition: {
-            maxWidth: 500
-          },
+          condition: { maxWidth: 640 },
           chartOptions: {
-            legend: {
-              enabled: false
-            }
+            chart: { spacingBottom: 64, marginBottom: 80 },
+            xAxis: {
+              labels: {
+                rotation: 0,
+                style: { fontSize: '10px' },
+                y: 16,
+                step: 2
+              }
+            },
+            legend: { enabled: false }
           }
         }]
       }
@@ -520,13 +535,18 @@ const TaiwanData = () => {
       },
       responsive: {
         rules: [{
-          condition: {
-            maxWidth: 500
-          },
+          condition: { maxWidth: 640 },
           chartOptions: {
-            legend: {
-              enabled: false
-            }
+            chart: { spacingBottom: 64, marginBottom: 80 },
+            xAxis: {
+              labels: {
+                rotation: 0,
+                style: { fontSize: '10px' },
+                y: 16,
+                step: 2
+              }
+            },
+            legend: { enabled: false }
           }
         }]
       }
@@ -631,7 +651,7 @@ const TaiwanData = () => {
         {/* 年度趨勢圖表 */}
         <Card className="mb-4">
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <CardTitle className="flex items-center">
                 <TrendingUp className="h-5 w-5 mr-2 text-primary" />
                 {chartType === 'line' 
@@ -643,14 +663,16 @@ const TaiwanData = () => {
                   : '年度專案數量、贊助金額與贊助人數對照（2013-2025年份）'
                 }
               </CardTitle>
-              <Tabs value={chartType} onValueChange={(value) => setChartType(value as 'line' | 'column' | 'backers' | 'both')}>
-                <TabsList>
-                  <TabsTrigger value="line">專案數量</TabsTrigger>
-                  <TabsTrigger value="column">贊助金額</TabsTrigger>
-                  <TabsTrigger value="backers">專案人數</TabsTrigger>
-                  <TabsTrigger value="both">三者對照</TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <div className="w-full overflow-x-auto -mx-1 sm:mx-0">
+                <Tabs value={chartType} onValueChange={(value) => setChartType(value as 'line' | 'column' | 'backers' | 'both')}>
+                  <TabsList className="whitespace-nowrap">
+                    <TabsTrigger value="line">專案數量</TabsTrigger>
+                    <TabsTrigger value="column">贊助金額</TabsTrigger>
+                    <TabsTrigger value="backers">專案人數</TabsTrigger>
+                    <TabsTrigger value="both">三者對照</TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
