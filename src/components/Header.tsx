@@ -23,9 +23,11 @@ const Header = () => {
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
-          <div className="p-2 rounded-lg bg-primary">
-            <GamepadIcon className="h-6 w-6 text-primary-foreground" />
-          </div>
+          <img 
+            src="/lovable-uploads/a565a0fc-11ce-4c46-bc85-316fab5f3ddf.png" 
+            alt="數位遊戲群眾集資洞察平台 Logo" 
+            className="h-10 w-10 object-contain"
+          />
           <span className="text-xl font-bold text-primary">
             Digital Game Crowdfunding
           </span>
