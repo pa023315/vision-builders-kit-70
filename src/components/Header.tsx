@@ -29,7 +29,7 @@ const Header = () => {
             className="h-10 w-10 object-contain"
           />
           <span className="text-xl font-bold text-primary">
-            Digital Game Crowdfunding
+            GameCF 數位遊戲群眾募資資訊站
           </span>
         </Link>
 
