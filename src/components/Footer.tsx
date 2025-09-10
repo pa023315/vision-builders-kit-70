@@ -1,19 +1,17 @@
-import { ExternalLink, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className="bg-secondary/10 border-t border-border mt-12">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-center items-center gap-8">
-          <a
-            href="https://pa023315.com/about/"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to="/about"
             className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
           >
             <span>關於我們</span>
-            <ExternalLink className="h-4 w-4" />
-          </a>
+          </Link>
           
           <a
             href="mailto:service@pa023315.com"
