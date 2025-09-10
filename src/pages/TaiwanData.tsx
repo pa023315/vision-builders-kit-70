@@ -82,7 +82,8 @@ const TaiwanData = () => {
       chart: {
         type: 'line',
         backgroundColor: 'transparent',
-        spacingBottom: 28,
+        spacingBottom: 40,
+        marginBottom: 60,
         style: {
           fontFamily: 'inherit'
         }
@@ -99,7 +100,8 @@ const TaiwanData = () => {
         labels: {
           style: {
             color: getThemeColor('--muted-foreground')
-          }
+          },
+          y: 20
         }
       },
       yAxis: {
@@ -175,7 +177,8 @@ const TaiwanData = () => {
       chart: {
         type: 'column',
         backgroundColor: 'transparent',
-        spacingBottom: 28,
+        spacingBottom: 40,
+        marginBottom: 60,
         style: {
           fontFamily: 'inherit'
         },
@@ -193,7 +196,8 @@ const TaiwanData = () => {
         labels: {
           style: {
             color: getThemeColor('--muted-foreground')
-          }
+          },
+          y: 20
         }
       },
       yAxis: {
@@ -279,7 +283,8 @@ const TaiwanData = () => {
     return {
       chart: {
         backgroundColor: 'transparent',
-        spacingBottom: 28,
+        spacingBottom: 40,
+        marginBottom: 60,
         style: {
           fontFamily: 'inherit'
         }
@@ -296,7 +301,8 @@ const TaiwanData = () => {
         labels: {
           style: {
             color: getThemeColor('--muted-foreground')
-          }
+          },
+          y: 20
         }
       },
       yAxis: [
@@ -446,7 +452,8 @@ const TaiwanData = () => {
       chart: {
         type: 'column',
         backgroundColor: 'transparent',
-        spacingBottom: 28,
+        spacingBottom: 40,
+        marginBottom: 60,
         style: {
           fontFamily: 'inherit'
         }
@@ -463,7 +470,8 @@ const TaiwanData = () => {
         labels: {
           style: {
             color: getThemeColor('--muted-foreground')
-          }
+          },
+          y: 20
         }
       },
       yAxis: {
@@ -646,7 +654,7 @@ const TaiwanData = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="h-72 md:h-80 lg:h-96">
+            <div className="h-72 md:h-80 lg:h-96 mb-4">
               <HighchartsReact
                 key={chartType}
                 highcharts={Highcharts}
