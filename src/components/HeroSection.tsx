@@ -14,12 +14,12 @@ const HeroSection = () => {
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className="flex justify-center mb-6 w-full max-w-md mx-auto">
+              <div className="flex justify-center mb-6 w-full">
                 <img 
                   src="/lovable-uploads/8293d014-d3f4-425b-8a38-80a75b1ce7dd.png" 
-                  alt="GameCF Logo" 
-                  className="w-full h-auto object-contain" 
-                  style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))' }}
+                  alt="GameCF logo 數位遊戲群眾募資資訊站" 
+                  className="block w-full max-w-[min(90vw,1000px)] h-auto object-contain" 
+                  style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))', transform: 'none', clipPath: 'none' }}
                 />
               </div>
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
