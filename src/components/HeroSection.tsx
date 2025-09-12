@@ -14,11 +14,11 @@ const HeroSection = () => {
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className="flex justify-center mb-6">
+              <div className="flex justify-center mb-6 w-full max-w-md mx-auto">
                 <img 
-                  src="/lovable-uploads/3f6b3c49-5df8-47c9-b60b-0c472f3f3a14.png" 
+                  src="/lovable-uploads/8293d014-d3f4-425b-8a38-80a75b1ce7dd.png" 
                   alt="GameCF Logo" 
-                  className="h-32 md:h-48 lg:h-56 w-auto max-w-[90vw] object-contain" 
+                  className="w-full h-auto object-contain" 
                   style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))' }}
                 />
               </div>
