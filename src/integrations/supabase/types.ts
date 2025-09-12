@@ -51,6 +51,7 @@ export type Database = {
           created_at: string
           currency: string | null
           description: string
+          display_order: number | null
           game_type: string | null
           id: string
           image_url: string | null
@@ -67,6 +68,7 @@ export type Database = {
           created_at?: string
           currency?: string | null
           description: string
+          display_order?: number | null
           game_type?: string | null
           id?: string
           image_url?: string | null
@@ -83,6 +85,7 @@ export type Database = {
           created_at?: string
           currency?: string | null
           description?: string
+          display_order?: number | null
           game_type?: string | null
           id?: string
           image_url?: string | null

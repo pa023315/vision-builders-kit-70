@@ -52,6 +52,7 @@ export interface CrowdfundingCase {
   project_year?: number
   image_url?: string
   project_url?: string
+  display_order: number
   created_at: string
   updated_at: string
 }

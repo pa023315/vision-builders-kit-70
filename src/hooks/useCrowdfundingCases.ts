@@ -9,6 +9,7 @@ export const useCrowdfundingCases = () => {
       const { data, error } = await supabase
         .from('crowdfunding_cases')
         .select('*')
+        .order('display_order', { ascending: true })
         .order('created_at', { ascending: false })
       
       if (error) throw error
@@ -111,6 +112,38 @@ export const useDeleteCrowdfundingCase = () => {
       toast({
         title: "刪除失敗",
         description: "無法刪除集資案例，請重試",
+        variant: "destructive",
+      })
+    },
+  })
+}
+
+export const useUpdateCrowdfundingCaseOrder = () => {
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: async (cases: { id: string; display_order: number }[]) => {
+      const promises = cases.map(({ id, display_order }) =>
+        supabase
+          .from('crowdfunding_cases')
+          .update({ display_order })
+          .eq('id', id)
+      )
+      
+      await Promise.all(promises)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['crowdfunding-cases'] })
+      toast({
+        title: "排序已更新",
+        description: "集資案例順序已成功調整",
+      })
+    },
+    onError: () => {
+      toast({
+        title: "排序失敗",
+        description: "無法更新排序，請重試",
         variant: "destructive",
       })
     },

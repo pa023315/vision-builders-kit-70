@@ -7,11 +7,29 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, ExternalLink, ChevronUp, ChevronDown } from "lucide-react";
-import { useCrowdfundingCases, useCreateCrowdfundingCase, useUpdateCrowdfundingCase, useDeleteCrowdfundingCase } from "@/hooks/useCrowdfundingCases";
+import { Plus, Edit, Trash2, ExternalLink, ChevronUp, ChevronDown, GripVertical } from "lucide-react";
+import { useCrowdfundingCases, useCreateCrowdfundingCase, useUpdateCrowdfundingCase, useDeleteCrowdfundingCase, useUpdateCrowdfundingCaseOrder } from "@/hooks/useCrowdfundingCases";
 import { useGameShowcases, useCreateGameShowcase, useUpdateGameShowcase, useDeleteGameShowcase } from "@/hooks/useGameShowcases";
 import { CrowdfundingCase, GameShowcase } from "@/lib/supabase";
 import { ImageUpload } from "@/components/ImageUpload";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 type SortField = 'name' | 'amount' | 'target' | 'success_rate' | 'backers' | 'project_year';
 type SortDirection = 'asc' | 'desc';
@@ -46,6 +64,11 @@ export const CasesAdmin = () => {
 
   const { data: crowdfundingCases = [], isLoading: loadingCrowdfunding } = useCrowdfundingCases();
   const { data: gameShowcases = [], isLoading: loadingGames } = useGameShowcases();
+  
+  const createCrowdfunding = useCreateCrowdfundingCase();
+  const updateCrowdfunding = useUpdateCrowdfundingCase();
+  const deleteCrowdfunding = useDeleteCrowdfundingCase();
+  const updateCrowdfundingOrder = useUpdateCrowdfundingCaseOrder();
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -89,13 +112,16 @@ export const CasesAdmin = () => {
     </TableHead>
   );
   
-  const createCrowdfunding = useCreateCrowdfundingCase();
-  const updateCrowdfunding = useUpdateCrowdfundingCase();
-  const deleteCrowdfunding = useDeleteCrowdfundingCase();
-  
   const createGame = useCreateGameShowcase();
   const updateGame = useUpdateGameShowcase();
   const deleteGame = useDeleteGameShowcase();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const resetCrowdfundingForm = () => {
     setCrowdfundingForm({
@@ -137,6 +163,7 @@ export const CasesAdmin = () => {
       backers: parseInt(crowdfundingForm.backers),
       project_year: crowdfundingForm.project_year ? parseInt(crowdfundingForm.project_year) : undefined,
       success_rate,
+      display_order: editingCrowdfunding ? editingCrowdfunding.display_order : Math.max(...crowdfundingCases.map(c => c.display_order), 0) + 1,
     };
 
     if (editingCrowdfunding) {
@@ -200,6 +227,85 @@ export const CasesAdmin = () => {
     if (confirm("確定要刪除此遊戲案例嗎？")) {
       deleteGame.mutate(id);
     }
+  };
+
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = crowdfundingCases.findIndex(item => item.id === active.id);
+      const newIndex = crowdfundingCases.findIndex(item => item.id === over.id);
+      
+      const newItems = arrayMove(crowdfundingCases, oldIndex, newIndex);
+      const updates = newItems.map((item, index) => ({
+        id: item.id,
+        display_order: index + 1
+      }));
+      
+      updateCrowdfundingOrder.mutate(updates);
+    }
+  };
+
+  const SortableTableRow = ({ case_ }: { case_: CrowdfundingCase }) => {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+    } = useSortable({ id: case_.id });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
+
+    return (
+      <TableRow ref={setNodeRef} style={style} {...attributes}>
+        <TableCell>
+          <div className="flex items-center gap-2">
+            <div {...listeners} className="cursor-grab active:cursor-grabbing">
+              <GripVertical className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+            </div>
+            <span className="font-medium">{case_.name}</span>
+          </div>
+        </TableCell>
+        <TableCell>{case_.amount.toLocaleString()}</TableCell>
+        <TableCell>{case_.target.toLocaleString()}</TableCell>
+        <TableCell>{case_.success_rate}%</TableCell>
+        <TableCell>{case_.backers}</TableCell>
+        <TableCell>{case_.currency || 'USD'}</TableCell>
+        <TableCell>{case_.game_type || '-'}</TableCell>
+        <TableCell>{case_.project_year || '-'}</TableCell>
+        <TableCell>
+          <div className="flex items-center gap-2">
+            {case_.project_url && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => window.open(case_.project_url, '_blank')}
+              >
+                <ExternalLink className="h-3 w-3" />
+              </Button>
+            )}
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleEditCrowdfunding(case_)}
+            >
+              <Edit className="h-3 w-3" />
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleDeleteCrowdfunding(case_.id)}
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
+        </TableCell>
+      </TableRow>
+    );
   };
 
   if (loadingCrowdfunding || loadingGames) {
@@ -355,62 +461,37 @@ export const CasesAdmin = () => {
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <SortableHeader field="name">專案名稱</SortableHeader>
-                      <SortableHeader field="amount">贊助金額</SortableHeader>
-                      <SortableHeader field="target">目標金額</SortableHeader>
-                      <SortableHeader field="success_rate">達成率</SortableHeader>
-                      <SortableHeader field="backers">贊助人數</SortableHeader>
-                      <TableHead>幣值</TableHead>
-                      <TableHead>遊戲類型</TableHead>
-                      <SortableHeader field="project_year">專案年份</SortableHeader>
-                      <TableHead>操作</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {sortedCrowdfundingCases.map((case_) => (
-                      <TableRow key={case_.id}>
-                        <TableCell className="font-medium">{case_.name}</TableCell>
-                        <TableCell>{case_.amount.toLocaleString()}</TableCell>
-                        <TableCell>{case_.target.toLocaleString()}</TableCell>
-                        <TableCell>{case_.success_rate}%</TableCell>
-                        <TableCell>{case_.backers}</TableCell>
-                        <TableCell>{case_.currency || 'USD'}</TableCell>
-                        <TableCell>{case_.game_type || '-'}</TableCell>
-                        <TableCell>{case_.project_year || '-'}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            {case_.project_url && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => window.open(case_.project_url, '_blank')}
-                              >
-                                <ExternalLink className="h-3 w-3" />
-                              </Button>
-                            )}
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleEditCrowdfunding(case_)}
-                            >
-                              <Edit className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleDeleteCrowdfunding(case_.id)}
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </TableCell>
+                <DndContext 
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <SortableHeader field="name">專案名稱</SortableHeader>
+                        <SortableHeader field="amount">贊助金額</SortableHeader>
+                        <SortableHeader field="target">目標金額</SortableHeader>
+                        <SortableHeader field="success_rate">達成率</SortableHeader>
+                        <SortableHeader field="backers">贊助人數</SortableHeader>
+                        <TableHead>幣值</TableHead>
+                        <TableHead>遊戲類型</TableHead>
+                        <SortableHeader field="project_year">專案年份</SortableHeader>
+                        <TableHead>操作</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      <SortableContext 
+                        items={crowdfundingCases.map(case_ => case_.id)}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        {crowdfundingCases.map((case_) => (
+                          <SortableTableRow key={case_.id} case_={case_} />
+                        ))}
+                      </SortableContext>
+                    </TableBody>
+                  </Table>
+                </DndContext>
               </div>
             </CardContent>
           </Card>
