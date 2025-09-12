@@ -15,7 +15,12 @@ const HeroSection = () => {
           <div className="space-y-8">
             <div className="space-y-4">
               <div className="flex justify-center mb-6">
-                <img src="/lovable-uploads/7ee2c3bb-9af2-4405-bb07-6540c8078974.png" alt="GameCF Logo" className="h-24 w-auto" />
+                <img 
+                  src="/lovable-uploads/7ee2c3bb-9af2-4405-bb07-6540c8078974.png" 
+                  alt="GameCF Logo" 
+                  className="h-72 w-auto object-contain scale-110" 
+                  style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))' }}
+                />
               </div>
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
                 數位遊戲群眾募資資訊站
