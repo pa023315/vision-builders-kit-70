@@ -16,7 +16,7 @@ const HeroSection = () => {
             <div className="space-y-4">
               <div className="flex justify-center mb-6 w-full">
                 <img 
-                  src="/lovable-uploads/b79d8205-f3ec-4197-980e-d8746e20225f.png" 
+                  src="/lovable-uploads/e9895021-c984-45d8-bd23-838c8ac64353.png" 
                   alt="GameCF logo 數位遊戲群眾募資資訊站" 
                   className="block w-full max-w-[min(90vw,1000px)] h-auto object-contain" 
                   style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))', transform: 'none', clipPath: 'none' }}
