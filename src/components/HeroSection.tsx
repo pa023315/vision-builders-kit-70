@@ -14,12 +14,11 @@ const HeroSection = () => {
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
           <div className="space-y-8">
             <div className="space-y-4">
+              <div className="flex justify-center mb-6">
+                <img src="/lovable-uploads/7ee2c3bb-9af2-4405-bb07-6540c8078974.png" alt="GameCF Logo" className="h-24 w-auto" />
+              </div>
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-                數位遊戲
-                <span className="block text-muted-foreground">
-                  群眾集資
-                </span>
-                洞察平台
+                數位遊戲群眾募資資訊站
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
                 探索台灣與全球數位遊戲群眾集資趨勢，掌握市場脈動，發現成功案例背後的關鍵數據與策略。
