@@ -118,19 +118,16 @@ const Resources = () => {
               {resourceCategories
                 .find(cat => cat.title === "範本工具")
                 ?.resources.map((resource, idx) => (
-                <Card key={idx} className="border hover:shadow-md transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <FileText className="h-10 w-10 text-primary" />
-                      <Button variant="ghost" size="sm" asChild>
-                        <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      </Button>
-                    </div>
-                    <h3 className="font-semibold text-lg mb-2">{resource.title}</h3>
-                    <p className="text-sm text-muted-foreground">{resource.description}</p>
-                  </CardContent>
+                <Card key={idx} className="border hover:shadow-md transition-shadow cursor-pointer">
+                  <a href={resource.url} target="_blank" rel="noopener noreferrer" className="block">
+                    <CardContent className="p-6">
+                      <div className="flex items-center mb-4">
+                        <FileText className="h-10 w-10 text-primary" />
+                      </div>
+                      <h3 className="font-semibold text-lg mb-2 hover:text-primary transition-colors">{resource.title}</h3>
+                      <p className="text-sm text-muted-foreground">{resource.description}</p>
+                    </CardContent>
+                  </a>
                 </Card>
               ))}
             </div>
@@ -149,28 +146,25 @@ const Resources = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {beginnerGuides?.map((guide, idx) => (
-                <Card key={idx} className="border hover:shadow-md transition-shadow overflow-hidden">
-                  {guide.image_url && (
-                    <div className="aspect-video w-full overflow-hidden">
-                      <img 
-                        src={guide.image_url} 
-                        alt={guide.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      {!guide.image_url && <BookOpen className="h-10 w-10 text-blue-600" />}
-                      <Button variant="ghost" size="sm" asChild className="ml-auto">
-                        <a href={guide.url} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      </Button>
-                    </div>
-                    <h3 className="font-semibold text-lg mb-2">{guide.name}</h3>
-                    <p className="text-sm text-muted-foreground">{guide.description}</p>
-                  </CardContent>
+                <Card key={idx} className="border hover:shadow-md transition-shadow overflow-hidden cursor-pointer">
+                  <a href={guide.url} target="_blank" rel="noopener noreferrer" className="block">
+                    {guide.image_url && (
+                      <div className="aspect-video w-full overflow-hidden">
+                        <img 
+                          src={guide.image_url} 
+                          alt={guide.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <CardContent className="p-6">
+                      <div className="flex items-center mb-4">
+                        {!guide.image_url && <BookOpen className="h-10 w-10 text-blue-600" />}
+                      </div>
+                      <h3 className="font-semibold text-lg mb-2 hover:text-primary transition-colors">{guide.name}</h3>
+                      <p className="text-sm text-muted-foreground">{guide.description}</p>
+                    </CardContent>
+                  </a>
                 </Card>
               ))}
             </div>
