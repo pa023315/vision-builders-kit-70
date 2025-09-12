@@ -14,16 +14,12 @@ const HeroSection = () => {
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className="flex justify-center mb-6 overflow-hidden">
+              <div className="flex justify-center mb-6">
                 <img 
-                  src="/lovable-uploads/7ee2c3bb-9af2-4405-bb07-6540c8078974.png" 
+                  src="/lovable-uploads/3f6b3c49-5df8-47c9-b60b-0c472f3f3a14.png" 
                   alt="GameCF Logo" 
-                  className="h-72 w-auto object-cover scale-150" 
-                  style={{ 
-                    filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))',
-                    objectPosition: 'center 45%',
-                    clipPath: 'inset(25% 0 25% 0)'
-                  }}
+                  className="h-32 md:h-48 lg:h-56 w-auto max-w-[90vw] object-contain" 
+                  style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))' }}
                 />
               </div>
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
