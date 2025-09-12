@@ -7,17 +7,22 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, ExternalLink } from "lucide-react";
+import { Plus, Edit, Trash2, ExternalLink, ChevronUp, ChevronDown } from "lucide-react";
 import { useCrowdfundingCases, useCreateCrowdfundingCase, useUpdateCrowdfundingCase, useDeleteCrowdfundingCase } from "@/hooks/useCrowdfundingCases";
 import { useGameShowcases, useCreateGameShowcase, useUpdateGameShowcase, useDeleteGameShowcase } from "@/hooks/useGameShowcases";
 import { CrowdfundingCase, GameShowcase } from "@/lib/supabase";
 import { ImageUpload } from "@/components/ImageUpload";
+
+type SortField = 'name' | 'amount' | 'target' | 'success_rate' | 'backers' | 'project_year';
+type SortDirection = 'asc' | 'desc';
 
 export const CasesAdmin = () => {
   const [crowdfundingDialogOpen, setCrowdfundingDialogOpen] = useState(false);
   const [gameDialogOpen, setGameDialogOpen] = useState(false);
   const [editingCrowdfunding, setEditingCrowdfunding] = useState<CrowdfundingCase | null>(null);
   const [editingGame, setEditingGame] = useState<GameShowcase | null>(null);
+  const [sortField, setSortField] = useState<SortField>('name');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   
   const [crowdfundingForm, setCrowdfundingForm] = useState({
     name: "",
@@ -41,6 +46,48 @@ export const CasesAdmin = () => {
 
   const { data: crowdfundingCases = [], isLoading: loadingCrowdfunding } = useCrowdfundingCases();
   const { data: gameShowcases = [], isLoading: loadingGames } = useGameShowcases();
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const sortedCrowdfundingCases = [...crowdfundingCases].sort((a, b) => {
+    let aValue: any = a[sortField];
+    let bValue: any = b[sortField];
+
+    // Handle null/undefined values
+    if (aValue == null) aValue = '';
+    if (bValue == null) bValue = '';
+
+    // Convert to lowercase for string comparison
+    if (typeof aValue === 'string') aValue = aValue.toLowerCase();
+    if (typeof bValue === 'string') bValue = bValue.toLowerCase();
+
+    if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const SortableHeader = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
+    <TableHead 
+      className="cursor-pointer hover:bg-muted/50 select-none"
+      onClick={() => handleSort(field)}
+    >
+      <div className="flex items-center gap-1">
+        {children}
+        {sortField === field && (
+          sortDirection === 'asc' ? 
+            <ChevronUp className="h-4 w-4" /> : 
+            <ChevronDown className="h-4 w-4" />
+        )}
+      </div>
+    </TableHead>
+  );
   
   const createCrowdfunding = useCreateCrowdfundingCase();
   const updateCrowdfunding = useUpdateCrowdfundingCase();
@@ -311,19 +358,19 @@ export const CasesAdmin = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>專案名稱</TableHead>
-                      <TableHead>贊助金額</TableHead>
-                      <TableHead>目標金額</TableHead>
-                      <TableHead>達成率</TableHead>
-                      <TableHead>贊助人數</TableHead>
+                      <SortableHeader field="name">專案名稱</SortableHeader>
+                      <SortableHeader field="amount">贊助金額</SortableHeader>
+                      <SortableHeader field="target">目標金額</SortableHeader>
+                      <SortableHeader field="success_rate">達成率</SortableHeader>
+                      <SortableHeader field="backers">贊助人數</SortableHeader>
                       <TableHead>幣值</TableHead>
                       <TableHead>遊戲類型</TableHead>
-                      <TableHead>專案年份</TableHead>
+                      <SortableHeader field="project_year">專案年份</SortableHeader>
                       <TableHead>操作</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {crowdfundingCases.map((case_) => (
+                    {sortedCrowdfundingCases.map((case_) => (
                       <TableRow key={case_.id}>
                         <TableCell className="font-medium">{case_.name}</TableCell>
                         <TableCell>{case_.amount.toLocaleString()}</TableCell>
