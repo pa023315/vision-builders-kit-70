@@ -50,6 +50,7 @@ const Cases = () => {
       "透明的進度更新"
     ],
     image_url: caseItem.image_url || "/placeholder.svg",
+    project_url: caseItem.project_url,
     created_at: caseItem.created_at,
     updated_at: caseItem.updated_at
   })) : [
@@ -78,6 +79,7 @@ const Cases = () => {
         "社群經營得當"
       ],
       image_url: "/placeholder.svg",
+      project_url: "https://www.kickstarter.com/projects/iga/bloodstained-ritual-of-the-night",
       created_at: "2024-01-01",
       updated_at: "2024-01-01"
     }
@@ -201,10 +203,19 @@ const Cases = () => {
                     </div>
                   </div>
                   
-                  <Button variant="outline" size="sm" className="w-full">
-                    查看詳細案例
-                    <ExternalLink className="ml-2 h-3 w-3" />
-                  </Button>
+                  {caseItem.project_url ? (
+                    <Button variant="outline" size="sm" className="w-full" asChild>
+                      <a href={caseItem.project_url} target="_blank" rel="noopener noreferrer">
+                        查看專案
+                        <ExternalLink className="ml-2 h-3 w-3" />
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button variant="outline" size="sm" className="w-full" disabled>
+                      查看專案
+                      <ExternalLink className="ml-2 h-3 w-3" />
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}
