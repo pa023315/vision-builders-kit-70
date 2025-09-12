@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit, Trash2, BarChart3, FileText, Award, Globe, Flame, BookOpen } from "lucide-react";
+import { Plus, Edit, Trash2, BarChart3, FileText, Award, Globe, Flame, BookOpen, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { TaiwanProjectsAdmin } from "@/components/admin/TaiwanProjectsAdmin";
 import { CampfireProjectsAdmin } from "@/components/admin/CampfireProjectsAdmin";
 import { KickstarterProjectsAdmin } from "@/components/admin/KickstarterProjectsAdmin";
@@ -13,6 +16,27 @@ import { CasesAdmin } from "@/components/admin/CasesAdmin";
 import BeginnerGuidesAdmin from "@/components/admin/BeginnerGuidesAdmin";
 
 const Admin = () => {
+  const { signOut, user } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "登出成功",
+        description: "已安全登出管理系統",
+      });
+      navigate("/admin/login");
+    } catch (error) {
+      toast({
+        title: "登出失敗",
+        description: "發生錯誤，請稍後再試",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
@@ -25,8 +49,15 @@ const Admin = () => {
               </span>
             </h1>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
+              <span className="text-sm text-muted-foreground mr-4">
+                歡迎，{user?.email}
+              </span>
+              <Button variant="outline" size="sm" onClick={() => navigate("/")}>
                 返回前台
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                <LogOut className="h-4 w-4 mr-2" />
+                登出
               </Button>
             </div>
           </div>
