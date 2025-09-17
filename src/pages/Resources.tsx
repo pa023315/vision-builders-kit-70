@@ -199,29 +199,6 @@ const Resources = () => {
           </CardContent>
         </Card>
 
-        {/* 專家諮詢 */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Target className="h-5 w-5 mr-2 text-primary" />
-              專家諮詢
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center p-6">
-              <Mail className="h-12 w-12 mx-auto mb-4 text-primary" />
-              <h3 className="text-lg font-medium mb-2">需要專業建議？</h3>
-              <p className="text-muted-foreground mb-4">
-                我們的專家團隊隨時為您提供一對一諮詢服務
-              </p>
-              <Button asChild>
-                <a href="mailto:service@pa023315.com">
-                  請來信 service@pa023315.com
-                </a>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </main>
       <Footer />
     </div>
