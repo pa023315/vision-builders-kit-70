@@ -29,6 +29,7 @@ export const CampfireProjectsAdmin = () => {
     launch_date: "",
     status: "active" as "active" | "completed" | "failed",
     image_url: "",
+    project_url: "",
   });
 
   const { data: projects = [], isLoading } = useProjects();
@@ -49,6 +50,7 @@ export const CampfireProjectsAdmin = () => {
       launch_date: "",
       status: "active" as "active" | "completed" | "failed",
       image_url: "",
+      project_url: "",
     });
     setEditingProject(null);
   };
@@ -92,6 +94,7 @@ export const CampfireProjectsAdmin = () => {
       launch_date: project.launch_date,
       status: project.status,
       image_url: project.image_url || "",
+      project_url: project.project_url || "",
     });
     setIsAddDialogOpen(true);
   };
@@ -131,7 +134,8 @@ export const CampfireProjectsAdmin = () => {
             status: (row['狀態'] === '成功' || row['狀態'] === '已完成' ? 'completed' : 
                     row['狀態'] === '失敗' ? 'failed' : 
                     row['status'] || 'active') as "active" | "completed" | "failed",
-            image_url: row['網址'] || row['圖片網址'] || row['image_url'] || '',
+            image_url: row['圖片網址'] || row['image_url'] || '',
+            project_url: row['專案網址'] || row['網址'] || row['project_url'] || '',
             success_rate: row['達成率'] ? parseInt(row['達成率'].toString().replace('%', '')) : 
                          (target > 0 ? Math.round((amount / target) * 100) : 0),
           };
@@ -414,6 +418,17 @@ export const CampfireProjectsAdmin = () => {
 
 
                      <div>
+                       <Label htmlFor="project_url">專案網址</Label>
+                       <Input
+                         id="project_url"
+                         type="url"
+                         value={formData.project_url}
+                         onChange={(e) => setFormData({ ...formData, project_url: e.target.value })}
+                         placeholder="https://..."
+                       />
+                     </div>
+
+                     <div>
                        <Label>專案圖片</Label>
                        <ImageUpload
                          onChange={(url) => setFormData({ ...formData, image_url: url })}
@@ -478,7 +493,20 @@ export const CampfireProjectsAdmin = () => {
                     <TableCell>{project.country}</TableCell>
                     <TableCell>{project.launch_date}</TableCell>
                     <TableCell>{project.category}</TableCell>
-                     <TableCell className="font-medium">{project.name}</TableCell>
+                     <TableCell className="font-medium">
+                       {project.project_url ? (
+                         <a 
+                           href={project.project_url} 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           className="text-blue-600 hover:underline"
+                         >
+                           {project.name}
+                         </a>
+                       ) : (
+                         project.name
+                       )}
+                     </TableCell>
                     <TableCell>{project.target.toLocaleString()}</TableCell>
                     <TableCell>{project.amount.toLocaleString()}</TableCell>
                     <TableCell>
