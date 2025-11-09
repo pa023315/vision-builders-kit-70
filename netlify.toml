@@ -1,0 +1,10 @@
+[[redirects]]
+  from = "/news/:id"
+  to = "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/news-og/:id"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

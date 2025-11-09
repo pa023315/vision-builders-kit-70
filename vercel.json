@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/news/:id",
+      "destination": "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/news-og/:id"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
