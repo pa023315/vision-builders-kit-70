@@ -1,1 +1,4 @@
 project_id = "mkllbwsxvkcacyztgsgv"
+
+[functions.og-tags]
+verify_jwt = false
