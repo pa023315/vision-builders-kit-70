@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,6 +27,12 @@ const News = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>新聞與深度報導 - GameCF</title>
+        <meta property="og:title" content="新聞與深度報導 - GameCF" />
+        <meta property="og:description" content="掌握數位遊戲群眾集資的最新動態、深度分析與產業洞察" />
+        <meta property="og:image" content="https://mkllbwsxvkcacyztgsgv.supabase.co/storage/v1/object/public/lovable-uploads/0b5d0079-3daa-413d-a1d9-80c077436eb5.png" />
+      </Helmet>
       <Header />
       <main className="container py-8">
         <div className="mb-8">

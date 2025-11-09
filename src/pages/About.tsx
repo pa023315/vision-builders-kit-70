@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ExternalLink } from "lucide-react";
@@ -5,6 +6,12 @@ import { ExternalLink } from "lucide-react";
 const About = () => {
   return (
     <>
+      <Helmet>
+        <title>關於我們 - GameCF</title>
+        <meta property="og:title" content="關於我們 - GameCF" />
+        <meta property="og:description" content="了解 GameCF 數位遊戲群眾募資資訊站的創立初衷與團隊介紹" />
+        <meta property="og:image" content="https://mkllbwsxvkcacyztgsgv.supabase.co/storage/v1/object/public/lovable-uploads/0b5d0079-3daa-413d-a1d9-80c077436eb5.png" />
+      </Helmet>
       <Header />
       <main className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">

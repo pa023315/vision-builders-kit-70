@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import DataCard from "@/components/DataCard";
@@ -56,6 +57,12 @@ const GlobalData = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>國際數位遊戲群眾集資數據 - GameCF</title>
+        <meta property="og:title" content="國際數位遊戲群眾集資數據 - GameCF" />
+        <meta property="og:description" content="探索全球數位遊戲群眾集資市場的表現與 Kickstarter 平台數據" />
+        <meta property="og:image" content="https://mkllbwsxvkcacyztgsgv.supabase.co/storage/v1/object/public/lovable-uploads/0b5d0079-3daa-413d-a1d9-80c077436eb5.png" />
+      </Helmet>
       <Header />
       <main className="container py-8">
         <div className="mb-8">

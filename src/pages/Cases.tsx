@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -124,6 +125,12 @@ const Cases = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>經典案例 - GameCF</title>
+        <meta property="og:title" content="經典案例 - GameCF" />
+        <meta property="og:description" content="探索成功的群眾募資遊戲案例，學習專案成功的關鍵因素" />
+        <meta property="og:image" content="https://mkllbwsxvkcacyztgsgv.supabase.co/storage/v1/object/public/lovable-uploads/0b5d0079-3daa-413d-a1d9-80c077436eb5.png" />
+      </Helmet>
       <Header />
       <main className="container py-8">
         <div className="mb-8">
