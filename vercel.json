@@ -1,6 +1,30 @@
 {
   "rewrites": [
     {
+      "source": "/taiwan-data",
+      "destination": "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/taiwan-data"
+    },
+    {
+      "source": "/global-data",
+      "destination": "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/global-data"
+    },
+    {
+      "source": "/news",
+      "destination": "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/news"
+    },
+    {
+      "source": "/cases",
+      "destination": "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/cases"
+    },
+    {
+      "source": "/resources",
+      "destination": "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/resources"
+    },
+    {
+      "source": "/about",
+      "destination": "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/about"
+    },
+    {
       "source": "/news/:id",
       "destination": "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/news-og/:id"
     }

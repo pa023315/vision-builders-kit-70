@@ -1,4 +1,40 @@
 [[redirects]]
+  from = "/taiwan-data"
+  to = "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/taiwan-data"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/global-data"
+  to = "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/global-data"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/news"
+  to = "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/news"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/cases"
+  to = "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/cases"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/resources"
+  to = "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/resources"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/about"
+  to = "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/about"
+  status = 200
+  force = false
+
+[[redirects]]
   from = "/news/:id"
   to = "https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/news-og/:id"
   status = 200

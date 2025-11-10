@@ -1,2 +1,8 @@
-/news/:id https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/news-og/:id 200
-/*    /index.html   200
+/taiwan-data  https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/taiwan-data 200
+/global-data  https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/global-data 200
+/news         https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/news 200
+/cases        https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/cases 200
+/resources    https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/resources 200
+/about        https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/og/about 200
+/news/:id     https://mkllbwsxvkcacyztgsgv.supabase.co/functions/v1/news-og/:id 200
+/*            /index.html   200

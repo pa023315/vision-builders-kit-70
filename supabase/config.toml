@@ -1,6 +1,6 @@
 project_id = "mkllbwsxvkcacyztgsgv"
 
-[functions.og-tags]
+[functions.og]
 verify_jwt = false
 
 [functions.news-og]
