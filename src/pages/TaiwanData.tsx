@@ -12,59 +12,69 @@ import HighchartsReact from 'highcharts-react-official';
 import { useMemo, useState } from 'react';
 
 const TaiwanData = () => {
-  const { data: taiwanProjects = [], isLoading } = useAllTaiwanProjects();
+  const { data: allProjects = [], isLoading } = useAllTaiwanProjects();
   const [chartType, setChartType] = useState<'line' | 'column' | 'backers' | 'both'>('line');
-  
-  // 年度專案數量資料
-  const yearlyData = [
-    { year: 2013, count: 3 },
-    { year: 2014, count: 10 },
-    { year: 2015, count: 12 },
-    { year: 2016, count: 7 },
-    { year: 2017, count: 11 },
-    { year: 2018, count: 11 },
-    { year: 2019, count: 7 },
-    { year: 2020, count: 15 },
-    { year: 2021, count: 22 },
-    { year: 2022, count: 11 },
-    { year: 2023, count: 12 },
-    { year: 2024, count: 8 },
-    { year: 2025, count: 5 },
-  ];
 
-  // 年度贊助金額資料
-  const yearlyAmountData = [
-    { year: 2013, amount: 82995 },
-    { year: 2014, amount: 2949611 },
-    { year: 2015, amount: 1849204 },
-    { year: 2016, amount: 3905309 },
-    { year: 2017, amount: 2442585 },
-    { year: 2018, amount: 7944010 },
-    { year: 2019, amount: 1014746 },
-    { year: 2020, amount: 11591248 },
-    { year: 2021, amount: 18428298 },
-    { year: 2022, amount: 17954962 },
-    { year: 2023, amount: 1764237 },
-    { year: 2024, amount: 649516 },
-    { year: 2025, amount: 353887 },
-  ];
+  // 只計算 completed + failed 狀態的專案（與後台同步）
+  const taiwanProjects = useMemo(() => {
+    return allProjects.filter(p => p.status === 'completed' || p.status === 'failed');
+  }, [allProjects]);
 
-  // 年度贊助人數資料
-  const yearlyBackersData = [
-    { year: 2013, backers: 108 },
-    { year: 2014, backers: 1533 },
-    { year: 2015, backers: 1205 },
-    { year: 2016, backers: 4061 },
-    { year: 2017, backers: 1171 },
-    { year: 2018, backers: 9001 },
-    { year: 2019, backers: 929 },
-    { year: 2020, backers: 11474 },
-    { year: 2021, backers: 15230 },
-    { year: 2022, backers: 11676 },
-    { year: 2023, backers: 1823 },
-    { year: 2024, backers: 318 },
-    { year: 2025, backers: 272 },
-  ];
+  // 成功專案 = status 為 completed
+  const successfulProjects = useMemo(() => {
+    return allProjects.filter(p => p.status === 'completed');
+  }, [allProjects]);
+
+  // 動態計算年度專案數量資料（只計算成功專案）
+  const yearlyData = useMemo(() => {
+    const yearCounts: { [key: number]: number } = {};
+    successfulProjects.forEach(p => {
+      if (p.launch_date) {
+        const year = parseInt(p.launch_date.split('-')[0]) || parseInt(p.launch_date.split('/')[0]);
+        if (year >= 2013 && year <= 2025) {
+          yearCounts[year] = (yearCounts[year] || 0) + 1;
+        }
+      }
+    });
+    return Array.from({ length: 13 }, (_, i) => ({
+      year: 2013 + i,
+      count: yearCounts[2013 + i] || 0
+    }));
+  }, [successfulProjects]);
+
+  // 動態計算年度贊助金額資料（只計算成功專案）
+  const yearlyAmountData = useMemo(() => {
+    const yearAmounts: { [key: number]: number } = {};
+    successfulProjects.forEach(p => {
+      if (p.launch_date) {
+        const year = parseInt(p.launch_date.split('-')[0]) || parseInt(p.launch_date.split('/')[0]);
+        if (year >= 2013 && year <= 2025) {
+          yearAmounts[year] = (yearAmounts[year] || 0) + (p.amount || 0);
+        }
+      }
+    });
+    return Array.from({ length: 13 }, (_, i) => ({
+      year: 2013 + i,
+      amount: yearAmounts[2013 + i] || 0
+    }));
+  }, [successfulProjects]);
+
+  // 動態計算年度贊助人數資料（只計算成功專案）
+  const yearlyBackersData = useMemo(() => {
+    const yearBackers: { [key: number]: number } = {};
+    successfulProjects.forEach(p => {
+      if (p.launch_date) {
+        const year = parseInt(p.launch_date.split('-')[0]) || parseInt(p.launch_date.split('/')[0]);
+        if (year >= 2013 && year <= 2025) {
+          yearBackers[year] = (yearBackers[year] || 0) + (p.backers || 0);
+        }
+      }
+    });
+    return Array.from({ length: 13 }, (_, i) => ({
+      year: 2013 + i,
+      backers: yearBackers[2013 + i] || 0
+    }));
+  }, [successfulProjects]);
 
   // Highcharts 折線圖配置
   const lineOptions = useMemo(() => {
@@ -164,7 +174,7 @@ const TaiwanData = () => {
         }]
       }
     };
-  }, []);
+  }, [yearlyData]);
 
   // Highcharts 柱狀圖配置
   const columnOptions = useMemo(() => {
@@ -274,7 +284,7 @@ const TaiwanData = () => {
         }]
       }
     };
-  }, []);
+  }, [yearlyAmountData]);
 
   // Highcharts 三軸對照圖配置
   const bothOptions = useMemo(() => {
@@ -449,7 +459,7 @@ const TaiwanData = () => {
         }]
       }
     };
-  }, []);
+  }, [yearlyData, yearlyAmountData, yearlyBackersData]);
 
   // Highcharts 贊助人數圖配置
   const backersOptions = useMemo(() => {
@@ -552,7 +562,7 @@ const TaiwanData = () => {
         }]
       }
     };
-  }, []);
+  }, [yearlyBackersData]);
    
   if (isLoading) {
     return (
@@ -565,19 +575,40 @@ const TaiwanData = () => {
     );
   }
 
-  // 根據Excel正確數字的統計數據
-  const correctStats = {
-    totalProjects: 134,           // 專案總數
-    totalAmount: 70930608,        // 成功贊助總金額 (70,930,608)
-    totalBackers: 58801,          // 成功贊助人數 (58,801)
-    avgAmount: 529183,            // 平均金額 (70,930,608 / 134 = 529,183)
-    medianAmount: 223628,         // 中位數金額 (223,628)
-    medianBackers: 156,           // 中位數人數 (156)
-    avgTicket: 1192,              // 中位數每人贊助 (1,192)
-    successRate: taiwanProjects.length > 0 
-      ? Math.round(taiwanProjects.filter(p => p.status === 'completed').length / taiwanProjects.length * 100)
-      : 0,
-  };
+  // 動態計算統計數據（與後台同步）
+  const correctStats = useMemo(() => {
+    const totalAmount = successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0);
+    const totalBackers = successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0);
+    
+    // 計算中位數金額
+    const amounts = successfulProjects.map(p => p.amount).filter(a => a > 0).sort((a, b) => a - b);
+    const medianAmount = amounts.length > 0
+      ? amounts.length % 2 === 0
+        ? Math.round((amounts[Math.floor(amounts.length / 2) - 1] + amounts[Math.floor(amounts.length / 2)]) / 2)
+        : amounts[Math.floor(amounts.length / 2)]
+      : 0;
+    
+    // 計算中位數人數
+    const backers = successfulProjects.map(p => p.backers).filter(b => b > 0).sort((a, b) => a - b);
+    const medianBackers = backers.length > 0
+      ? backers.length % 2 === 0
+        ? Math.round((backers[Math.floor(backers.length / 2) - 1] + backers[Math.floor(backers.length / 2)]) / 2)
+        : backers[Math.floor(backers.length / 2)]
+      : 0;
+    
+    return {
+      totalProjects: taiwanProjects.length,
+      totalAmount,
+      totalBackers,
+      avgAmount: successfulProjects.length > 0 ? Math.round(totalAmount / successfulProjects.length) : 0,
+      medianAmount,
+      medianBackers,
+      avgTicket: totalBackers > 0 ? Math.round(totalAmount / totalBackers) : 0,
+      successRate: taiwanProjects.length > 0 
+        ? Math.round(successfulProjects.length / taiwanProjects.length * 100)
+        : 0,
+    };
+  }, [taiwanProjects, successfulProjects]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -606,7 +637,7 @@ const TaiwanData = () => {
           <DataCard
             title="專案總數"
             value={correctStats.totalProjects.toString()}
-            subtitle="件活躍專案"
+            subtitle="件專案"
             icon={BarChart}
             trend="up"
           />
