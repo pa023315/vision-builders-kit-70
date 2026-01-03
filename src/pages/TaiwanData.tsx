@@ -25,10 +25,10 @@ const TaiwanData = () => {
     return allProjects.filter(p => p.status === 'completed');
   }, [allProjects]);
 
-  // 動態計算年度專案數量資料（只計算成功專案）
+  // 動態計算年度專案數量資料（計算所有專案：成功 + 失敗）
   const yearlyData = useMemo(() => {
     const yearCounts: { [key: number]: number } = {};
-    successfulProjects.forEach(p => {
+    taiwanProjects.forEach(p => {
       if (p.launch_date) {
         const year = parseInt(p.launch_date.split('-')[0]) || parseInt(p.launch_date.split('/')[0]);
         if (year >= 2013 && year <= 2025) {
@@ -40,7 +40,7 @@ const TaiwanData = () => {
       year: 2013 + i,
       count: yearCounts[2013 + i] || 0
     }));
-  }, [successfulProjects]);
+  }, [taiwanProjects]);
 
   // 動態計算年度贊助金額資料（只計算成功專案）
   const yearlyAmountData = useMemo(() => {
