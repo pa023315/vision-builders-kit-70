@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,11 +6,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Edit, Trash2, Link, Loader2 } from "lucide-react";
 import { useNews, useCreateNews, useUpdateNews, useDeleteNews } from "@/hooks/useNews";
 import { NewsItem } from "@/lib/supabase";
 import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/ImageUpload";
+
+const CUSTOM_VALUE = "__custom__";
 
 export const NewsAdmin = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -27,10 +30,26 @@ export const NewsAdmin = () => {
     featured_image: "",
   });
 
+  const [customAuthor, setCustomAuthor] = useState("");
+  const [customCategory, setCustomCategory] = useState("");
+  const [isCustomAuthor, setIsCustomAuthor] = useState(false);
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
+
   const { data: news = [], isLoading } = useNews();
   const createNews = useCreateNews();
   const updateNews = useUpdateNews();
   const deleteNews = useDeleteNews();
+
+  // Extract unique authors and categories from existing news
+  const uniqueAuthors = useMemo(() => {
+    const authors = news.map(n => n.author).filter(Boolean);
+    return [...new Set(authors)];
+  }, [news]);
+
+  const uniqueCategories = useMemo(() => {
+    const categories = news.map(n => n.category).filter(Boolean);
+    return [...new Set(categories)];
+  }, [news]);
 
   const resetForm = () => {
     setFormData({
@@ -44,6 +63,10 @@ export const NewsAdmin = () => {
       featured_image: "",
     });
     setEditingNews(null);
+    setCustomAuthor("");
+    setCustomCategory("");
+    setIsCustomAuthor(false);
+    setIsCustomCategory(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -71,6 +94,13 @@ export const NewsAdmin = () => {
       url: newsItem.url || "",
       featured_image: newsItem.featured_image || "",
     });
+    // Check if author/category exists in the list
+    const authorExists = uniqueAuthors.includes(newsItem.author);
+    const categoryExists = uniqueCategories.includes(newsItem.category);
+    setIsCustomAuthor(!authorExists);
+    setIsCustomCategory(!categoryExists);
+    if (!authorExists) setCustomAuthor(newsItem.author);
+    if (!categoryExists) setCustomCategory(newsItem.category);
     setIsAddDialogOpen(true);
   };
 
@@ -173,21 +203,109 @@ export const NewsAdmin = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="author">作者</Label>
-                      <Input
-                        id="author"
-                        value={formData.author}
-                        onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                        required
-                      />
+                      {isCustomAuthor ? (
+                        <div className="flex gap-2">
+                          <Input
+                            id="author"
+                            placeholder="輸入新作者名稱"
+                            value={customAuthor}
+                            onChange={(e) => {
+                              setCustomAuthor(e.target.value);
+                              setFormData({ ...formData, author: e.target.value });
+                            }}
+                            required
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsCustomAuthor(false);
+                              setCustomAuthor("");
+                              setFormData({ ...formData, author: "" });
+                            }}
+                          >
+                            取消
+                          </Button>
+                        </div>
+                      ) : (
+                        <Select
+                          value={formData.author}
+                          onValueChange={(value) => {
+                            if (value === CUSTOM_VALUE) {
+                              setIsCustomAuthor(true);
+                              setFormData({ ...formData, author: "" });
+                            } else {
+                              setFormData({ ...formData, author: value });
+                            }
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="選擇作者" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {uniqueAuthors.map((author) => (
+                              <SelectItem key={author} value={author}>
+                                {author}
+                              </SelectItem>
+                            ))}
+                            <SelectItem value={CUSTOM_VALUE}>+ 新增作者</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
                     </div>
                     <div>
                       <Label htmlFor="category">分類</Label>
-                      <Input
-                        id="category"
-                        value={formData.category}
-                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        required
-                      />
+                      {isCustomCategory ? (
+                        <div className="flex gap-2">
+                          <Input
+                            id="category"
+                            placeholder="輸入新分類名稱"
+                            value={customCategory}
+                            onChange={(e) => {
+                              setCustomCategory(e.target.value);
+                              setFormData({ ...formData, category: e.target.value });
+                            }}
+                            required
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsCustomCategory(false);
+                              setCustomCategory("");
+                              setFormData({ ...formData, category: "" });
+                            }}
+                          >
+                            取消
+                          </Button>
+                        </div>
+                      ) : (
+                        <Select
+                          value={formData.category}
+                          onValueChange={(value) => {
+                            if (value === CUSTOM_VALUE) {
+                              setIsCustomCategory(true);
+                              setFormData({ ...formData, category: "" });
+                            } else {
+                              setFormData({ ...formData, category: value });
+                            }
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="選擇分類" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {uniqueCategories.map((category) => (
+                              <SelectItem key={category} value={category}>
+                                {category}
+                              </SelectItem>
+                            ))}
+                            <SelectItem value={CUSTOM_VALUE}>+ 新增分類</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
                     </div>
                   </div>
 
