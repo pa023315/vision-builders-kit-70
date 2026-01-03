@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,15 +8,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Upload } from "lucide-react";
+import { Plus, Edit, Trash2, Upload, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import * as XLSX from 'xlsx';
 import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from "@/hooks/useProjects";
 import { Project } from "@/lib/supabase";
 import { ImageUpload } from "@/components/ImageUpload";
 
+type SortField = 'amount' | 'status' | 'created_at';
+type SortDirection = 'asc' | 'desc';
+
 export const TaiwanProjectsAdmin = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [sortField, setSortField] = useState<SortField>('amount');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -192,7 +198,50 @@ export const TaiwanProjectsAdmin = () => {
     return <div>載入中...</div>;
   }
 
-  const taiwanProjects = projects.filter(p => p.country === '台灣').sort((a, b) => b.amount - a.amount);
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
+    }
+  };
+
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) return <ArrowUpDown className="h-4 w-4 ml-1" />;
+    return sortDirection === 'asc' 
+      ? <ArrowUp className="h-4 w-4 ml-1" /> 
+      : <ArrowDown className="h-4 w-4 ml-1" />;
+  };
+
+  const taiwanProjects = useMemo(() => {
+    let filtered = projects.filter(p => p.country === '台灣');
+    
+    // 狀態篩選
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(p => p.status === statusFilter);
+    }
+    
+    // 排序
+    return filtered.sort((a, b) => {
+      let comparison = 0;
+      
+      switch (sortField) {
+        case 'amount':
+          comparison = a.amount - b.amount;
+          break;
+        case 'status':
+          const statusOrder = { active: 0, completed: 1, failed: 2 };
+          comparison = statusOrder[a.status] - statusOrder[b.status];
+          break;
+        case 'created_at':
+          comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          break;
+      }
+      
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+  }, [projects, sortField, sortDirection, statusFilter]);
   
   
   const successfulProjects = taiwanProjects.filter(p => 
@@ -312,10 +361,11 @@ export const TaiwanProjectsAdmin = () => {
       {/* 台灣專案管理 */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">台灣專案 ({taiwanProjects.length})</CardTitle>
-            <div className="flex gap-2">
-              <input
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">台灣專案 ({taiwanProjects.length})</CardTitle>
+              <div className="flex gap-2">
+                <input
                 type="file"
                 accept=".xlsx,.xls"
                 onChange={handleExcelImport}
@@ -490,6 +540,58 @@ export const TaiwanProjectsAdmin = () => {
                   刪除所有數據
                 </Button>
               )}
+              </div>
+            </div>
+            
+            {/* 篩選和排序控制項 */}
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Label className="text-sm whitespace-nowrap">狀態篩選：</Label>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-[120px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border z-50">
+                    <SelectItem value="all">全部</SelectItem>
+                    <SelectItem value="active">進行中</SelectItem>
+                    <SelectItem value="completed">成功</SelectItem>
+                    <SelectItem value="failed">失敗</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Label className="text-sm whitespace-nowrap">排序：</Label>
+                <div className="flex gap-1">
+                  <Button
+                    variant={sortField === 'amount' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleSort('amount')}
+                    className="flex items-center"
+                  >
+                    贊助金額
+                    {getSortIcon('amount')}
+                  </Button>
+                  <Button
+                    variant={sortField === 'status' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleSort('status')}
+                    className="flex items-center"
+                  >
+                    狀態
+                    {getSortIcon('status')}
+                  </Button>
+                  <Button
+                    variant={sortField === 'created_at' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleSort('created_at')}
+                    className="flex items-center"
+                  >
+                    新增日期
+                    {getSortIcon('created_at')}
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </CardHeader>
