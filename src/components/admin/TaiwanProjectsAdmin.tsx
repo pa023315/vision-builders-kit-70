@@ -244,15 +244,21 @@ export const TaiwanProjectsAdmin = () => {
   }
   
   
-  const successfulProjects = taiwanProjects.filter(p => 
-    p.amount && p.target && p.amount >= p.target
+  // 只計算 completed + failed 狀態的專案（排除 active）
+  const completedOrFailedProjects = projects.filter(p => 
+    p.country === '台灣' && (p.status === 'completed' || p.status === 'failed')
+  );
+  
+  // 成功專案 = status 為 completed
+  const successfulProjects = projects.filter(p => 
+    p.country === '台灣' && p.status === 'completed'
   );
   
   const taiwanStats = {
-    totalProjects: taiwanProjects.length,
+    totalProjects: completedOrFailedProjects.length,
     totalAmount: successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0),
     totalBackers: successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0),
-    successRate: taiwanProjects.length > 0 ? Math.round((successfulProjects.length / taiwanProjects.length) * 100) : 0,
+    successRate: completedOrFailedProjects.length > 0 ? Math.round((successfulProjects.length / completedOrFailedProjects.length) * 100) : 0,
     medianAmount: (() => {
       if (successfulProjects.length === 0) return 0;
       const amounts = successfulProjects.map(p => p.amount).filter(a => a > 0).sort((a, b) => a - b);
@@ -296,7 +302,7 @@ export const TaiwanProjectsAdmin = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{taiwanStats.totalProjects}</div>
-            <p className="text-xs text-muted-foreground">件活躍專案</p>
+            <p className="text-xs text-muted-foreground">件專案</p>
           </CardContent>
         </Card>
         <Card>
