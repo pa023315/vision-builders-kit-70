@@ -20,6 +20,13 @@ const Footer = () => {
             <Mail className="h-4 w-4" />
             <span>聯繫我們: service@pa023315.com</span>
           </a>
+
+          <Link
+            to="/changelog"
+            className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
+          >
+            <span>更新紀錄</span>
+          </Link>
         </div>
       </div>
     </footer>
