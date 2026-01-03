@@ -194,10 +194,6 @@ export const TaiwanProjectsAdmin = () => {
     event.target.value = '';
   };
 
-  if (isLoading) {
-    return <div>載入中...</div>;
-  }
-
   const handleSort = (field: SortField) => {
     if (sortField === field) {
       setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
@@ -242,6 +238,10 @@ export const TaiwanProjectsAdmin = () => {
       return sortDirection === 'asc' ? comparison : -comparison;
     });
   }, [projects, sortField, sortDirection, statusFilter]);
+
+  if (isLoading) {
+    return <div>載入中...</div>;
+  }
   
   
   const successfulProjects = taiwanProjects.filter(p => 
