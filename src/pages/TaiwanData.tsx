@@ -563,19 +563,8 @@ const TaiwanData = () => {
       }
     };
   }, [yearlyBackersData]);
-   
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container py-8">
-          <div className="text-center">載入中...</div>
-        </main>
-      </div>
-    );
-  }
 
-  // 動態計算統計數據（與後台同步）
+  // 動態計算統計數據（與後台同步）- 必須在 conditional return 之前
   const correctStats = useMemo(() => {
     const totalAmount = successfulProjects.reduce((sum, p) => sum + (p.amount || 0), 0);
     const totalBackers = successfulProjects.reduce((sum, p) => sum + (p.backers || 0), 0);
@@ -609,6 +598,17 @@ const TaiwanData = () => {
         : 0,
     };
   }, [taiwanProjects, successfulProjects]);
+   
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-8">
+          <div className="text-center">載入中...</div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
