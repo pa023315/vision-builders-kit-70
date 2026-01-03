@@ -14,6 +14,7 @@ import News from "./pages/News";
 import Cases from "./pages/Cases";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
+import Changelog from "./pages/Changelog";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 import NotFound from "./pages/NotFound";
@@ -52,6 +53,7 @@ const App = () => (
             <Route path="/cases" element={<Cases />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/about" element={<About />} />
+            <Route path="/changelog" element={<Changelog />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={
               <ProtectedRoute>

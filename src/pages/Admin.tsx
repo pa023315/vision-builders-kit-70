@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit, Trash2, BarChart3, FileText, Award, Globe, Flame, BookOpen, LogOut } from "lucide-react";
+import { Plus, Edit, Trash2, BarChart3, FileText, Award, Globe, Flame, BookOpen, LogOut, History } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { TaiwanProjectsAdmin } from "@/components/admin/TaiwanProjectsAdmin";
@@ -14,6 +14,7 @@ import { NewsAdmin } from "@/components/admin/NewsAdmin";
 import { StatsAdmin } from "@/components/admin/StatsAdmin";
 import { CasesAdmin } from "@/components/admin/CasesAdmin";
 import BeginnerGuidesAdmin from "@/components/admin/BeginnerGuidesAdmin";
+import ChangelogAdmin from "@/components/admin/ChangelogAdmin";
 
 const Admin = () => {
   const { signOut, user } = useAuth();
@@ -66,7 +67,7 @@ const Admin = () => {
 
       <main className="container py-8">
         <Tabs defaultValue="taiwan" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7 lg:w-[900px]">
+          <TabsList className="grid w-full grid-cols-8 lg:w-[1050px]">
             <TabsTrigger value="taiwan" className="flex items-center gap-2">
               <Award className="h-4 w-4" />
               台灣專案
@@ -90,6 +91,10 @@ const Admin = () => {
             <TabsTrigger value="beginner-guides" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               新手指南
+            </TabsTrigger>
+            <TabsTrigger value="changelog" className="flex items-center gap-2">
+              <History className="h-4 w-4" />
+              更新紀錄
             </TabsTrigger>
             <TabsTrigger value="stats" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
@@ -119,6 +124,10 @@ const Admin = () => {
 
           <TabsContent value="beginner-guides">
             <BeginnerGuidesAdmin />
+          </TabsContent>
+
+          <TabsContent value="changelog">
+            <ChangelogAdmin />
           </TabsContent>
 
           <TabsContent value="stats">
