@@ -44,6 +44,30 @@ export type Database = {
         }
         Relationships: []
       }
+      changelog: {
+        Row: {
+          content: string
+          created_at: string
+          date: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          date: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          date?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       crowdfunding_cases: {
         Row: {
           amount: number
