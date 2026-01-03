@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Pencil, Check, X } from "lucide-react";
+import { Plus, Trash2, Pencil, Check, X, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ChangelogEntry {
   id: string;
@@ -12,25 +13,9 @@ interface ChangelogEntry {
   content: string;
 }
 
-const STORAGE_KEY = "changelog_entries";
-
-const getStoredEntries = (): ChangelogEntry[] => {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    return JSON.parse(stored);
-  }
-  return [
-    { id: "1", date: "2026.01.03", content: "更新台灣數據" },
-    { id: "2", date: "2025.09.18", content: "網站上線" },
-  ];
-};
-
-const saveEntries = (entries: ChangelogEntry[]) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-};
-
 export const ChangelogAdmin = () => {
-  const [entries, setEntries] = useState<ChangelogEntry[]>(getStoredEntries);
+  const [entries, setEntries] = useState<ChangelogEntry[]>([]);
+  const [loading, setLoading] = useState(true);
   const [newDate, setNewDate] = useState("");
   const [newContent, setNewContent] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -38,7 +23,29 @@ export const ChangelogAdmin = () => {
   const [editContent, setEditContent] = useState("");
   const { toast } = useToast();
 
-  const handleAdd = () => {
+  const fetchEntries = async () => {
+    const { data, error } = await supabase
+      .from("changelog")
+      .select("id, date, content")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      toast({
+        title: "載入失敗",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      setEntries(data || []);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchEntries();
+  }, []);
+
+  const handleAdd = async () => {
     if (!newDate || !newContent) {
       toast({
         title: "請填寫完整",
@@ -48,33 +55,37 @@ export const ChangelogAdmin = () => {
       return;
     }
 
-    const newEntry: ChangelogEntry = {
-      id: Date.now().toString(),
-      date: newDate,
-      content: newContent,
-    };
+    const { error } = await supabase
+      .from("changelog")
+      .insert({ date: newDate, content: newContent });
 
-    const updatedEntries = [newEntry, ...entries];
-    setEntries(updatedEntries);
-    saveEntries(updatedEntries);
-    setNewDate("");
-    setNewContent("");
-
-    toast({
-      title: "新增成功",
-      description: "已新增更新紀錄",
-    });
+    if (error) {
+      toast({
+        title: "新增失敗",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({ title: "新增成功", description: "已新增更新紀錄" });
+      setNewDate("");
+      setNewContent("");
+      fetchEntries();
+    }
   };
 
-  const handleDelete = (id: string) => {
-    const updatedEntries = entries.filter((entry) => entry.id !== id);
-    setEntries(updatedEntries);
-    saveEntries(updatedEntries);
+  const handleDelete = async (id: string) => {
+    const { error } = await supabase.from("changelog").delete().eq("id", id);
 
-    toast({
-      title: "刪除成功",
-      description: "已刪除更新紀錄",
-    });
+    if (error) {
+      toast({
+        title: "刪除失敗",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({ title: "刪除成功", description: "已刪除更新紀錄" });
+      fetchEntries();
+    }
   };
 
   const handleStartEdit = (entry: ChangelogEntry) => {
@@ -89,7 +100,7 @@ export const ChangelogAdmin = () => {
     setEditContent("");
   };
 
-  const handleSaveEdit = (id: string) => {
+  const handleSaveEdit = async (id: string) => {
     if (!editDate || !editContent) {
       toast({
         title: "請填寫完整",
@@ -99,20 +110,35 @@ export const ChangelogAdmin = () => {
       return;
     }
 
-    const updatedEntries = entries.map((entry) =>
-      entry.id === id ? { ...entry, date: editDate, content: editContent } : entry
-    );
-    setEntries(updatedEntries);
-    saveEntries(updatedEntries);
-    setEditingId(null);
-    setEditDate("");
-    setEditContent("");
+    const { error } = await supabase
+      .from("changelog")
+      .update({ date: editDate, content: editContent })
+      .eq("id", id);
 
-    toast({
-      title: "更新成功",
-      description: "已更新紀錄",
-    });
+    if (error) {
+      toast({
+        title: "更新失敗",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({ title: "更新成功", description: "已更新紀錄" });
+      setEditingId(null);
+      setEditDate("");
+      setEditContent("");
+      fetchEntries();
+    }
   };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardContent className="flex items-center justify-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
