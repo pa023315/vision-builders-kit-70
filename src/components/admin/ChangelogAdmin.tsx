@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Save } from "lucide-react";
+import { Plus, Trash2, Pencil, Check, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ChangelogEntry {
@@ -19,7 +19,6 @@ const getStoredEntries = (): ChangelogEntry[] => {
   if (stored) {
     return JSON.parse(stored);
   }
-  // 預設資料
   return [
     { id: "1", date: "2026.01.03", content: "更新台灣數據" },
     { id: "2", date: "2025.09.18", content: "網站上線" },
@@ -34,6 +33,9 @@ export const ChangelogAdmin = () => {
   const [entries, setEntries] = useState<ChangelogEntry[]>(getStoredEntries);
   const [newDate, setNewDate] = useState("");
   const [newContent, setNewContent] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDate, setEditDate] = useState("");
+  const [editContent, setEditContent] = useState("");
   const { toast } = useToast();
 
   const handleAdd = () => {
@@ -72,6 +74,43 @@ export const ChangelogAdmin = () => {
     toast({
       title: "刪除成功",
       description: "已刪除更新紀錄",
+    });
+  };
+
+  const handleStartEdit = (entry: ChangelogEntry) => {
+    setEditingId(entry.id);
+    setEditDate(entry.date);
+    setEditContent(entry.content);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditDate("");
+    setEditContent("");
+  };
+
+  const handleSaveEdit = (id: string) => {
+    if (!editDate || !editContent) {
+      toast({
+        title: "請填寫完整",
+        description: "日期和內容都必須填寫",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const updatedEntries = entries.map((entry) =>
+      entry.id === id ? { ...entry, date: editDate, content: editContent } : entry
+    );
+    setEntries(updatedEntries);
+    saveEntries(updatedEntries);
+    setEditingId(null);
+    setEditDate("");
+    setEditContent("");
+
+    toast({
+      title: "更新成功",
+      description: "已更新紀錄",
     });
   };
 
@@ -117,20 +156,68 @@ export const ChangelogAdmin = () => {
               key={entry.id}
               className="flex items-center justify-between p-4 border rounded-lg"
             >
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-mono text-muted-foreground whitespace-nowrap">
-                  {entry.date}
-                </span>
-                <span className="text-foreground">{entry.content}</span>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleDelete(entry.id)}
-                className="text-destructive hover:text-destructive"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              {editingId === entry.id ? (
+                <>
+                  <div className="flex items-center gap-4 flex-1">
+                    <Input
+                      value={editDate}
+                      onChange={(e) => setEditDate(e.target.value)}
+                      className="w-40"
+                      placeholder="日期"
+                    />
+                    <Input
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      className="flex-1"
+                      placeholder="內容"
+                    />
+                  </div>
+                  <div className="flex items-center gap-1 ml-4">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleSaveEdit(entry.id)}
+                      className="text-primary hover:text-primary"
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleCancelEdit}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm font-mono text-muted-foreground whitespace-nowrap">
+                      {entry.date}
+                    </span>
+                    <span className="text-foreground">{entry.content}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleStartEdit(entry)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDelete(entry.id)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>
