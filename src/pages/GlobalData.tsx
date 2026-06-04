@@ -9,6 +9,7 @@ import { TrendingUp, Users, DollarSign, Globe, Award, BarChart } from "lucide-re
 import { useKickstarterProjects, useCampfireProjects } from "@/hooks/useProjects";
 import { useState } from "react";
 import { BarChart as RechartsBarChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Bar } from "recharts";
+import { CrowdfundingTrackerSection } from "@/components/CrowdfundingTrackerSection";
 
 const GlobalData = () => {
   const { data: kickstarterProjects = [], isLoading: isKickstarterLoading } = useKickstarterProjects();
@@ -96,6 +97,8 @@ const GlobalData = () => {
             </Button>
           </div>
         </div>
+
+        <CrowdfundingTrackerSection />
 
         {/* Kickstarter Content */}
         {activeTab === "kickstarter" && (
