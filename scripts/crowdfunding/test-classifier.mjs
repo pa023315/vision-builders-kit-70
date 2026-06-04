@@ -27,6 +27,26 @@ const mixedProject = classifyProject({
 });
 assert.equal(mixedProject.auto_classification, 'review');
 
+const campfireBoardGame = classifyProject({
+  title: 'Slay the Spire - Downfall ボードゲーム 日本語版',
+});
+assert.equal(campfireBoardGame.auto_classification, 'rejected');
+
+const campfireRealEvent = classifyProject({
+  title: '【LIAR GAME×今際の国のアリス】没入型リアル・デスゲーム体験を生み出す！',
+});
+assert.equal(campfireRealEvent.auto_classification, 'rejected');
+
+const campfirePcPurchase = classifyProject({
+  title: '高品質な配信環境へ。架城シエスタの新型PC購入プロジェクト',
+});
+assert.equal(campfirePcPurchase.auto_classification, 'review');
+
+const campfireVisualNovel = classifyProject({
+  title: '男性Vライバーノベルゲーム！「ニュー・ライフ」製作プロジェクト',
+});
+assert.equal(campfireVisualNovel.auto_classification, 'approved');
+
 const ignoredProject = resolveEffectiveClassification({
   ignore_forever: true,
   manual_classification: 'approved',

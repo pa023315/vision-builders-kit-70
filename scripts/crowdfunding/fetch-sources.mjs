@@ -224,27 +224,58 @@ export function parseCampfireCandidates(html, pageUrl) {
     }
 
     seen.add(sourceUrl);
+    const stats = parseCampfireListStats(title);
+
     candidates.push({
       platform: 'campfire',
       source_url: sourceUrl,
-      title,
+      title: stats.title,
       description: '',
       image_url: undefined,
       currency: 'JPY',
-      pledged_amount: 0,
-      goal_amount: 0,
-      percent_funded: 0,
-      backer_count: 0,
+      pledged_amount: stats.pledged_amount,
+      goal_amount: stats.goal_amount,
+      percent_funded: stats.percent_funded,
+      backer_count: stats.backer_count,
       project_status: 'active',
-      raw_text: title,
+      raw_text: stats.title,
       raw_payload: {
         source: 'campfire',
         page_url: pageUrl,
+        list_text: title,
       },
     });
   }
 
   return candidates;
+}
+
+function parseCampfireListStats(text) {
+  const percentMatch = text.match(/([\d,]+)%/);
+  const pledgedMatch = text.match(/現在\s*([\d,]+)\s*円/);
+  const backersMatch = text.match(/支援者\s*([\d,]+)\s*人/);
+  const percent_funded = percentMatch
+    ? Number.parseInt(percentMatch[1].replace(/,/g, ''), 10)
+    : 0;
+  const pledged_amount = pledgedMatch
+    ? Number.parseInt(pledgedMatch[1].replace(/,/g, ''), 10)
+    : 0;
+  const backer_count = backersMatch
+    ? Number.parseInt(backersMatch[1].replace(/,/g, ''), 10)
+    : 0;
+  const goal_amount =
+    pledged_amount > 0 && percent_funded > 0
+      ? Math.round((pledged_amount / percent_funded) * 100)
+      : 0;
+  const title = cleanText(text.replace(/\s+[\d,]+%[\s\S]*$/, ''));
+
+  return {
+    title,
+    pledged_amount,
+    goal_amount,
+    percent_funded,
+    backer_count,
+  };
 }
 
 export async function fetchCampfireCandidates({ pages = 3 } = {}) {
