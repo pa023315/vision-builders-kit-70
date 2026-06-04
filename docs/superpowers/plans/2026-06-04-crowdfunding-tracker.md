@@ -32,7 +32,9 @@
 - Create: `scripts/crowdfunding/test-classifier.mjs`
   - 不依賴測試 runner 的分類器檢查腳本。
 - Create: `scripts/crowdfunding/fetch-sources.mjs`
-  - Kickstarter / CAMPFIRE 候選來源抓取器；第一版保守抓清單頁並抽取可用 metadata。
+  - Kicktraq Video Games / CAMPFIRE 候選來源抓取器；Kicktraq 作為 Kickstarter 專案的主要候選來源。
+- Create: `scripts/crowdfunding/test-fetch-kickstarter.mjs`
+  - Kicktraq/Kickstarter 抓取 smoke test，提前判斷是否拿到專案資料或 Cloudflare challenge。
 - Create: `scripts/crowdfunding/sync-supabase.mjs`
   - 將候選資料 merge 到 Supabase，保留人工覆寫。
 - Create: `scripts/crowdfunding/run-daily.mjs`
@@ -569,6 +571,7 @@ git commit -m "feat: add crowdfunding classifier"
 
 **Files:**
 - Create: `scripts/crowdfunding/fetch-sources.mjs`
+- Create: `scripts/crowdfunding/test-fetch-kickstarter.mjs`
 - Create: `scripts/crowdfunding/sync-supabase.mjs`
 - Create: `scripts/crowdfunding/run-daily.mjs`
 
@@ -577,7 +580,7 @@ git commit -m "feat: add crowdfunding classifier"
 Create `scripts/crowdfunding/fetch-sources.mjs`:
 
 ```js
-const KICKSTARTER_URL = 'https://www.kickstarter.com/discover/advanced?category_id=35&sort=magic&seed=2967584&page='
+const KICKTRAQ_VIDEO_GAMES_URL = 'https://www.kicktraq.com/categories/games/video%20games/'
 const CAMPFIRE_URL = 'https://camp-fire.jp/projects/search?category=game&page='
 
 function absoluteUrl(base, href) {
@@ -588,9 +591,62 @@ function absoluteUrl(base, href) {
   }
 }
 
-function extractTitleFromAnchor(anchorHtml) {
-  const text = anchorHtml.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-  return text.slice(0, 180)
+function stripTags(html) {
+  return html
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&gt;/g, '>')
+    .replace(/&lt;/g, '<')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function parseMoney(value) {
+  const match = String(value ?? '').match(/^([^0-9.-]*)([0-9,.-]+)/)
+  if (!match) return { currency: null, amount: 0 }
+  return {
+    currency: match[1].trim() || null,
+    amount: Number.parseInt(match[2].replace(/[^0-9-]/g, ''), 10) || 0
+  }
+}
+
+function parseKicktraqProject(block) {
+  const linkMatch = block.match(/<h2>\s*<a href=["']([^"']+)["']>([\s\S]*?)<\/a>\s*<\/h2>/i)
+  if (!linkMatch) return null
+
+  const imageMatch = block.match(/<img src=["']([^"']+)["']/i)
+  const descriptionMatch = block.match(/<\/h2>\s*<div>([\s\S]*?)<\/div>\s*<div class="project-cat">/i)
+  const backersMatch = block.match(/Backers:\s*([0-9,]+)/i)
+  const fundingMatch = block.match(/Funding:\s*([^<]+?)\s+of\s+([^<]+?)\s+\(<span[^>]*>([0-9,]+)% funded<\/span>\)/i)
+  const datesMatch = block.match(/Campaign Dates:\s*([^<]+?)\s*-&gt;\s*([^<]+?)\s*\((\d{4})\)/i)
+  const timeLeftMatch = block.match(/Time left:\s*([^<]+?)<br/i)
+
+  const pledged = parseMoney(fundingMatch?.[1])
+  const goal = parseMoney(fundingMatch?.[2])
+  const title = stripTags(linkMatch[2])
+
+  return {
+    platform: 'kickstarter',
+    source_url: absoluteUrl('https://www.kicktraq.com', linkMatch[1]),
+    title,
+    description: stripTags(descriptionMatch?.[1] ?? title),
+    image_url: imageMatch?.[1] ?? null,
+    currency: pledged.currency ?? goal.currency,
+    pledged_amount: pledged.amount,
+    goal_amount: goal.amount,
+    percent_funded: Number.parseInt((fundingMatch?.[3] ?? '0').replace(/,/g, ''), 10) || 0,
+    backer_count: Number.parseInt((backersMatch?.[1] ?? '0').replace(/,/g, ''), 10) || 0,
+    project_status: 'active',
+    raw_text: stripTags(block),
+    raw_payload: {
+      source: 'kicktraq',
+      campaign_dates: datesMatch ? `${datesMatch[1]} -> ${datesMatch[2]} (${datesMatch[3]})` : null,
+      time_left: timeLeftMatch ? stripTags(timeLeftMatch[1]) : null
+    }
+  }
 }
 
 function parseLinks(html, baseUrl, platform) {
@@ -627,6 +683,11 @@ function parseLinks(html, baseUrl, platform) {
   return candidates
 }
 
+function parseKicktraqProjects(html) {
+  const blocks = html.match(/<div class="project(?: odd)?">[\s\S]*?<div style="clear: both"><\/div>\s*<\/div>/g) ?? []
+  return blocks.map(parseKicktraqProject).filter(Boolean)
+}
+
 async function fetchPage(url) {
   const response = await fetch(url, {
     headers: {
@@ -637,7 +698,11 @@ async function fetchPage(url) {
   if (!response.ok) {
     throw new Error(`Fetch failed ${response.status} ${response.statusText} for ${url}`)
   }
-  return response.text()
+  const html = await response.text()
+  if (html.includes('Just a moment...') && html.includes('challenges.cloudflare.com')) {
+    throw new Error(`Cloudflare challenge detected for ${url}`)
+  }
+  return html
 }
 
 async function delay(ms) {
@@ -647,9 +712,9 @@ async function delay(ms) {
 export async function fetchKickstarterCandidates({ pages = 3 } = {}) {
   const candidates = []
   for (let page = 1; page <= pages; page += 1) {
-    const url = `${KICKSTARTER_URL}${page}`
+    const url = page === 1 ? KICKTRAQ_VIDEO_GAMES_URL : `${KICKTRAQ_VIDEO_GAMES_URL}?page=${page}`
     const html = await fetchPage(url)
-    candidates.push(...parseLinks(html, url, 'kickstarter'))
+    candidates.push(...parseKicktraqProjects(html))
     await delay(1200)
   }
   return candidates
@@ -667,7 +732,48 @@ export async function fetchCampfireCandidates({ pages = 3 } = {}) {
 }
 ```
 
-- [ ] **Step 2: 新增 Supabase sync**
+- [ ] **Step 2: 新增 Kicktraq/Kickstarter smoke test**
+
+Create `scripts/crowdfunding/test-fetch-kickstarter.mjs`:
+
+```js
+import { fetchKickstarterCandidates } from './fetch-sources.mjs'
+
+try {
+  const candidates = await fetchKickstarterCandidates({ pages: 1 })
+  if (candidates.length === 0) {
+    throw new Error('Kicktraq smoke test found 0 Kickstarter project candidates')
+  }
+  console.log(JSON.stringify({
+    status: 'ok',
+    candidates: candidates.length,
+    sample: candidates.slice(0, 3).map((candidate) => ({
+      title: candidate.title,
+      source_url: candidate.source_url
+    }))
+  }, null, 2))
+} catch (error) {
+  console.error(JSON.stringify({
+    status: 'failed',
+    reason: error instanceof Error ? error.message : String(error)
+  }, null, 2))
+  process.exit(1)
+}
+```
+
+- [ ] **Step 3: 先執行 Kicktraq/Kickstarter smoke test**
+
+Run:
+
+```bash
+node scripts/crowdfunding/test-fetch-kickstarter.mjs
+```
+
+Expected on the first-version fetch path: output JSON with `status: "ok"` and at least one Kicktraq Video Games candidate.
+
+Known current local result from 2026-06-04 test: direct `curl -L` to Kickstarter Advanced Search returned a Cloudflare `Just a moment...` challenge page, while `curl -L https://www.kicktraq.com/categories/games/video%20games/` returned a normal 40KB HTML page containing project title, description, image, Backers, Funding, Campaign Dates, and Time left fields. Use Kicktraq as the primary Kickstarter candidate source.
+
+- [ ] **Step 4: 新增 Supabase sync**
 
 Create `scripts/crowdfunding/sync-supabase.mjs`:
 
@@ -762,7 +868,7 @@ export async function syncCandidates(supabase, candidates) {
 }
 ```
 
-- [ ] **Step 3: 新增每日入口**
+- [ ] **Step 5: 新增每日入口**
 
 Create `scripts/crowdfunding/run-daily.mjs`:
 
@@ -805,7 +911,7 @@ if (results.every((result) => result.status === 'failed')) {
 }
 ```
 
-- [ ] **Step 4: 驗證缺少 env 時會明確失敗**
+- [ ] **Step 6: 驗證缺少 env 時會明確失敗**
 
 Run:
 
@@ -819,7 +925,7 @@ Expected: command fails with:
 Missing required env: SUPABASE_URL
 ```
 
-- [ ] **Step 5: 執行 build**
+- [ ] **Step 7: 執行 build**
 
 Run:
 
@@ -829,10 +935,10 @@ npm run build
 
 Expected: build succeeds.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
-git add scripts/crowdfunding/fetch-sources.mjs scripts/crowdfunding/sync-supabase.mjs scripts/crowdfunding/run-daily.mjs
+git add scripts/crowdfunding/fetch-sources.mjs scripts/crowdfunding/test-fetch-kickstarter.mjs scripts/crowdfunding/sync-supabase.mjs scripts/crowdfunding/run-daily.mjs
 git commit -m "feat: add crowdfunding tracker sync scripts"
 ```
 
@@ -1515,5 +1621,6 @@ Expected: push succeeds. This makes the implementation visible to Lovable throug
 - 規格中的資料表、分類欄位、人工覆寫、抓取紀錄、前台公開限制、每日排程都有對應 task。
 - 第一版不會自動寫回既有 `projects`，因此不影響目前統計頁的歷史資料。
 - 核心分類器有腳本層測試；UI 以 `npm run lint`、`npm run build` 與本機人工檢查驗證。
+- Kickstarter 抓取有 smoke test，會提早揭露 Cloudflare challenge，而不是等後台完成後才發現抓不到資料。
 - `SUPABASE_SERVICE_ROLE_KEY` 只出現在 GitHub Actions env，不會放進前端程式。
 - 完成後會 push 到 GitHub `origin/main`，讓 Lovable 可以同步並繼續更新網站。
