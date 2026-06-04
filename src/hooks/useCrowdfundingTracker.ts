@@ -55,6 +55,7 @@ export const useCrowdfundingFetchRuns = () => {
       if (error) throw error
       return data as CrowdfundingFetchRun[]
     },
+    refetchInterval: 30000,
   })
 }
 
@@ -125,8 +126,8 @@ export const useTriggerCrowdfundingTracker = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: fetchRunsQueryKey })
       toast({
-        title: '已送出強制更新',
-        description: 'GitHub Actions 已排入執行，稍後可在抓取紀錄查看結果',
+        title: '已排入強制更新',
+        description: '這代表 GitHub Actions 已被觸發；抓取完成後才會出現在抓取紀錄',
       })
     },
     onError: () => {

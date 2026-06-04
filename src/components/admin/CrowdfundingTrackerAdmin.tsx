@@ -120,6 +120,7 @@ export function CrowdfundingTrackerAdmin() {
   const { data: projects = [], isLoading } = useAdminCrowdfundingProjects();
   const { data: runs = [] } = useCrowdfundingFetchRuns();
   const triggerTracker = useTriggerCrowdfundingTracker();
+  const [queuedAt, setQueuedAt] = useState<string | null>(null);
 
   const groups = useMemo(
     () => ({
@@ -146,7 +147,11 @@ export function CrowdfundingTrackerAdmin() {
           <Button
             type="button"
             size="sm"
-            onClick={() => triggerTracker.mutate()}
+            onClick={() =>
+              triggerTracker.mutate(undefined, {
+                onSuccess: () => setQueuedAt(new Date().toISOString()),
+              })
+            }
             disabled={triggerTracker.isPending}
           >
             <RefreshCw
@@ -181,6 +186,13 @@ export function CrowdfundingTrackerAdmin() {
           </TabsContent>
           <TabsContent value="runs">
             <div className="divide-y">
+              {queuedAt ? (
+                <div className="grid gap-2 py-3 text-sm md:grid-cols-[1fr_1fr_180px]">
+                  <span>手動更新 / 已排入</span>
+                  <span>等待 GitHub Actions 執行完成後寫入抓取紀錄</span>
+                  <span>{new Date(queuedAt).toLocaleString("zh-TW")}</span>
+                </div>
+              ) : null}
               {runs.map((run) => (
                 <div
                   key={run.id}
