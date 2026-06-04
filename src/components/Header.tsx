@@ -11,6 +11,7 @@ const Header = () => {
     { name: "首頁", path: "/" },
     { name: "台灣數據", path: "/taiwan-data" },
     { name: "國際數據", path: "/global-data" },
+    { name: "募資追蹤", path: "/crowdfunding-tracker" },
     { name: "案例", path: "/cases" },
     { name: "新聞", path: "/news" },
     { name: "資源", path: "/resources" },
