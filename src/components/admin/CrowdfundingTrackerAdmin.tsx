@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Ban, ExternalLink, RotateCcw, ShieldCheck, ShieldX } from "lucide-react";
+import { Ban, ExternalLink, RefreshCw, RotateCcw, ShieldCheck, ShieldX } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { CrowdfundingClassification, CrowdfundingTrackedProject } from "@/lib/su
 import {
   useAdminCrowdfundingProjects,
   useCrowdfundingFetchRuns,
+  useTriggerCrowdfundingTracker,
   useUpdateCrowdfundingReview,
 } from "@/hooks/useCrowdfundingTracker";
 
@@ -118,6 +119,7 @@ const ProjectRow = ({ project }: { project: CrowdfundingTrackedProject }) => {
 export function CrowdfundingTrackerAdmin() {
   const { data: projects = [], isLoading } = useAdminCrowdfundingProjects();
   const { data: runs = [] } = useCrowdfundingFetchRuns();
+  const triggerTracker = useTriggerCrowdfundingTracker();
 
   const groups = useMemo(
     () => ({
@@ -139,7 +141,20 @@ export function CrowdfundingTrackerAdmin() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>群眾募資追蹤審核</CardTitle>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle>群眾募資追蹤審核</CardTitle>
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => triggerTracker.mutate()}
+            disabled={triggerTracker.isPending}
+          >
+            <RefreshCw
+              className={`mr-2 h-4 w-4 ${triggerTracker.isPending ? "animate-spin" : ""}`}
+            />
+            {triggerTracker.isPending ? "更新中" : "強制更新"}
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="review">

@@ -102,3 +102,39 @@ export const useUpdateCrowdfundingReview = () => {
     },
   })
 }
+
+export const useTriggerCrowdfundingTracker = () => {
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke(
+        'trigger-crowdfunding-tracker',
+        { body: {} },
+      )
+
+      if (error) throw error
+      return data as {
+        status: string
+        repository: string
+        workflow_file: string
+        ref: string
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: fetchRunsQueryKey })
+      toast({
+        title: '已送出強制更新',
+        description: 'GitHub Actions 已排入執行，稍後可在抓取紀錄查看結果',
+      })
+    },
+    onError: () => {
+      toast({
+        title: '強制更新失敗',
+        description: '無法觸發 GitHub Actions，請確認 Edge Function secrets 是否已設定',
+        variant: 'destructive',
+      })
+    },
+  })
+}
