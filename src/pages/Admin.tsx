@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit, Trash2, BarChart3, FileText, Award, Globe, Flame, BookOpen, LogOut, History } from "lucide-react";
+import { Plus, Edit, Trash2, BarChart3, FileText, Award, Globe, Flame, BookOpen, LogOut, History, ListChecks } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { TaiwanProjectsAdmin } from "@/components/admin/TaiwanProjectsAdmin";
@@ -15,6 +15,7 @@ import { StatsAdmin } from "@/components/admin/StatsAdmin";
 import { CasesAdmin } from "@/components/admin/CasesAdmin";
 import BeginnerGuidesAdmin from "@/components/admin/BeginnerGuidesAdmin";
 import ChangelogAdmin from "@/components/admin/ChangelogAdmin";
+import { CrowdfundingTrackerAdmin } from "@/components/admin/CrowdfundingTrackerAdmin";
 
 const Admin = () => {
   const { signOut, user } = useAuth();
@@ -67,7 +68,7 @@ const Admin = () => {
 
       <main className="container py-8">
         <Tabs defaultValue="taiwan" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-8 lg:w-[1050px]">
+          <TabsList className="grid w-full grid-cols-9 lg:w-[1180px]">
             <TabsTrigger value="taiwan" className="flex items-center gap-2">
               <Award className="h-4 w-4" />
               台灣專案
@@ -79,6 +80,10 @@ const Admin = () => {
             <TabsTrigger value="kickstarter" className="flex items-center gap-2">
               <Globe className="h-4 w-4" />
               Kickstarter
+            </TabsTrigger>
+            <TabsTrigger value="tracker" className="flex items-center gap-2">
+              <ListChecks className="h-4 w-4" />
+              追蹤審核
             </TabsTrigger>
             <TabsTrigger value="cases" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
@@ -112,6 +117,10 @@ const Admin = () => {
 
           <TabsContent value="kickstarter">
             <KickstarterProjectsAdmin />
+          </TabsContent>
+
+          <TabsContent value="tracker">
+            <CrowdfundingTrackerAdmin />
           </TabsContent>
 
           <TabsContent value="cases">

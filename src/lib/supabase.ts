@@ -25,6 +25,61 @@ export interface Project {
   updated_at: string
 }
 
+export type CrowdfundingPlatform = 'kickstarter' | 'campfire'
+export type CrowdfundingClassification = 'approved' | 'review' | 'rejected'
+export type CrowdfundingProjectStatus = 'active' | 'upcoming' | 'ended' | 'unknown'
+
+export interface CrowdfundingTrackedProject {
+  id: string
+  platform: CrowdfundingPlatform
+  source_id: string | null
+  source_url: string
+  title: string
+  creator: string | null
+  description: string | null
+  image_url: string | null
+  country: string | null
+  currency: string | null
+  pledged_amount: number
+  goal_amount: number
+  percent_funded: number
+  backer_count: number
+  start_at: string | null
+  end_at: string | null
+  project_status: CrowdfundingProjectStatus
+  auto_classification: CrowdfundingClassification
+  manual_classification: CrowdfundingClassification | null
+  effective_classification: CrowdfundingClassification
+  confidence: number
+  classification_reasons: string[]
+  ignore_forever: boolean
+  admin_note: string | null
+  raw_payload: unknown | null
+  first_seen_at: string
+  last_seen_at: string
+  last_fetched_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface CrowdfundingFetchRun {
+  id: string
+  source: CrowdfundingPlatform | 'all'
+  started_at: string
+  finished_at: string | null
+  status: 'running' | 'success' | 'failed'
+  pages_requested: number
+  candidates_found: number
+  created_count: number
+  updated_count: number
+  approved_count: number
+  review_count: number
+  rejected_count: number
+  error_message: string | null
+  metadata: unknown | null
+  created_at: string
+}
+
 export interface NewsItem {
   id: string
   title: string

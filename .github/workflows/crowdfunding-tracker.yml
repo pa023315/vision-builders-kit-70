@@ -1,0 +1,35 @@
+name: Crowdfunding Tracker
+
+on:
+  schedule:
+    - cron: "17 19 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run classifier checks
+        run: npm run tracker:test
+
+      - name: Smoke test Kicktraq source
+        run: node scripts/crowdfunding/test-fetch-kickstarter.mjs
+
+      - name: Run daily tracker
+        run: npm run tracker:run
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          CROWDFUNDING_TRACKER_PAGES: "3"

@@ -122,6 +122,159 @@ export type Database = {
         }
         Relationships: []
       }
+      crowdfunding_fetch_runs: {
+        Row: {
+          approved_count: number
+          candidates_found: number
+          created_at: string
+          created_count: number
+          error_message: string | null
+          finished_at: string | null
+          id: string
+          metadata: Json | null
+          pages_requested: number
+          rejected_count: number
+          review_count: number
+          source: "kickstarter" | "campfire" | "all"
+          started_at: string
+          status: "running" | "success" | "failed"
+          updated_count: number
+        }
+        Insert: {
+          approved_count?: number
+          candidates_found?: number
+          created_at?: string
+          created_count?: number
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          metadata?: Json | null
+          pages_requested?: number
+          rejected_count?: number
+          review_count?: number
+          source: "kickstarter" | "campfire" | "all"
+          started_at?: string
+          status?: "running" | "success" | "failed"
+          updated_count?: number
+        }
+        Update: {
+          approved_count?: number
+          candidates_found?: number
+          created_at?: string
+          created_count?: number
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          metadata?: Json | null
+          pages_requested?: number
+          rejected_count?: number
+          review_count?: number
+          source?: "kickstarter" | "campfire" | "all"
+          started_at?: string
+          status?: "running" | "success" | "failed"
+          updated_count?: number
+        }
+        Relationships: []
+      }
+      crowdfunding_tracked_projects: {
+        Row: {
+          admin_note: string | null
+          auto_classification: "approved" | "review" | "rejected"
+          backer_count: number
+          classification_reasons: string[]
+          confidence: number
+          country: string | null
+          created_at: string
+          creator: string | null
+          currency: string | null
+          description: string | null
+          effective_classification: "approved" | "review" | "rejected"
+          end_at: string | null
+          first_seen_at: string
+          goal_amount: number
+          id: string
+          ignore_forever: boolean
+          image_url: string | null
+          last_fetched_at: string | null
+          last_seen_at: string
+          manual_classification: "approved" | "review" | "rejected" | null
+          percent_funded: number
+          platform: "kickstarter" | "campfire"
+          pledged_amount: number
+          project_status: "active" | "upcoming" | "ended" | "unknown"
+          raw_payload: Json | null
+          source_id: string | null
+          source_url: string
+          start_at: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          admin_note?: string | null
+          auto_classification?: "approved" | "review" | "rejected"
+          backer_count?: number
+          classification_reasons?: string[]
+          confidence?: number
+          country?: string | null
+          created_at?: string
+          creator?: string | null
+          currency?: string | null
+          description?: string | null
+          effective_classification?: "approved" | "review" | "rejected"
+          end_at?: string | null
+          first_seen_at?: string
+          goal_amount?: number
+          id?: string
+          ignore_forever?: boolean
+          image_url?: string | null
+          last_fetched_at?: string | null
+          last_seen_at?: string
+          manual_classification?: "approved" | "review" | "rejected" | null
+          percent_funded?: number
+          platform: "kickstarter" | "campfire"
+          pledged_amount?: number
+          project_status?: "active" | "upcoming" | "ended" | "unknown"
+          raw_payload?: Json | null
+          source_id?: string | null
+          source_url: string
+          start_at?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          admin_note?: string | null
+          auto_classification?: "approved" | "review" | "rejected"
+          backer_count?: number
+          classification_reasons?: string[]
+          confidence?: number
+          country?: string | null
+          created_at?: string
+          creator?: string | null
+          currency?: string | null
+          description?: string | null
+          effective_classification?: "approved" | "review" | "rejected"
+          end_at?: string | null
+          first_seen_at?: string
+          goal_amount?: number
+          id?: string
+          ignore_forever?: boolean
+          image_url?: string | null
+          last_fetched_at?: string | null
+          last_seen_at?: string
+          manual_classification?: "approved" | "review" | "rejected" | null
+          percent_funded?: number
+          platform?: "kickstarter" | "campfire"
+          pledged_amount?: number
+          project_status?: "active" | "upcoming" | "ended" | "unknown"
+          raw_payload?: Json | null
+          source_id?: string | null
+          source_url?: string
+          start_at?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       game_showcases: {
         Row: {
           created_at: string

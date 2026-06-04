@@ -133,20 +133,26 @@
 
 ## 來源抓取
 
-### Kickstarter
+### Kickstarter / Kicktraq
 
-來源 URL：
+第一版主要來源 URL：
+
+`https://www.kicktraq.com/categories/games/video%20games/`
+
+備援來源 URL：
 
 `https://www.kickstarter.com/discover/advanced?category_id=35&sort=magic&seed=2967584&page=1`
 
-Kickstarter Advanced Search 可以用分類與其他 discovery 條件篩選，因此適合作為候選來源。不過它不能當作最終電子遊戲判斷依據，因為分類結果可能混入非數位遊戲專案。
+2026-06-04 實測結果：直接抓 Kickstarter Advanced Search 會回傳 Cloudflare `Just a moment...` challenge 頁，不是專案資料；Kicktraq 的 Video Games 類別頁可直接抓到 Active Video Games Projects，並包含專案標題、描述、圖片、Backers、Funding、Campaign Dates、Time left 等欄位。因此第一版以 Kicktraq 作為 Kickstarter 專案候選資料的主要來源。
+
+Kicktraq 的 Video Games 類別仍只能視為候選來源，不能當作最終電子遊戲判斷依據，因為其中可能包含數位桌遊、音樂致敬、混合媒體或分類不準確的專案。
 
 抓取行為：
 
-- 每日執行時先抓 3 頁。
+- 每日執行時先抓 Kicktraq Video Games 前 3 頁或可見分頁。
 - 除非後台明確調高設定，否則最多抓 5 頁。
 - 請求之間加入延遲。
-- 如果被擋或結果為空，寫入失敗抓取紀錄，並保留前一次已核准資料。
+- 如果 Kicktraq 被擋、結果為空，或直接 Kickstarter 備援被 Cloudflare 擋住，寫入失敗抓取紀錄，並保留前一次已核准資料。
 - 前台頁面不得依賴即時存取 Kickstarter。
 
 ### CAMPFIRE
