@@ -12,7 +12,8 @@ import HighchartsReact from 'highcharts-react-official';
 import { useMemo, useState } from 'react';
 
 const TaiwanData = () => {
-  const { data: allProjects = [], isLoading } = useAllTaiwanProjects();
+  const { data: allProjectsData, isLoading } = useAllTaiwanProjects();
+  const allProjects = allProjectsData ?? [];
   const [chartType, setChartType] = useState<'line' | 'column' | 'backers' | 'both'>('line');
 
   // 只計算 completed + failed 狀態的專案（與後台同步）
@@ -599,7 +600,7 @@ const TaiwanData = () => {
     };
   }, [taiwanProjects, successfulProjects]);
    
-  if (isLoading) {
+  if (isLoading && !allProjectsData) {
     return (
       <div className="min-h-screen bg-background">
         <Header />

@@ -11,11 +11,16 @@ import { useState } from "react";
 import { BarChart as RechartsBarChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Bar } from "recharts";
 
 const GlobalData = () => {
-  const { data: kickstarterProjects = [], isLoading: isKickstarterLoading } = useKickstarterProjects();
-  const { data: campfireProjects = [], isLoading: isCampfireLoading } = useCampfireProjects();
+  const { data: kickstarterProjectsData, isLoading: isKickstarterLoading } = useKickstarterProjects();
+  const { data: campfireProjectsData, isLoading: isCampfireLoading } = useCampfireProjects();
   const [activeTab, setActiveTab] = useState<"kickstarter" | "campfire">("kickstarter");
+  const kickstarterProjects = kickstarterProjectsData ?? [];
+  const campfireProjects = campfireProjectsData ?? [];
   
-  if (isKickstarterLoading || isCampfireLoading) {
+  if (
+    (isKickstarterLoading && !kickstarterProjectsData) ||
+    (isCampfireLoading && !campfireProjectsData)
+  ) {
     return (
       <div className="min-h-screen bg-background">
         <Header />

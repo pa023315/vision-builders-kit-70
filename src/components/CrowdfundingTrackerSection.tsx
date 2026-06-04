@@ -12,10 +12,11 @@ const platformLabel = (platform: string) =>
   platform === "kickstarter" ? "Kickstarter" : "CAMPFIRE";
 
 export function CrowdfundingTrackerSection() {
-  const { data: projects = [], isLoading } = useApprovedCrowdfundingProjects();
+  const { data: projectsData, isLoading } = useApprovedCrowdfundingProjects();
   const [query, setQuery] = useState("");
   const [platform, setPlatform] = useState("all");
   const [sort, setSort] = useState("last_seen");
+  const projects = projectsData ?? [];
 
   const visibleProjects = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -82,7 +83,9 @@ export function CrowdfundingTrackerSection() {
           </Select>
         </div>
 
-        {isLoading ? <div>載入中...</div> : null}
+        {isLoading && !projectsData ? (
+          <div className="text-muted-foreground">正在讀取追蹤專案...</div>
+        ) : null}
         {!isLoading && visibleProjects.length === 0 ? (
           <div className="text-muted-foreground">目前沒有已公開的追蹤專案。</div>
         ) : null}

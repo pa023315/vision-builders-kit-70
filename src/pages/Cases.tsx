@@ -10,11 +10,12 @@ import { useGameShowcases } from "@/hooks/useGameShowcases";
 
 const Cases = () => {
   console.log('Cases component rendered');
-  const { data: crowdfundingCases = [], isLoading } = useCrowdfundingCases();
+  const { data: crowdfundingCasesData, isLoading } = useCrowdfundingCases();
   const { data: gameShowcases = [], isLoading: gameLoading } = useGameShowcases();
+  const crowdfundingCases = crowdfundingCasesData ?? [];
   console.log('Crowdfunding cases data:', crowdfundingCases);
   
-  if (isLoading) {
+  if (isLoading && !crowdfundingCasesData) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
