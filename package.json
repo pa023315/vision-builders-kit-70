@@ -9,7 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "tracker:test": "node scripts/crowdfunding/test-classifier.mjs",
+    "tracker:test": "node scripts/crowdfunding/test-classifier.mjs && node scripts/crowdfunding/test-image-parsing.mjs",
     "tracker:run": "node scripts/crowdfunding/run-daily.mjs"
   },
   "dependencies": {

@@ -78,6 +78,47 @@ function extractAttribute(html, attribute) {
   return match ? decodeHtml(match[1]) : undefined;
 }
 
+function parseSrcset(srcset = '') {
+  return srcset
+    .split(',')
+    .map((entry) => {
+      const [rawUrl, rawSize] = entry.trim().split(/\s+/);
+      const widthMatch = rawSize?.match(/^(\d+)w$/);
+      const densityMatch = rawSize?.match(/^([\d.]+)x$/);
+
+      return {
+        url: rawUrl,
+        score: widthMatch
+          ? Number.parseInt(widthMatch[1], 10)
+          : densityMatch
+            ? Number.parseFloat(densityMatch[1]) * 1000
+            : 0,
+      };
+    })
+    .filter((entry) => entry.url)
+    .sort((a, b) => b.score - a.score);
+}
+
+function extractImageUrl(html, baseUrl) {
+  const imageMatch = html.match(/<img\b[^>]*>/i);
+  if (!imageMatch) {
+    return undefined;
+  }
+
+  const imageTag = imageMatch[0];
+  const srcset = extractAttribute(imageTag, 'srcset');
+  const srcsetUrl = parseSrcset(srcset)[0]?.url;
+  const url =
+    srcsetUrl ??
+    extractAttribute(imageTag, 'data-src') ??
+    extractAttribute(imageTag, 'data-original') ??
+    extractAttribute(imageTag, 'data-lazy-src') ??
+    extractAttribute(imageTag, 'data-srcset') ??
+    extractAttribute(imageTag, 'src');
+
+  return toAbsoluteUrl(url, baseUrl);
+}
+
 function toAbsoluteUrl(url, baseUrl) {
   if (!url) {
     return undefined;
@@ -144,7 +185,7 @@ export function parseKicktraqCandidates(html, pageUrl = KICKTRAQ_BASE_URL) {
         /<div class="project-image">[\s\S]*?<img\b[^>]*>/i,
       );
       const imageUrl = imageMatch
-        ? toAbsoluteUrl(extractAttribute(imageMatch[0], 'src'), pageUrl)
+        ? extractImageUrl(imageMatch[0], pageUrl)
         : undefined;
 
       const afterHeading = block.slice(
@@ -224,6 +265,7 @@ export function parseCampfireCandidates(html, pageUrl) {
     }
 
     seen.add(sourceUrl);
+    const imageUrl = extractImageUrl(match[2], pageUrl);
     const stats = parseCampfireListStats(title);
 
     candidates.push({
@@ -231,7 +273,7 @@ export function parseCampfireCandidates(html, pageUrl) {
       source_url: sourceUrl,
       title: stats.title,
       description: '',
-      image_url: undefined,
+      image_url: imageUrl,
       currency: 'JPY',
       pledged_amount: stats.pledged_amount,
       goal_amount: stats.goal_amount,

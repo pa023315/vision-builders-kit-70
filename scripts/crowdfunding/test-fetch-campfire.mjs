@@ -1,10 +1,15 @@
-import { fetchKickstarterCandidates } from './fetch-sources.mjs';
+import { fetchCampfireCandidates } from './fetch-sources.mjs';
 
 try {
-  const candidates = await fetchKickstarterCandidates({ pages: 1 });
+  const candidates = await fetchCampfireCandidates({ pages: 1 });
+  const withImages = candidates.filter((candidate) => candidate.image_url);
 
   if (candidates.length === 0) {
-    throw new Error('Expected at least one Kickstarter candidate from Kicktraq');
+    throw new Error('Expected at least one CAMPFIRE candidate');
+  }
+
+  if (withImages.length === 0) {
+    throw new Error('Expected at least one CAMPFIRE candidate image');
   }
 
   console.log(
@@ -12,7 +17,8 @@ try {
       {
         status: 'ok',
         count: candidates.length,
-        sample: candidates.slice(0, 3).map((candidate) => ({
+        image_count: withImages.length,
+        sample: withImages.slice(0, 3).map((candidate) => ({
           title: candidate.title,
           source_url: candidate.source_url,
           image_url: candidate.image_url,

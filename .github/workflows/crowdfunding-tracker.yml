@@ -27,6 +27,9 @@ jobs:
       - name: Smoke test Kicktraq source
         run: node scripts/crowdfunding/test-fetch-kickstarter.mjs
 
+      - name: Smoke test CAMPFIRE source
+        run: node scripts/crowdfunding/test-fetch-campfire.mjs
+
       - name: Run daily tracker
         run: npm run tracker:run
         env:

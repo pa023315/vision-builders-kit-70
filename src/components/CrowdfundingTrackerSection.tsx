@@ -11,6 +11,10 @@ import { useApprovedCrowdfundingProjects } from "@/hooks/useCrowdfundingTracker"
 const platformLabel = (platform: string) =>
   platform === "kickstarter" ? "Kickstarter" : "CAMPFIRE";
 
+const isLowResolutionKickstarterImage = (platform: string, imageUrl?: string | null) =>
+  platform === "kickstarter" &&
+  Boolean(imageUrl?.includes("width=160") && imageUrl?.includes("height=90"));
+
 export function CrowdfundingTrackerSection() {
   const { data: projectsData, isLoading } = useApprovedCrowdfundingProjects();
   const [query, setQuery] = useState("");
@@ -93,13 +97,30 @@ export function CrowdfundingTrackerSection() {
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {visibleProjects.map((project) => (
             <Card key={project.id} className="overflow-hidden">
-              <div className="aspect-video bg-muted">
+              <div className="relative aspect-video overflow-hidden bg-muted">
                 {project.image_url ? (
-                  <img
-                    src={project.image_url}
-                    alt={project.title}
-                    className="h-full w-full object-cover"
-                  />
+                  isLowResolutionKickstarterImage(project.platform, project.image_url) ? (
+                    <>
+                      <img
+                        src={project.image_url}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 h-full w-full scale-110 object-cover opacity-40 blur-lg"
+                      />
+                      <div className="absolute inset-0 bg-background/30" />
+                      <img
+                        src={project.image_url}
+                        alt={project.title}
+                        className="relative mx-auto h-full w-auto max-w-[260px] object-contain"
+                      />
+                    </>
+                  ) : (
+                    <img
+                      src={project.image_url}
+                      alt={project.title}
+                      className="h-full w-full object-cover"
+                    />
+                  )
                 ) : null}
               </div>
               <CardContent className="space-y-3 p-4">
